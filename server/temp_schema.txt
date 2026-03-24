@@ -1,0 +1,15 @@
+[
+  "id",
+  "username",
+  "password_hash",
+  "role",
+  "passkey",
+  "created_at",
+  "updated_at",
+  "district_id",
+  "email",
+  "mobile",
+  "qualification",
+  "office_field",
+  "member_since"
+]
