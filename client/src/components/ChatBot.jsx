@@ -30,11 +30,14 @@ export default function ChatBot() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  
+  // Robust API URL construction
+  const BASE_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : (BASE_URL ? `${BASE_URL}/api` : '/api');
 
   // Load History from Supabase on Mount
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const API_URL = import.meta.env.VITE_API_URL || '/api';
     if (token && isOpen) {
       fetch(`${API_URL}/chatbot/history`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -107,7 +110,6 @@ export default function ChatBot() {
     setIsLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_URL}/chatbot/query`, {
         method: 'POST',
@@ -144,7 +146,6 @@ export default function ChatBot() {
   const handleNewChat = async () => {
     setShowConfirmReset(false);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
       if (token) {
         await fetch(`${API_URL}/chatbot/history`, {

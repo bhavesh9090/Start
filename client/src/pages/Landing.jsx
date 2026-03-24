@@ -405,27 +405,21 @@ function AboutSection({ t }) {
 function HelpSection({ t }) {
   const [form, setForm] = useState({ name: '', email: '', mobile: '', message: '' });
   const [sent, setSent] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await helpAPI.submit(form);
       setSent(true);
+      showToast(t('tax.sent') || 'Help request sent successfully!', 'success');
       setTimeout(() => {
         setSent(false);
         setForm({ name: '', email: '', mobile: '', message: '' });
       }, 3000);
     } catch (err) {
       console.error('Help submission error:', err);
-      const recipient = "huuuuii947@gmail.com";
-      const subject = encodeURIComponent(`Help Request from ${form.name}`);
-      const body = encodeURIComponent(
-        `Name: ${form.name}\n` +
-        `Email: ${form.email}\n` +
-        `Mobile: ${form.mobile}\n\n` +
-        `Message:\n${form.message}`
-      );
-      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+      showToast('Failed to send help request. Please check your connection.', 'error');
     }
   };
 
