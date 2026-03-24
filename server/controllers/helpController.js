@@ -2,27 +2,36 @@ const { sendEmail } = require('../utils/mailer');
 const { supabase } = require('../config/supabase');
 
 const submitHelpRequest = async (req, res) => {
+  console.log('[HelpSubmit] Received new request');
   try {
     const { name, email, mobile, message } = req.body;
 
     if (!name || !email || !message) {
+      console.log('[HelpSubmit] Validation failed: Missing required fields');
       return res.status(400).json({ error: 'Name, email, and message are required' });
     }
 
-    // 1. Save to database (optional but recommended for record keeping)
-    const { data: request, error: dbError } = await supabase
-      .from('help_requests')
-      .insert({ name, email, mobile, message })
-      .select()
-      .single();
+    // 1. Save to database
+    console.log('[HelpSubmit] Attempting to save to Supabase...');
+    try {
+      const { data: request, error: dbError } = await supabase
+        .from('help_requests')
+        .insert({ name, email, mobile, message })
+        .select()
+        .single();
 
-    // If table doesn't exist, we'll log it but proceed with email
-    if (dbError) {
-      console.warn('Database save failed (table might not exist):', dbError.message);
+      if (dbError) {
+        console.warn('[HelpSubmit] Database save failed:', dbError.message);
+      } else {
+        console.log('[HelpSubmit] Database save successful');
+      }
+    } catch (dbErr) {
+      console.error('[HelpSubmit] Unexpected Database Error:', dbErr.message);
     }
 
-    // 2. Send email to admin
-    const emailResult = await sendEmail({
+    // 2. Send email to admin (Moving to background to prevent frontend hang)
+    console.log('[HelpSubmit] Triggering background email...');
+    sendEmail({
       to: 'huuuuii947@gmail.com',
       subject: `New Help Request from ${name}`,
       text: `
@@ -45,20 +54,20 @@ const submitHelpRequest = async (req, res) => {
           ${message.replace(/\n/g, '<br>')}
         </div>
       `,
+    }).then(result => {
+      if (result.success) console.log('[HelpSubmit] Background email sent successfully');
+      else console.error('[HelpSubmit] Background email failed:', result.error);
+    }).catch(err => {
+      console.error('[HelpSubmit] Unexpected Background Email Error:', err.message);
     });
 
-    if (!emailResult.success) {
-      console.error('Email sending failed:', emailResult.error);
-      // We still return 201 if DB saved, but with a warning
-      return res.status(201).json({ 
-        message: 'Request received, but email notification failed', 
-        warning: 'Email service not configured' 
-      });
-    }
-
-    res.status(201).json({ message: 'Help request submitted successfully' });
+    console.log('[HelpSubmit] Sending immediate success response to user');
+    res.status(201).json({ 
+      message: 'Help request submitted successfully',
+      note: 'Notification email is being processed'
+    });
   } catch (err) {
-    console.error('Help request error:', err);
+    console.error('[HelpSubmit] Global Controller Error:', err);
     res.status(500).json({ error: 'Failed to process help request' });
   }
 };
