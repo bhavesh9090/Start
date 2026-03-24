@@ -23,7 +23,7 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
+    ? (process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(url => url.trim()) : true)
     : ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true,
 }));
