@@ -24,7 +24,8 @@ app.use(helmet());
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://start-beta-five.vercel.app'
+  'https://start-beta-five.vercel.app',
+  'https://etaxpay.vercel.app'
 ];
 
 app.use(cors({
