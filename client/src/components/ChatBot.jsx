@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiMessageCircle, FiX, FiSend, FiHelpCircle, FiRotateCcw, FiSmile, FiZap, FiChevronDown } from 'react-icons/fi';
+import { FiMessageCircle, FiX, FiSend, FiHelpCircle, FiRotateCcw, FiSmile, FiZap, FiChevronDown, FiChevronLeft } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -201,6 +201,13 @@ export default function ChatBot() {
             <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/5 rounded-full" />
             
             <div className="flex items-center gap-3 relative z-10">
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="p-1 -ml-1 hover:bg-white/20 rounded-lg transition-colors"
+                title="Back"
+              >
+                <FiChevronLeft className="w-6 h-6" />
+              </button>
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/10">
                 <RobotIcon className="w-6 h-6" />
               </div>
@@ -222,7 +229,8 @@ export default function ChatBot() {
               </button>
               <button 
                 onClick={() => { setIsOpen(false); setShowEmojiPicker(false); }}
-                className="p-2 hover:bg-white/20 rounded-xl transition-colors sm:hidden"
+                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                title="Close"
               >
                 <FiX className="w-5 h-5 text-white/80" />
               </button>
