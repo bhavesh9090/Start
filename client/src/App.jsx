@@ -6,6 +6,7 @@ import 'aos/dist/aos.css';
 import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Loader from './components/Loader';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -31,7 +32,11 @@ import AdminMeeting from './pages/admin/AdminMeeting';
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading, isAdmin } = useAuth();
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="text-saffron-500 text-xl">Loading...</div></div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen mountain-bg">
+      <Loader message="Securing Session" />
+    </div>
+  );
   if (!user) return <Navigate to="/login" />;
   if (adminOnly && !isAdmin()) return <Navigate to="/user/dashboard" />;
 

@@ -279,12 +279,12 @@ const downloadReceipt = async (req, res) => {
 // ==================== ADMIN: GET ALL PAYMENTS ====================
 const getAllPayments = async (req, res) => {
   try {
-    const { user_id } = req.query;
+    const { user_id, block, status, month, year } = req.query;
     const district_id = req.user.district_id;
 
     let query = supabase
       .from('monthly_payments')
-      .select('*, users!inner(username, gst_id, district_id)')
+      .select('*, users!inner(username, gst_id, district_id, block)')
       .order('created_at', { ascending: false });
 
     // Strict District Filtering for admins
@@ -294,6 +294,22 @@ const getAllPayments = async (req, res) => {
 
     if (user_id) {
       query = query.eq('user_id', user_id);
+    }
+
+    if (block) {
+      query = query.eq('users.block', block);
+    }
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    if (month) {
+      query = query.eq('month', parseInt(month, 10));
+    }
+
+    if (year) {
+      query = query.eq('year', parseInt(year, 10));
     }
 
     const { data: payments, error } = await query;

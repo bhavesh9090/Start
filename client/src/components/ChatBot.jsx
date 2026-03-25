@@ -170,11 +170,8 @@ export default function ChatBot() {
       {/* Floating Chat Button */}
       <motion.button
         onClick={() => { setIsOpen(!isOpen); setShowEmojiPicker(false); }}
-        className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${
-          isOpen 
-            ? 'bg-gradient-to-br from-red-500 to-red-600' 
-            : 'bg-gradient-to-br from-red-500 to-green-500'
-        } text-white`}
+        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 text-white"
+        style={{ backgroundColor: isOpen ? '#980404' : '#FF5F00' }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         animate={{ rotate: isOpen ? 0 : 0 }}
@@ -196,10 +193,9 @@ export default function ChatBot() {
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-600 via-red-500 to-green-600 p-4 text-white flex items-center justify-between flex-shrink-0 relative overflow-hidden">
-            {/* Decorative circles */}
-            <div className="absolute -top-6 -right-6 w-20 h-20 bg-white/10 rounded-full" />
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/5 rounded-full" />
+          <div className="p-4 text-white flex items-center justify-between flex-shrink-0 relative overflow-hidden" style={{ backgroundColor: '#980404' }}>
+            {/* Simple Background */}
+            <div className="absolute inset-0 bg-black/5" />
             
             <div className="flex items-center gap-3 relative z-10">
               <button 
@@ -242,11 +238,7 @@ export default function ChatBot() {
           <div 
             ref={scrollRef} 
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-gray-50/80 to-white relative"
-            style={{ 
-              backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(239,68,68,0.03) 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }}
+            className="flex-1 overflow-y-auto p-4 space-y-3 bg-white relative"
           >
             {messages.map((m, i) => (
               <motion.div 
@@ -257,15 +249,18 @@ export default function ChatBot() {
                 transition={{ duration: 0.2, delay: 0.05 }}
               >
                 {m.sender === 'bot' && (
-                  <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-green-500 rounded-lg flex items-center justify-center mr-2 mt-1 flex-shrink-0 shadow-sm">
-                    <RobotIcon className="w-4 h-4 text-white" />
+                  <div className="w-7 h-7 bg-maroon-100 text-maroon-600 rounded-lg flex items-center justify-center mr-2 mt-1 flex-shrink-0 shadow-sm">
+                    <RobotIcon className="w-4 h-4" />
                   </div>
                 )}
-                <div className={`max-w-[75%] px-4 py-2.5 text-sm leading-relaxed ${
-                  m.sender === 'user' 
-                    ? 'bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl rounded-tr-md shadow-md shadow-red-500/15' 
-                    : 'bg-white text-gray-700 rounded-2xl rounded-tl-md border border-gray-100 shadow-sm'
-                }`}>
+                <div 
+                  className={`max-w-[75%] px-4 py-2.5 text-sm leading-relaxed ${
+                    m.sender === 'user' 
+                      ? 'text-white rounded-2xl rounded-tr-md shadow-md' 
+                      : 'bg-gray-50 text-gray-700 rounded-2xl rounded-tl-md border border-gray-100 shadow-sm'
+                  }`}
+                  style={m.sender === 'user' ? { backgroundColor: '#980404' } : {}}
+                >
                   <p className="whitespace-pre-wrap break-words">{m.text}</p>
                   <p className={`text-[9px] mt-1.5 ${m.sender === 'user' ? 'text-white/50 text-right' : 'text-gray-300'}`}>
                     {formatTime()}
@@ -280,8 +275,8 @@ export default function ChatBot() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-green-500 rounded-lg flex items-center justify-center mr-2 mt-1 flex-shrink-0">
-                  <RobotIcon className="w-4 h-4 text-white animate-pulse" />
+                <div className="w-7 h-7 bg-maroon-100 text-maroon-600 rounded-lg flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+                  <RobotIcon className="w-4 h-4 animate-pulse" />
                 </div>
                 <div className="bg-white px-5 py-3 rounded-2xl rounded-tl-md border border-gray-100 shadow-sm flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -339,7 +334,7 @@ export default function ChatBot() {
                 <div className="flex gap-2 justify-center">
                   <button
                     onClick={handleNewChat}
-                    className="px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl text-xs font-bold hover:shadow-lg transition-all shadow-sm"
+                    className="px-5 py-2 bg-red-600 text-white rounded-xl text-xs font-bold hover:bg-red-700 transition-all shadow-sm"
                   >
                     Yes, Clear
                   </button>
@@ -399,9 +394,10 @@ export default function ChatBot() {
               disabled={!input.trim() || isLoading}
               className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center transition-all shadow-md ${
                 input.trim() && !isLoading
-                  ? 'bg-gradient-to-br from-red-500 to-green-500 text-white shadow-red-500/20 hover:shadow-lg'
+                  ? 'text-white hover:opacity-90'
                   : 'bg-gray-100 text-gray-400 shadow-none cursor-not-allowed'
               }`}
+              style={input.trim() && !isLoading ? { backgroundColor: '#980404' } : {}}
               whileHover={input.trim() ? { scale: 1.05 } : {}}
               whileTap={input.trim() ? { scale: 0.95 } : {}}
             >

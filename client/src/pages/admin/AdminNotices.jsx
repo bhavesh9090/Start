@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { noticeAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { FiSend, FiBell, FiInfo, FiAlertCircle } from 'react-icons/fi';
+import Loader from '../../components/Loader';
 
 export default function AdminNotices() {
   const { t } = useTranslation();
@@ -109,7 +110,12 @@ export default function AdminNotices() {
                   disabled={submitting}
                   className="btn-saffron w-full flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <FiSend /> {submitting ? t('common.loading') : t('adminPanel.notices.broadcastBtn')}
+                  <FiSend /> {submitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                      {t('common.loading')}
+                    </span>
+                  ) : t('adminPanel.notices.broadcastBtn')}
                 </button>
               </form>
             </div>
@@ -124,7 +130,7 @@ export default function AdminNotices() {
               
               {loading ? (
                 <div className="flex justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-saffron-500"></div>
+                  <Loader message={t('common.loading')} />
                 </div>
               ) : notices.length === 0 ? (
                 <div className="text-center py-12 text-gray-500">

@@ -1,0 +1,263 @@
+{
+  "notices": [
+    {
+      "id": "47047500-02cb-40ce-835d-6a714dc7444e",
+      "user_id": null,
+      "title": "hhhhhhhhhhhhhhhhh",
+      "message": "hgghgghjjghhggyygg",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T06:16:47.297489+00:00",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878"
+    },
+    {
+      "id": "db9f55c4-c6e4-48b2-af1c-fced5ba636ac",
+      "user_id": "c22685fd-241e-4001-bd4c-3a8bc9625eaf",
+      "title": "UDYH",
+      "message": "HFSATRWEEEEEEEEEEEEEEEE",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T06:16:04.114265+00:00",
+      "district_id": null
+    },
+    {
+      "id": "cb9f7af3-ca8b-4532-9474-9c58e4566001",
+      "user_id": "c22685fd-241e-4001-bd4c-3a8bc9625eaf",
+      "title": "hello",
+      "message": "hfdfgjfgsdfgsfggfh",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T06:11:11.449287+00:00",
+      "district_id": null
+    },
+    {
+      "id": "d85ece27-b394-4527-be4f-949bd50ec732",
+      "user_id": "c22685fd-241e-4001-bd4c-3a8bc9625eaf",
+      "title": "Hello",
+      "message": "fbsfgefgkfghgf",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T06:08:14.228957+00:00",
+      "district_id": null
+    },
+    {
+      "id": "127e316b-9ff6-41d7-9d8d-93c1f7b58eb5",
+      "user_id": null,
+      "title": "FOR TEXT ",
+      "message": "HELO ALERT",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T05:14:51.853004+00:00",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878"
+    },
+    {
+      "id": "96b2d706-b2a1-40f9-a8a1-e484e171d99d",
+      "user_id": "c22685fd-241e-4001-bd4c-3a8bc9625eaf",
+      "title": "Pay the tax ",
+      "message": "Yur tax is delay From January plz pay the tax ",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-25T03:58:01.331506+00:00",
+      "district_id": null
+    },
+    {
+      "id": "c0693b08-6e33-43e5-853e-b6e42910e610",
+      "user_id": "74841568-0aec-4369-9404-4adc2d9af1c6",
+      "title": "Gaali",
+      "message": "Bsdk tax bhrrr",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-24T18:52:18.070264+00:00",
+      "district_id": null
+    },
+    {
+      "id": "e41319b1-0e38-49b7-8661-02464c30c334",
+      "user_id": "29c653a2-451f-4b30-8440-199656d45786",
+      "title": "HHHH",
+      "message": "HGGGQWHDGDGHDGDFDHGHFDGFGFGH",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-20T17:41:31.154277+00:00",
+      "district_id": null
+    },
+    {
+      "id": "e24dada8-130f-439a-981f-7d9f073bfffc",
+      "user_id": null,
+      "title": "Bsdk Tax bHEJ",
+      "message": "jldi bhej saaale",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "created_at": "2026-03-20T06:48:25.580243+00:00",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878"
+    },
+    {
+      "id": "6ad99894-d97d-439e-8d5f-1623a0cf98f0",
+      "user_id": null,
+      "title": "Rate Expenses",
+      "message": "bksdcghskfgfggfgfhgfhgfgfghgfghgfhbghhbgh",
+      "type": "reminder",
+      "is_read": false,
+      "created_by": "d03620ad-9e73-4096-91e7-651f776f6d00",
+      "created_at": "2026-03-19T10:19:01.687664+00:00",
+      "district_id": "58dd52ab-2f34-4333-97ef-b7fc0761463e"
+    }
+  ],
+  "notifications": [],
+  "users": [
+    {
+      "id": "9adb1a45-aabe-47d2-b6ff-946243d1ae03",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Jeevan Kumar"
+    },
+    {
+      "id": "e16fd8ea-e8fb-4e8b-93f0-7e7365d8174c",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Himanshu Singh"
+    },
+    {
+      "id": "fcc57a2e-da10-4ead-848e-90896a8297ed",
+      "district_id": "6cb6f451-95f9-4edf-8520-1ef8cf6b1848",
+      "username": "Hshs"
+    },
+    {
+      "id": "2d06e5ee-74ad-48b1-ad64-70caa0a55636",
+      "district_id": "c3a34dc1-86f6-4223-bb97-3e3a655d7de3",
+      "username": "Ritika joshi"
+    },
+    {
+      "id": "29c653a2-451f-4b30-8440-199656d45786",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Rekha Paliwal"
+    },
+    {
+      "id": "1f06b8b7-c5ce-465b-8575-88b5a4a17a44",
+      "district_id": "58dd52ab-2f34-4333-97ef-b7fc0761463e",
+      "username": "Ram Kumar"
+    },
+    {
+      "id": "74841568-0aec-4369-9404-4adc2d9af1c6",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Bhavesh Bisht"
+    },
+    {
+      "id": "199f37a4-9848-4b91-a4ae-a4bf4abdefeb",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Adarsh"
+    },
+    {
+      "id": "ef3b6f56-5f10-49c0-b3b2-5c2608dbdaa9",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Radhe Shyam"
+    },
+    {
+      "id": "c22685fd-241e-4001-bd4c-3a8bc9625eaf",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "Lalu Yadav"
+    }
+  ],
+  "errors": [],
+  "admins": [
+    {
+      "id": "f6635c5d-3a4d-411b-b829-4e7707a7dcb0",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "superadmin"
+    },
+    {
+      "id": "829d0447-face-4e66-b48e-c6ad259f6ab0",
+      "district_id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "username": "admin_almora"
+    },
+    {
+      "id": "446ca839-7ea7-4891-bbf5-fb57af711c54",
+      "district_id": "b5fbbc16-edd4-4838-9112-65aa2aba2180",
+      "username": "admin_bageshwar"
+    },
+    {
+      "id": "dbda2ee3-6c23-402a-88f6-6d34e6718702",
+      "district_id": "d4adb1a6-5b5b-4c86-8d05-c2c768d6d765",
+      "username": "admin_champawat"
+    },
+    {
+      "id": "9e060697-12d5-4546-b6a3-1cfdf66ba14c",
+      "district_id": "c3a34dc1-86f6-4223-bb97-3e3a655d7de3",
+      "username": "admin_haridwar"
+    }
+  ],
+  "districts": [
+    {
+      "id": "cf6e1dfc-4f9a-4e6c-a75c-b25c123f3878",
+      "name": "Almora"
+    },
+    {
+      "id": "b5fbbc16-edd4-4838-9112-65aa2aba2180",
+      "name": "Bageshwar"
+    },
+    {
+      "id": "8733bd15-e5eb-43fb-8515-37542f699703",
+      "name": "Chamoli"
+    },
+    {
+      "id": "d4adb1a6-5b5b-4c86-8d05-c2c768d6d765",
+      "name": "Champawat"
+    },
+    {
+      "id": "1042b9ed-bcf9-4fbd-ba26-710e18ae9cc7",
+      "name": "Dehradun"
+    },
+    {
+      "id": "c3a34dc1-86f6-4223-bb97-3e3a655d7de3",
+      "name": "Haridwar"
+    },
+    {
+      "id": "58dd52ab-2f34-4333-97ef-b7fc0761463e",
+      "name": "Nainital"
+    },
+    {
+      "id": "bde97633-b8ea-4137-8cbb-7c49625232b9",
+      "name": "Pauri Garhwal"
+    },
+    {
+      "id": "6cb6f451-95f9-4edf-8520-1ef8cf6b1848",
+      "name": "Pithoragarh"
+    },
+    {
+      "id": "0c696371-31cf-42c3-ac1a-a3658e3e663e",
+      "name": "Rudraprayag"
+    },
+    {
+      "id": "b4fec44d-e944-4321-a099-fb9d2f1ae606",
+      "name": "Tehri Garhwal"
+    },
+    {
+      "id": "8afe531d-9e86-4e10-a3b7-8672748887f6",
+      "name": "Udham Singh Nagar"
+    },
+    {
+      "id": "220b8156-3d96-47c0-89bf-cca149fb6bfe",
+      "name": "Uttarkashi"
+    }
+  ],
+  "testInsert": {
+    "data": [
+      {
+        "id": "055ff7ae-aac3-4028-aee7-6342c2c1bb17",
+        "user_id": "9adb1a45-aabe-47d2-b6ff-946243d1ae03",
+        "title": "DIAGNOSTIC TEST",
+        "message": "This is a test notification from the diagnostics script.",
+        "type": "info",
+        "is_read": false,
+        "created_at": "2026-03-25T06:22:28.637678+00:00"
+      }
+    ],
+    "error": null
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { noticeAPI, taxAPI } from '../../services/api';
 import { FiSend, FiAlertTriangle, FiCalendar } from 'react-icons/fi';
+import Loader from '../../components/Loader';
 
 export default function NoticeGenerator() {
   const { t } = useTranslation();
@@ -106,7 +107,12 @@ export default function NoticeGenerator() {
                 </div>
               </div>
               <button type="submit" disabled={taxGenerating} className="btn-saffron w-full disabled:opacity-50">
-                {taxGenerating ? t('common.loading') : t('admin.generate')}
+                {taxGenerating ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    {t('common.loading')}
+                  </span>
+                ) : t('admin.generate')}
               </button>
             </form>
           </div>
@@ -136,7 +142,12 @@ export default function NoticeGenerator() {
                 </div>
               </div>
               <button type="submit" disabled={generating} className="btn-maroon w-full disabled:opacity-50">
-                {generating ? t('common.loading') : t('admin.generateNotice')}
+                {generating ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    {t('common.loading')}
+                  </span>
+                ) : t('admin.generateNotice')}
               </button>
             </form>
           </div>

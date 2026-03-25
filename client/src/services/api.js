@@ -21,7 +21,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    if (error.response?.status === 401) {
       // Token expired or invalid
       if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
         localStorage.removeItem('token');

@@ -10,6 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useMemo } from 'react';
 import { monthlyTaxAPI, noticeAPI } from '../../services/api';
 import CustomDropdown from '../../components/CustomDropdown';
+import Loader from '../../components/Loader';
 
 
 export default function AdminUsers() {
@@ -300,7 +301,7 @@ export default function AdminUsers() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {loading ? (
-                  <tr><td colSpan={5} className="px-6 py-20 text-center"><div className="animate-pulse text-saffron-500 font-extrabold tracking-[0.3em] uppercase">{t('adminPanel.users.syncing')}</div></td></tr>
+                  <tr><td colSpan={5} className="px-6 py-20 text-center flex justify-center items-center"><Loader message={t('adminPanel.users.syncing')} /></td></tr>
                 ) : users.length === 0 ? (
                   <tr><td colSpan={5} className="px-6 py-20 text-center text-gray-300 italic">{t('adminPanel.users.noShopkeepers')}</td></tr>
                 ) : (
@@ -362,7 +363,7 @@ export default function AdminUsers() {
           {/* Mobile Card View */}
           <div className="md:hidden divide-y divide-gray-100">
             {loading ? (
-              <div className="px-6 py-12 text-center animate-pulse text-saffron-500 font-extrabold tracking-[0.3em] uppercase">{t('adminPanel.users.syncing')}</div>
+              <div className="px-6 py-12 text-center flex justify-center items-center"><Loader message={t('adminPanel.users.syncing')} /></div>
             ) : users.length === 0 ? (
               <div className="px-6 py-12 text-center text-gray-300 italic">{t('adminPanel.users.noShopkeepers')}</div>
             ) : (

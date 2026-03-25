@@ -8,6 +8,7 @@ import { supabase } from '../services/supabase';
 import uttarakhandData from '../data/uttarakhand';
 import OTPModal from '../components/OTPModal';
 import { motion } from 'framer-motion';
+import Loader from '../components/Loader';
 
 export default function Register() {
   const { t } = useTranslation();
@@ -31,7 +32,12 @@ export default function Register() {
 
   const blocks = form.district ? uttarakhandData[form.district] || [] : [];
 
-  const GST_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  const GST_REGEX_STRICT = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+  const formatName = (str) => {
+    if (!str) return str;
+    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
 
   const handleSendOTP = async () => {
     if (!form.mobile || form.mobile.length < 10) {
@@ -58,15 +64,26 @@ export default function Register() {
     setError('');
 
     if (step === 1) {
-      // Validate form
+      // Validate Name (No numbers)
       if (!form.username) {
         setError(t('auth.nameRequired'));
         return;
       }
-      if (!GST_REGEX.test(form.gst_id)) {
-        setError(t('auth.invalidGst'));
+      if (/\d/.test(form.username)) {
+        setError("Name should not contain numbers");
         return;
       }
+      if (form.father_name && /\d/.test(form.father_name)) {
+        setError("Father Name should not contain numbers");
+        return;
+      }
+
+      // Validate GST
+      if (form.gst_id.length !== 15 || !GST_REGEX_STRICT.test(form.gst_id)) {
+        setError("Invalid GST ID. It must be exactly 15 characters long.");
+        return;
+      }
+
       if (!form.mobile || form.mobile.length < 10) {
         setError(t('auth.mobileRequired'));
         return;
@@ -126,14 +143,14 @@ export default function Register() {
       }
 
       const res = await authAPI.register({
-        username: form.username,
+        username: formatName(form.username),
         gst_id: form.gst_id,
         mobile: form.mobile,
         password: form.password,
         district: form.district,
         block: form.block,
         business_type: form.business_type,
-        father_name: form.father_name,
+        father_name: formatName(form.father_name),
         otp: form.otp,
         photo_url
       });
@@ -231,8 +248,8 @@ export default function Register() {
                     value={form.gst_id} onChange={(e) => updateForm('gst_id', e.target.value.toUpperCase())}
                     maxLength={15} required />
                   {form.gst_id && (
-                    <p className={`text-xs mt-1 flex items-center gap-1 ${GST_REGEX.test(form.gst_id) ? 'text-forest-500' : 'text-red-400'}`}>
-                      {GST_REGEX.test(form.gst_id) ? `✓ ${t('auth.gstValid')}` : `✗ ${t('auth.gstInvalid')}`}
+                    <p className={`text-xs mt-1 flex items-center gap-1 ${GST_REGEX_STRICT.test(form.gst_id) ? 'text-forest-500' : 'text-red-400'}`}>
+                      {GST_REGEX_STRICT.test(form.gst_id) ? `✓ ${t('auth.gstValid')}` : `✗ ${t('auth.gstInvalid')}`}
                     </p>
                   )}
                 </div>
@@ -339,7 +356,12 @@ export default function Register() {
                 {!otpSent ? (
                   <button type="button" onClick={handleSendOTP} disabled={loading}
                     className="btn-saffron w-full text-lg py-3 disabled:opacity-50">
-                    {loading ? t('common.loading') : t('auth.sendOtp')}
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        {t('common.loading')}
+                      </span>
+                    ) : t('auth.sendOtp')}
                   </button>
                 ) : (
                   <>
@@ -354,7 +376,12 @@ export default function Register() {
                     </div>
                     <button type="submit" disabled={loading}
                       className="btn-forest w-full text-lg py-3 disabled:opacity-50">
-                      {loading ? t('common.loading') : t('auth.verifyOtp')}
+                      {loading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                          {t('common.loading')}
+                        </span>
+                      ) : t('auth.verifyOtp')}
                     </button>
                   </>
                 )}

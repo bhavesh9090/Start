@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authAPI } from '../services/api';
-import { FiLock, FiCheckCircle } from 'react-icons/fi';
+import { FiLock, FiCheckCircle, FiPhone } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 import OTPModal from '../components/OTPModal';
+import Loader from '../components/Loader';
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [form, setForm] = useState({ gst_id: '', mobile: '', otp: '', new_password: '' });
@@ -22,6 +25,7 @@ export default function ForgotPassword() {
     try {
       const res = await authAPI.forgotPassword({ gst_id: form.gst_id, mobile: form.mobile });
       setStep(2);
+      setOtpSent(true);
       if (res.data.debug_otp) {
         setOtpModal({ isOpen: true, otp: res.data.debug_otp });
       }
@@ -57,7 +61,20 @@ export default function ForgotPassword() {
               <FiLock className="w-7 h-7 text-saffron-600" />
             </div>
             <h2 className="text-2xl font-bold text-maroon-500">{t('auth.resetPassword')}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t('nav.zilaPanchayat')}</p>
           </div>
+
+          {!success && (
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+                step >= 1 ? 'bg-gradient-to-br from-saffron-400 to-saffron-600 text-white' : 'bg-gray-200 text-gray-500'
+              }`}>1</div>
+              <div className={`w-16 h-1 rounded-full ${step >= 2 ? 'bg-saffron-500' : 'bg-gray-200'}`}></div>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+                step >= 2 ? 'bg-gradient-to-br from-saffron-400 to-saffron-600 text-white' : 'bg-gray-200 text-gray-500'
+              }`}>2</div>
+            </div>
+          )}
 
           {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">{error}</div>}
           {success && (
@@ -81,17 +98,35 @@ export default function ForgotPassword() {
                   value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value})} required />
               </div>
               <button type="submit" disabled={loading} className="btn-saffron w-full disabled:opacity-50">
-                {loading ? t('common.loading') : t('auth.sendOtp')}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    {t('common.loading')}
+                  </span>
+                ) : t('auth.sendOtp')}
               </button>
             </form>
           )}
 
           {!success && step === 2 && (
             <form onSubmit={handleReset} className="space-y-4">
+              <div className="text-center p-6 bg-gradient-to-br from-saffron-50 to-forest-50 rounded-xl mb-4">
+                <FiPhone className="w-10 h-10 text-saffron-500 mx-auto mb-3" />
+                <p className="text-sm text-gray-600">{t('auth.otpSentTo')}</p>
+                <p className="text-lg font-bold text-gray-800 mt-1">+91 {form.mobile}</p>
+              </div>
+
+              {otpSent && (
+                <div className="flex items-center gap-2 text-forest-600 text-sm mb-3 p-3 bg-forest-50 rounded-xl">
+                  <FiCheckCircle className="w-5 h-5" /> {t('auth.otpSent')}
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('auth.otp')}</label>
-                <input type="text" className="input-field text-center text-lg tracking-widest" maxLength={6}
-                  value={form.otp} onChange={(e) => setForm({...form, otp: e.target.value})} required />
+                <input type="text" className="input-field text-center text-2xl tracking-[0.5em] font-mono" maxLength={6}
+                  placeholder={t('auth.otpPlaceholder')}
+                  value={form.otp} onChange={(e) => setForm({...form, otp: e.target.value.replace(/\D/g, '')})} required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('auth.newPassword')}</label>
@@ -112,7 +147,17 @@ export default function ForgotPassword() {
                 </div>
               </div>
               <button type="submit" disabled={loading} className="btn-forest w-full disabled:opacity-50">
-                {loading ? t('common.loading') : t('auth.resetPassword')}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    {t('common.loading')}
+                  </span>
+                ) : t('auth.resetPassword')}
+              </button>
+
+              <button type="button" onClick={() => { setStep(1); setOtpSent(false); }}
+                className="w-full text-center text-sm text-gray-500 hover:text-saffron-600 mt-3 py-2 transition-colors">
+                ← {t('auth.backToForm')}
               </button>
             </form>
           )}

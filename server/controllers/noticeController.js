@@ -4,31 +4,97 @@ const { logAudit } = require('../utils/audit');
 // ==================== CREATE NOTICE ====================
 const createNotice = async (req, res) => {
   try {
-    const { title, message, user_id } = req.body;
+    const { title, message, user_id, type } = req.body;
 
     if (!title || !message) {
       return res.status(400).json({ error: 'Title and message required' });
     }
 
-    // Strict District Lock: Admin can only send to their own district
     const district_id = req.user.district_id;
     if (!district_id) {
       return res.status(403).json({ error: 'No district assigned to admin' });
     }
 
+    // 1. Create the notice
     const { data: notice, error } = await supabase
       .from('notices')
       .insert({
         title,
         message,
-        district_id: user_id ? null : district_id, // If personal notice, don't broadcast to district
-        user_id: user_id || null, // Optional personal targeting
+        district_id: user_id ? null : district_id,
+        user_id: user_id || null,
         created_by: req.user.id,
+        type: type || 'reminder'
       })
       .select()
       .single();
 
     if (error) throw error;
+
+    // 2. SYNC: Create notifications for users
+    try {
+      if (user_id) {
+        // Individual notice
+        await supabase.from('notifications').insert({
+          user_id,
+          title: `Personal Notice: ${title}`,
+          message: message.substring(0, 100),
+          type: 'info'
+        });
+        
+        // Cleanup: Keep only latest 4 for this user
+        const { data: toDelete } = await supabase
+          .from('notifications')
+          .select('id')
+          .eq('user_id', user_id)
+          .order('created_at', { ascending: false })
+          .range(4, 50);
+        if (toDelete && toDelete.length > 0) {
+          await supabase.from('notifications').delete().in('id', toDelete.map(d => d.id));
+        }
+      } else {
+        // District-wide notice
+        const { data: users } = await supabase
+          .from('users')
+          .select('id')
+          .eq('district_id', district_id);
+
+        if (users && users.length > 0) {
+          const bulkNotifs = users.map(u => ({
+            user_id: u.id,
+            title: `Announcement: ${title}`,
+            message: message.substring(0, 100),
+            type: 'info'
+          }));
+          await supabase.from('notifications').insert(bulkNotifs);
+
+          // Cleanup: Keep only latest 4 for every user in district
+          // This is a bit heavy, so we do it in a safer way
+          const { data: oldNotifs } = await supabase
+            .from('notifications')
+            .select('id, user_id')
+            .in('user_id', users.map(u => u.id))
+            .order('created_at', { ascending: false });
+          
+          if (oldNotifs) {
+            const userCounts = {};
+            const itemIdsToDelete = [];
+            oldNotifs.forEach(n => {
+              userCounts[n.user_id] = (userCounts[n.user_id] || 0) + 1;
+              if (userCounts[n.user_id] > 4) {
+                itemIdsToDelete.push(n.id);
+              }
+            });
+            if (itemIdsToDelete.length > 0) {
+              await supabase.from('notifications').delete().in('id', itemIdsToDelete);
+            }
+          }
+        }
+      }
+    } catch (syncErr) {
+      console.error('Notification sync failed:', syncErr);
+      // Don't fail the notice creation request
+    }
 
     await logAudit({
       actorId: req.user.id,
@@ -91,9 +157,9 @@ const deleteNotice = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
-    const isAdmin = req.user.role === 'admin';
+    const userRole = req.user.role;
+    const isAdmin = ['super_admin', 'district_admin'].includes(userRole);
 
-    // Fetch notice first to check ownership
     const { data: notice, error: fetchError } = await supabase
       .from('notices')
       .select('*')
@@ -104,12 +170,11 @@ const deleteNotice = async (req, res) => {
       return res.status(404).json({ error: 'Notice not found' });
     }
 
-    // Authorization: Admin can delete any notice in their district. 
-    // User can only delete notice targeted at them.
     const isOwner = notice.user_id === userId;
-    const isDistrictAdmin = isAdmin && notice.district_id === req.user.district_id;
+    const isDistrictMatch = notice.district_id === req.user.district_id;
+    const isAuthorized = isOwner || isDistrictMatch || isAdmin;
 
-    if (!isOwner && !isDistrictAdmin) {
+    if (!isAuthorized) {
       return res.status(403).json({ error: 'Unauthorized to delete this notice' });
     }
 

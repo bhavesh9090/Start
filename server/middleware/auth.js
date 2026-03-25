@@ -13,6 +13,8 @@ const authenticateToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+    // Sync debug log
+    console.log(`[AUTH-DEBUG] User authenticated:`, { id: decoded.id, role: decoded.role, district_id: decoded.district_id });
     next();
   } catch (err) {
     return res.status(403).json({ error: 'Invalid or expired token' });

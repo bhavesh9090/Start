@@ -561,3 +561,12 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .animate-fade-in {
   animation: fadeIn 0.3s ease-in forwards;
 }
+@keyframes waterFill {
+  0% { height: 0%; opacity: 0.3; }
+  50% { height: 100%; opacity: 1; }
+  100% { height: 0%; opacity: 0.3; }
+}
+
+.animate-water-fill {
+  animation: waterFill 3s ease-in-out infinite;
+}

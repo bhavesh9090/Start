@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { monthlyTaxAPI } from '../../services/api';
 import { FiDollarSign, FiCheckCircle, FiAlertCircle, FiAlertTriangle, FiBarChart2, FiTrendingUp } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import Loader from '../../components/Loader';
 
 export default function UserDashboard() {
   const { t, i18n } = useTranslation();
@@ -75,16 +76,30 @@ export default function UserDashboard() {
     { name: 'Pending Tax', value: pendingTax, color: 'url(#colorPending)' }
   ].filter(d => d.value > 0);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center pt-16 mountain-bg"><p className="text-saffron-500 text-lg">{t('common.loading')}</p></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center pt-16 mountain-bg">
+      <Loader message={t('common.loading')} />
+    </div>
+  );
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 mountain-bg">
       <div className="max-w-6xl mx-auto">
         {/* Welcome */}
-        <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-maroon-500">{t('dashboard.welcome')}, {user?.username || user?.gst_id}!</h1>
-            <p className="text-gray-500 mt-1">GST: {user?.gst_id} • {user?.district}</p>
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div className="flex items-center gap-4">
+            {user?.photo_url && (
+              <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-white flex-shrink-0">
+                <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
+              </div>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold text-maroon-500">{t('dashboard.welcome')}, {user?.username || user?.gst_id}!</h1>
+              <p className="text-gray-500 mt-1 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-forest-500"></span>
+                GST: {user?.gst_id} • {user?.district}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-saffron-100">
             <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{t('tax.year')}</span>

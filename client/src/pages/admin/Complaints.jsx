@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { supabase } from '../../services/supabase';
 import CustomDropdown from '../../components/CustomDropdown';
+import Loader from '../../components/Loader';
 
 export default function AdminComplaints() {
   const { t } = useTranslation();
@@ -132,7 +133,9 @@ export default function AdminComplaints() {
 
         <div className="space-y-4">
           {loading ? (
-            <p className="text-center text-gray-400 py-8">{t('common.loading')}</p>
+            <div className="flex justify-center items-center py-12">
+              <Loader message={t('common.loading')} />
+            </div>
           ) : complaints.length === 0 ? (
             <div className="glass-card p-8 text-center">
               <FiMessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />

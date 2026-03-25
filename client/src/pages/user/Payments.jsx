@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { monthlyTaxAPI } from '../../services/api';
 import { FiDownload, FiFileText } from 'react-icons/fi';
 import { useToast } from '../../context/ToastContext';
+import Loader from '../../components/Loader';
 
 export default function Payments() {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export default function Payments() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {loading ? (
-                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-400 font-bold animate-pulse uppercase tracking-[0.2em]">{t('common.loading')}</td></tr>
+                  <tr><td colSpan={6} className="px-6 py-20 text-center flex justify-center items-center"><Loader message={t('common.loading')} /></td></tr>
                 ) : payments.length === 0 ? (
                   <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300 italic">{t('admin.noData')}</td></tr>
                 ) : (
@@ -94,7 +95,7 @@ export default function Payments() {
           {/* Mobile Card View */}
           <div className="md:hidden divide-y divide-gray-100">
             {loading ? (
-              <div className="p-12 text-center text-gray-400 font-bold animate-pulse uppercase tracking-[0.2em]">{t('common.loading')}</div>
+              <div className="p-20 text-center flex justify-center items-center"><Loader message={t('common.loading')} /></div>
             ) : payments.length === 0 ? (
               <div className="p-12 text-center text-gray-300 italic">{t('admin.noData')}</div>
             ) : (

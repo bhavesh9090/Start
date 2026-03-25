@@ -40,12 +40,51 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    if (user && !isAdmin()) {
-      adminAPI.getNotifications().then(res => {
-        setNotifications(res.data.notifications?.filter(n => !n.is_read) || []);
-      }).catch(() => {});
-    }
-  }, [user, location.pathname]);
+    const fetchNotifs = async () => {
+      if (!user || isAdmin()) return;
+      
+      let dbNotifs = [];
+      let notices = [];
+
+      // 1. Fetch real notifications
+      try {
+        const res = await adminAPI.getNotifications();
+        dbNotifs = res.data.notifications || [];
+      } catch (e) { /* ignore */ }
+
+      // 2. Fetch notices
+      try {
+        const res = await noticeAPI.getUserNotices();
+        notices = res.data.notices || [];
+      } catch (e) { /* ignore */ }
+
+      // 3. Map notices to notification format
+      const noticeNotifs = notices.map(n => ({
+        id: `notice-${n.id}`, 
+        title: n.title,
+        message: n.message,
+        created_at: n.created_at,
+        is_read: false,
+        type: 'info'
+      }));
+
+      // 4. Combine and deduplicate
+      const combined = [...dbNotifs];
+      noticeNotifs.forEach(nn => {
+        if (!combined.some(cn => cn.title === nn.title)) {
+          combined.push(nn);
+        }
+      });
+
+      // Sort by date (newest first) and limit to 4
+      const sorted = combined.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      setNotifications(sorted.slice(0, 4));
+    };
+
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 30.2 * 1000); // 30.2s polling
+    return () => clearInterval(interval);
+  }, [user]);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'hi' : 'en';
@@ -57,6 +96,27 @@ export default function Navbar() {
     logout();
     navigate('/');
     setMenuOpen(false);
+  };
+
+  const markAllAsRead = async () => {
+    const unread = notifications.filter(n => !n.is_read);
+    if (unread.length === 0) return;
+    try {
+      await Promise.all(unread.map(n => adminAPI.markNotificationRead(n.id)));
+      // Update local state without clearing, just marking as read
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    } catch (err) {
+      console.error('Failed to mark notifications as read:', err);
+    }
+  };
+
+  const toggleNotif = () => {
+    const newState = !showNotif;
+    setShowNotif(newState);
+    if (newState) {
+      setShowProfile(false);
+      markAllAsRead();
+    }
   };
 
   const isLanding = location.pathname === '/';
@@ -146,12 +206,12 @@ export default function Navbar() {
             {/* Notifications */}
             {user && !isAdmin() && (
               <div className="relative" ref={notifRef}>
-                <button onClick={() => { setShowNotif(!showNotif); setShowProfile(false); }}
+                <button onClick={toggleNotif}
                   className="relative p-2 text-gray-600 hover:text-saffron-600 hover:bg-saffron-50 rounded-lg transition-colors">
                   <FiBell className="w-5 h-5" />
-                  {notifications.length > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-maroon-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
-                      {notifications.length}
+                  {notifications.filter(n => !n.is_read).length > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-saffron-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse shadow-md">
+                      {notifications.filter(n => !n.is_read).length}
                     </span>
                   )}
                 </button>
@@ -163,10 +223,13 @@ export default function Navbar() {
                     {notifications.length === 0 ? (
                       <p className="p-4 text-sm text-gray-500">{t('dashboard.noNotifications')}</p>
                     ) : (
-                      notifications.slice(0, 5).map((n) => (
-                        <div key={n.id} className="p-3 border-b border-gray-50 hover:bg-saffron-50 transition-colors">
-                          <p className="text-sm font-medium text-gray-800">{n.title}</p>
-                          <p className="text-xs text-gray-500 mt-1">{n.message}</p>
+                      notifications.slice(0, 10).map((n) => (
+                        <div key={n.id} className={`p-3 border-b border-gray-50 hover:bg-saffron-50 transition-colors relative ${!n.is_read ? 'bg-saffron-50/30' : ''}`}>
+                          <div className="flex justify-between items-start gap-2">
+                            <p className={`text-sm font-medium ${!n.is_read ? 'text-gray-900' : 'text-gray-800'}`}>{n.title}</p>
+                            {!n.is_read && <span className="w-2 h-2 bg-saffron-500 rounded-full mt-1 flex-shrink-0 animate-bounce"></span>}
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{n.message}</p>
                         </div>
                       ))
                     )}
@@ -188,10 +251,18 @@ export default function Navbar() {
                 </Link>
               </div>
             ) : (
-                <div className="relative" ref={profileRef}>
+                <div className="relative flex items-center gap-2.5" ref={profileRef}>
+                  <div className="hidden sm:flex flex-col items-end leading-none">
+                    <span className="text-[13px] font-bold text-gray-800">{user.username}</span>
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5">
+                      {isAdmin() 
+                        ? (user.role === 'super_admin' ? 'Super Admin' : 'District Admin') 
+                        : (user.gst_id ? user.gst_id : 'User')}
+                    </span>
+                  </div>
                   <button onClick={() => { setShowProfile(!showProfile); setShowNotif(false); }}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all overflow-hidden ${
-                  showProfile ? 'bg-saffron-100 ring-2 ring-saffron-500' : 'bg-gray-100 hover:bg-gray-200'
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all overflow-hidden ${
+                  showProfile ? 'bg-saffron-100 ring-2 ring-saffron-500 shadow-inner' : 'bg-gray-100 hover:bg-gray-200 shadow-sm'
                 }`}>
                 {user.photo_url ? (
                   <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
@@ -255,8 +326,28 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-3 px-4 py-4 bg-gray-50/50 rounded-xl mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-white shadow-sm overflow-hidden flex-shrink-0">
+                    {user.photo_url ? (
+                      <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-saffron-50">
+                        <FiUser className="w-5 h-5 text-saffron-500" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold text-gray-900 truncate">{user.username}</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest truncate">
+                      {isAdmin() 
+                        ? (user.role === 'super_admin' ? 'Super Admin' : 'District Admin') 
+                        : (user.gst_id ? user.gst_id : 'User')}
+                    </span>
+                  </div>
+                </div>
                 <button onClick={handleLogout}
-                  className="w-full px-4 py-2.5 text-sm font-medium text-maroon-500 text-left rounded-lg hover:bg-maroon-50">
+                  className="w-full px-4 py-2.5 text-sm font-medium text-maroon-500 text-left rounded-lg hover:bg-maroon-50 flex items-center gap-2">
+                  <FiLogOut className="w-4 h-4" />
                   {t('nav.logout')}
                 </button>
               </div>

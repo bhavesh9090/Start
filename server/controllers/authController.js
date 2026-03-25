@@ -21,10 +21,29 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ error: 'All required fields must be provided' });
     }
 
-    // Validate GST format
-    if (!GST_REGEX.test(gst_id)) {
-      return res.status(400).json({ error: 'Invalid GST ID format' });
+    // Validate GST format and length (exactly 15)
+    if (gst_id.length !== 15 || !GST_REGEX.test(gst_id)) {
+      return res.status(400).json({ error: 'Invalid GST ID. It must be exactly 15 characters long.' });
     }
+
+    // Validate Name (No numbers)
+    if (/\d/.test(username)) {
+      return res.status(400).json({ error: 'Name should not contain numbers' });
+    }
+
+    // Validate Father Name (No numbers)
+    if (father_name && /\d/.test(father_name)) {
+      return res.status(400).json({ error: 'Father Name should not contain numbers' });
+    }
+
+    // Auto-capitalize names (Title Case)
+    const formatName = (str) => {
+      if (!str) return str;
+      return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    };
+
+    const formattedUsername = formatName(username);
+    const formattedFatherName = formatName(father_name);
 
     // Verify OTP
     if (!otp || !verifyOTP(mobile, otp)) {
@@ -66,7 +85,7 @@ const registerUser = async (req, res) => {
     const { data: user, error } = await supabase
       .from('users')
       .insert({
-        username,
+        username: formattedUsername,
         gst_id,
         mobile,
         password_hash,
@@ -74,7 +93,7 @@ const registerUser = async (req, res) => {
         district_id: distData?.id,
         block,
         business_type,
-        father_name,
+        father_name: formattedFatherName,
         photo_url,
       })
       .select()
@@ -308,6 +327,7 @@ const loginAdmin = async (req, res) => {
         role: admin.role,
         district: admin.districts?.name,
         district_id: admin.district_id,
+        photo_url: admin.photo_url,
       },
     });
 
@@ -407,7 +427,7 @@ const updateProfile = async (req, res) => {
       .from('users')
       .update({ username, mobile, father_name, photo_url })
       .eq('id', userId)
-      .select('id, username, gst_id, mobile, district, district_id, block, business_type, father_name, photo_url, created_at, status')
+      .select('id, username, gst_id, mobile, district, district_id, block, business_type, father_name, photo_url, created_at')
       .single();
 
     if (error) throw error;

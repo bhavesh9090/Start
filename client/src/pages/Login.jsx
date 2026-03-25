@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
 import { FiUser, FiLock, FiShield } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import Loader from '../components/Loader';
 
 export default function Login() {
   const { t } = useTranslation();

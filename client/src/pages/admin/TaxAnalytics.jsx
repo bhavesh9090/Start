@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../services/supabase';
+import Loader from '../../components/Loader';
 
 const COLORS = ['#800000', '#D97706', '#FFA500', '#B22222', '#CC7722', '#8B0000'];
 
@@ -51,8 +52,8 @@ export default function TaxAnalytics() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-white/50 backdrop-blur-sm">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-maroon-500"></div>
+    <div className="min-h-screen flex items-center justify-center mountain-bg">
+      <Loader size="large" message={t('common.loading')} />
     </div>
   );
 
@@ -69,16 +70,16 @@ export default function TaxAnalytics() {
     switch (activeTab) {
       case 'year':
         return (
-          <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
-          <div className="lg:col-span-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-in-up">
+          <div className="lg:col-span-2 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
             <h3 className="text-lg font-black text-gray-800 mb-6 sm:mb-8 flex items-center gap-2">
                {t('analytics.yearCollection')}
             </h3>
-            <div className="h-[300px] md:h-[400px]">
+            <div className="h-[250px] sm:h-[300px] md:h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={data.yearWise}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
+                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600 }} minTickGap={20} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
                     <Tooltip 
                       cursor={{ stroke: '#800000', strokeWidth: 1 }}
@@ -95,9 +96,9 @@ export default function TaxAnalytics() {
                 <table className="w-full text-left">
                   <thead className="bg-[#FAF9F6]">
                     <tr>
-                      <th className="px-4 py-3 text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelYear')}</th>
-                      <th className="px-4 py-3 text-right text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelCollection')}</th>
-                      <th className="px-4 py-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('analytics.growth')}</th>
+                      <th className="px-2 sm:px-4 py-3 text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelYear')}</th>
+                      <th className="px-2 sm:px-4 py-3 text-right text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelCollection')}</th>
+                      <th className="px-2 sm:px-4 py-3 text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('analytics.growth')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
@@ -121,16 +122,16 @@ export default function TaxAnalytics() {
 
       case 'month':
         return (
-          <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
-          <div className="lg:col-span-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-gray-100">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-in-up">
+          <div className="lg:col-span-2 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 shadow-sm border border-gray-100">
             <h3 className="text-lg font-black text-gray-800 mb-6 sm:mb-8 flex items-center gap-2">
                {t('analytics.monthPerformance')} 
             </h3>
-            <div className="h-[300px] md:h-[400px]">
+            <div className="h-[250px] sm:h-[300px] md:h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data.monthWise}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 9, fontWeight: 600 }} minTickGap={10} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
                     <Tooltip cursor={{ fill: '#f8fafc' }} />
                     <Bar dataKey="collection" fill="#D97706" radius={[10, 10, 0, 0]} barSize={25} />
@@ -163,10 +164,10 @@ export default function TaxAnalytics() {
 
       case 'block':
         return (
-          <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
-          <div className="lg:col-span-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-in-up">
+          <div className="lg:col-span-2 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
             <h3 className="text-lg font-black text-gray-800 mb-6 sm:mb-8">{t('analytics.blockEfficiency')}</h3>
-            <div className="h-[300px] md:h-[400px]">
+            <div className="h-[250px] sm:h-[300px] md:h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data.blockWise} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -205,10 +206,10 @@ export default function TaxAnalytics() {
 
       case 'type':
         return (
-          <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
-          <div className="lg:col-span-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-in-up">
+          <div className="lg:col-span-2 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
             <h3 className="text-lg font-black text-gray-800 mb-6 sm:mb-8">{t('analytics.businessSector')}</h3>
-            <div className="h-[300px] md:h-[400px]">
+            <div className="h-[250px] sm:h-[300px] md:h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -225,7 +226,7 @@ export default function TaxAnalytics() {
                       ))}
                     </Pie>
                     <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '20px' }} />
-                    <Legend verticalAlign="bottom" height={36} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '10px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -253,7 +254,7 @@ export default function TaxAnalytics() {
   };
 
   return (
-    <div className="min-h-screen mountain-bg pt-12 pb-12 px-4 md:px-8 animate-fade-in">
+    <div className="min-h-screen mountain-bg pt-8 sm:pt-12 pb-8 sm:pb-12 px-2 sm:px-4 md:px-8 animate-fade-in overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 sm:mb-12">
           <div className="animate-slide-in-left">

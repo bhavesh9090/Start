@@ -24,6 +24,7 @@ import lalitImg from '../assets/lalit.jpeg';
 import sahilImg from '../assets/sahil.jpeg';
 import rajaImg from '../assets/raja.jpeg';
 import gauravImg from '../assets/gaurav.jpeg';
+import Loader from '../components/Loader';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -590,7 +591,7 @@ function ComplaintSection({ t }) {
             whileTap={{ scale: 0.98 }}
           >
             {loading ? (
-              <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <Loader size="small" />
             ) : (
               <>
                 <FiSend className="w-5 h-5" />

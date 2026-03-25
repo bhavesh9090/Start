@@ -1,19 +1,31 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../services/supabase';
 import { monthlyTaxAPI } from '../../services/api';
-import { useTranslation } from 'react-i18next';
-import { FiActivity, FiDollarSign, FiInfo, FiTrendingUp } from 'react-icons/fi';
+import { FiActivity, FiDollarSign, FiInfo, FiTrendingUp, FiFilter, FiX, FiMap, FiCalendar, FiCheckCircle, FiAlertCircle, FiUser } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
+import uttarakhandData from '../../data/uttarakhand';
+import CustomDropdown from '../../components/CustomDropdown';
 
 export default function AdminMonthlyTaxes() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    block: '',
+    status: '',
+    month: '',
+    year: ''
+  });
+  const [showFilters, setShowFilters] = useState(true);
 
   useEffect(() => {
     fetchPayments();
+  }, [filters]);
 
-    // Set up Supabase Realtime Subscription
+  useEffect(() => {
     const subscription = supabase
       .channel('public:monthly_payments')
       .on(
@@ -36,7 +48,7 @@ export default function AdminMonthlyTaxes() {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const res = await monthlyTaxAPI.getAllPayments();
+      const res = await monthlyTaxAPI.getAllPayments(filters);
       setPayments(res.data.payments || []);
     } catch (error) {
       console.error('Error fetching payments:', error);
@@ -45,22 +57,123 @@ export default function AdminMonthlyTaxes() {
     }
   };
 
+  const resetFilters = () => {
+    setFilters({
+      block: '',
+      status: '',
+      month: '',
+      year: ''
+    });
+  };
+
   return (
     <div className="min-h-screen mountain-bg pt-20 pb-10 px-4 animate-fade-in">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="animate-slide-in-left">
-            <h1 className="text-3xl font-bold text-maroon-500 flex items-center gap-2">
+            <h1 className="text-3xl font-extrabold text-maroon-500 flex items-center gap-2">
               <FiTrendingUp className="text-saffron-500 interactive-icon" /> {t('adminPanel.monthlyTax.streamsTitle')}
             </h1>
             <p className="text-gray-600 text-sm mt-1">{t('adminPanel.monthlyTax.streamsDesc')}</p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-saffron-50 rounded-lg text-saffron-600 text-[10px] font-bold border border-saffron-100 animate-fade-in delay-300">
-            <FiActivity className="animate-pulse" /> LIVE STREAMING
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${showFilters ? 'bg-maroon-500 text-white' : 'bg-white text-gray-600 border border-gray-100'}`}
+            >
+              <FiFilter /> {showFilters ? 'HIDE FILTERS' : 'SHOW FILTERS'}
+            </button>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-saffron-50 rounded-lg text-saffron-600 text-[10px] font-bold border border-saffron-100 animate-fade-in delay-300">
+              <FiActivity className="animate-pulse" /> LIVE STREAMING
+            </div>
           </div>
         </div>
 
-        <div className="modern-card overflow-hidden border-0 shadow-2xl animate-fade-in-up delay-100">
+        {/* Filters Bar */}
+        <AnimatePresence mode="wait">
+          {showFilters && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginBottom: 40 }}
+              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+              className="glass-card overflow-visible border-0 shadow-xl relative z-[100]"
+            >
+              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('adminPanel.users.assignedBlock')}</label>
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: 'All Blocks' },
+                      ...(uttarakhandData[user?.district] || []).map(b => ({ value: b, label: b }))
+                    ]}
+                    value={filters.block}
+                    onChange={(val) => setFilters({ ...filters, block: val })}
+                    icon={FiMap}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('adminPanel.users.table.status')}</label>
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: 'All Status' },
+                      { value: 'PAID', label: 'Paid' },
+                      { value: 'PENDING', label: 'Unpaid' }
+                    ]}
+                    value={filters.status}
+                    onChange={(val) => setFilters({ ...filters, status: val })}
+                    icon={FiCheckCircle}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('tax.year')}</label>
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: 'All Years' },
+                      { value: '2026', label: '2026' },
+                      { value: '2025', label: '2025' },
+                      { value: '2024', label: '2024' }
+                    ]}
+                    value={filters.year}
+                    onChange={(val) => setFilters({ ...filters, year: val })}
+                    icon={FiCalendar}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('tax.month')}</label>
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: 'All Months' },
+                      ...[...Array(12)].map((_, i) => ({
+                        value: (i + 1).toString(),
+                        label: new Date(2024, i).toLocaleString('default', { month: 'long' })
+                      }))
+                    ]}
+                    value={filters.month}
+                    onChange={(val) => setFilters({ ...filters, month: val })}
+                    icon={FiCalendar}
+                    className="w-full"
+                  />
+                </div>
+
+                <button 
+                  onClick={resetFilters}
+                  className="px-4 py-3.5 bg-gray-100 text-gray-400 hover:text-maroon-600 hover:bg-maroon-50 rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <FiX className="w-4 h-4" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Reset</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="modern-card overflow-hidden border-0 shadow-2xl animate-fade-in-up clear-both relative z-10">
           {/* Desktop Table View */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -68,6 +181,7 @@ export default function AdminMonthlyTaxes() {
                 <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-100 uppercase tracking-tighter">
                   <th className="p-4 text-[10px] font-black text-gray-500">{t('adminPanel.users.table.profile')}</th>
                   <th className="p-4 text-[10px] font-black text-gray-500">{t('adminPanel.labels.gstId')}</th>
+                  <th className="p-4 text-[10px] font-black text-gray-500">Block</th>
                   <th className="p-4 text-[10px] font-black text-gray-500">{t('adminPanel.labels.monthYear')}</th>
                   <th className="p-4 text-[10px] font-black text-gray-500">{t('tax.amount')}</th>
                   <th className="p-4 text-[10px] font-black text-gray-500">{t('tax.penalty')}</th>
@@ -93,6 +207,7 @@ export default function AdminMonthlyTaxes() {
                     >
                       <td className="p-4 text-sm font-black text-gray-900 group-hover:text-maroon-600">{p.users?.username || 'Unknown'}</td>
                       <td className="p-4 text-xs text-gray-500 font-mono tracking-tight">{p.users?.gst_id || 'N/A'}</td>
+                      <td className="p-4 text-sm text-gray-600 font-bold">{p.users?.block || '—'}</td>
                       <td className="p-4 text-sm text-gray-700">{`${p.month} / ${p.year}`}</td>
                       <td className="p-4 text-sm font-black text-gray-900">₹{p.amount}</td>
                       <td className="p-4 text-sm text-red-500">{Number(p.penalty) > 0 ? `₹${p.penalty}` : '—'}</td>
@@ -135,6 +250,10 @@ export default function AdminMonthlyTaxes() {
                   <div className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100 hover:border-saffron-200 transition-colors">
                     <div className="flex justify-between items-end mb-3">
                       <div>
+                        <p className="text-[8px] font-black text-gray-500 uppercase mb-1">Block</p>
+                        <p className="text-xs font-bold text-gray-800">{p.users?.block || '—'}</p>
+                      </div>
+                      <div className="text-right">
                         <p className="text-[8px] font-black text-gray-500 uppercase mb-1">{t('adminPanel.labels.monthYear')}</p>
                         <p className="text-sm font-bold text-gray-700">{`${p.month} / ${p.year}`}</p>
                       </div>

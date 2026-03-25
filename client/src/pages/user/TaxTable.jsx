@@ -6,6 +6,7 @@ import { supabase } from '../../services/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { FiDownload, FiFilter, FiCreditCard } from 'react-icons/fi';
 import { useToast } from '../../context/ToastContext';
+import Loader from '../../components/Loader';
 
 const TAX_AMOUNTS = {
   'Grocery & Retail': 200,
@@ -184,7 +185,7 @@ export default function TaxTable() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {loading ? (
-                  <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-400 font-bold animate-pulse uppercase tracking-[0.2em]">{t('common.loading')}</td></tr>
+                  <tr><td colSpan={7} className="px-6 py-20 text-center flex justify-center items-center"><Loader message={t('common.loading')} /></td></tr>
                 ) : tableTaxes.length === 0 ? (
                   <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-300 italic">{t('admin.noData')}</td></tr>
                 ) : (
@@ -211,7 +212,7 @@ export default function TaxTable() {
           {/* Mobile Card View */}
           <div className="md:hidden divide-y divide-gray-100">
             {loading ? (
-              <div className="p-12 text-center text-gray-400 font-bold animate-pulse uppercase tracking-[0.2em]">{t('common.loading')}</div>
+              <div className="p-20 text-center flex justify-center items-center"><Loader message={t('common.loading')} /></div>
             ) : tableTaxes.length === 0 ? (
               <div className="p-12 text-center text-gray-300 italic">{t('admin.noData')}</div>
             ) : (

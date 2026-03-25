@@ -5,6 +5,7 @@ import { adminAPI } from '../../services/api';
 import { FiActivity, FiFilter, FiInfo, FiUser, FiSettings } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import CustomDropdown from '../../components/CustomDropdown';
+import Loader from '../../components/Loader';
 
 export default function AuditLogs() {
   const { t } = useTranslation();
@@ -99,7 +100,7 @@ export default function AuditLogs() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {loading ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">{t('common.loading')}</td></tr>
+                  <tr><td colSpan={6} className="px-4 py-8 text-center flex justify-center items-center"><Loader message={t('common.loading')} /></td></tr>
                 ) : logs.length === 0 ? (
                   <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">{t('admin.noData')}</td></tr>
                 ) : (
@@ -134,7 +135,7 @@ export default function AuditLogs() {
         {/* Mobile Card View */}
         <div className="md:hidden space-y-4">
           {loading ? (
-            <div className="p-10 text-center text-gray-400 bg-white rounded-3xl border border-dashed">{t('common.loading')}</div>
+            <div className="p-10 text-center flex justify-center items-center bg-white rounded-3xl border border-dashed"><Loader message={t('common.loading')} /></div>
           ) : logs.length === 0 ? (
             <div className="p-10 text-center text-gray-400 bg-white rounded-3xl border border-dashed">{t('admin.noData')}</div>
           ) : (

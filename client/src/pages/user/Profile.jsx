@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
 import { supabase } from '../../services/supabase';
 import { FiUser, FiMapPin, FiBriefcase, FiHash, FiPhone, FiCalendar, FiShield, FiCamera, FiEdit3, FiSave, FiX, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import Loader from '../../components/Loader';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -105,7 +106,11 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center mountain-bg"><p className="text-saffron-500 font-bold animate-pulse">{t('common.loading')}</p></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center mountain-bg">
+      <Loader />
+    </div>
+  );
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 mountain-bg">

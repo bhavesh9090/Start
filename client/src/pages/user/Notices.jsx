@@ -5,6 +5,7 @@ import { noticeAPI } from '../../services/api';
 import { FiAlertCircle, FiAlertTriangle, FiInfo, FiTrash2 } from 'react-icons/fi';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import { useAuth } from '../../context/AuthContext';
+import Loader from '../../components/Loader';
 
 export default function UserNotices() {
   const { t } = useTranslation();
@@ -35,13 +36,23 @@ export default function UserNotices() {
       setDeletingId(null);
     } catch (err) {
       console.error('Delete notice error:', err);
+      alert("Failed to delete notice. Please try again.");
+      setDeletingId(null);
     }
   };
 
-  const typeConfig = {
-    reminder: { icon: FiInfo, color: 'bg-blue-600 border-blue-700 text-white', badge: 'bg-white/20 text-white' },
-    warning: { icon: FiAlertTriangle, color: 'bg-red-600 border-red-700 text-white', badge: 'bg-white/20 text-white animate-pulse' },
-    general: { icon: FiAlertCircle, color: 'bg-saffron-600 border-saffron-700 text-white', badge: 'bg-white/20 text-white' },
+  const noticeThemes = [
+    { color: 'bg-[#991b1b] border-[#7f1d1d] text-white', badge: 'bg-white/20 text-white' }, // Maroon
+    { color: 'bg-saffron-500 border-saffron-600 text-white', badge: 'bg-white/20 text-white' }, // Saffron
+    { color: 'bg-forest-500 border-forest-600 text-white', badge: 'bg-white/20 text-white' }, // Forest
+    { color: 'bg-[#1a1a2e] border-black text-white', badge: 'bg-white/20 text-white' }, // Dark Navy
+    { color: 'bg-amber-600 border-amber-700 text-white', badge: 'bg-white/20 text-white' }, // Amber/Gold
+  ];
+
+  const typeIcons = {
+    reminder: FiInfo,
+    warning: FiAlertTriangle,
+    general: FiAlertCircle,
   };
 
   return (
@@ -50,7 +61,9 @@ export default function UserNotices() {
         <h1 className="text-3xl font-bold text-maroon-500 mb-6">{t('notice.title')}</h1>
 
         {loading ? (
-          <p className="text-center text-gray-400 py-8">{t('common.loading')}</p>
+          <div className="flex justify-center items-center py-20">
+            <Loader message={t('common.loading')} />
+          </div>
         ) : notices.length === 0 ? (
           <div className="glass-card p-8 text-center">
             <FiInfo className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -58,9 +71,9 @@ export default function UserNotices() {
           </div>
         ) : (
           <div className="space-y-4">
-            {notices.map((notice) => {
-              const cfg = typeConfig[notice.type] || typeConfig.general;
-              const Icon = cfg.icon;
+            {notices.map((notice, index) => {
+              const cfg = noticeThemes[index % noticeThemes.length];
+              const Icon = typeIcons[notice.type] || typeIcons.general;
               return (
                 <div key={notice.id} className={`p-6 rounded-2xl border shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 ${cfg.color}`}>
                   <div className="flex items-start gap-4">

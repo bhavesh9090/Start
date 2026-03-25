@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { monthlyTaxAPI } from '../../services/api';
 import { FiCheckCircle, FiCreditCard, FiAlertCircle, FiLock, FiDownload } from 'react-icons/fi';
+import Loader from '../../components/Loader';
 
 export default function MonthlyTaxPayment() {
   const { t } = useTranslation();
@@ -176,7 +177,11 @@ export default function MonthlyTaxPayment() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex text-center justify-center items-center mountain-bg text-saffron-600 font-bold dark:text-saffron-400">{t('common.loading')}</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center mountain-bg">
+      <Loader />
+    </div>
+  );
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 animate-fade-in transition-opacity duration-700 mountain-bg">

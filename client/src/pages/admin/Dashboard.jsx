@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { memo } from 'react';
 import { motion } from 'framer-motion';
+import Loader from '../../components/Loader';
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -54,8 +55,8 @@ export default function AdminDashboard() {
   };
 
   if (loading || !stats) return (
-    <div className="min-h-screen bg-cream flex items-center justify-center pt-16">
-      <p className="text-saffron-500 text-lg">{t('common.loading')}</p>
+    <div className="min-h-screen flex items-center justify-center pt-16 mountain-bg">
+      <Loader message={t('common.loading')} />
     </div>
   );
 
@@ -77,6 +78,7 @@ export default function AdminDashboard() {
           <div className="animate-slide-in-left">
             <h1 className="text-4xl font-black text-maroon-500 tracking-tight mb-2">
               {t('notice.adminDashboard')}
+              {user?.username && <span className="text-gray-400 font-normal">, {user.username}</span>}
             </h1>
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-saffron-100 text-saffron-700 text-[10px] font-black uppercase rounded-lg border border-saffron-200">
