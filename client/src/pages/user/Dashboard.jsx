@@ -178,7 +178,7 @@ export default function UserDashboard() {
             <h2 className="text-lg font-semibold text-gray-800 mb-4 sm:mb-6 w-full flex items-center gap-2">
                <FiBarChart2 className="text-forest-500" /> {t('payment.status')} {t('tax.breakdown')}
             </h2>
-            {totalTax === 0 ? (
+            {totals.total === 0 ? (
                <p className="text-gray-400 text-sm">{t('dashboard.noPaidData')}</p>
             ) : (
                <div className="w-full h-56 sm:h-64">
