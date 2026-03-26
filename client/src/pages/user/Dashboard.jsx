@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
@@ -27,7 +27,6 @@ export default function UserDashboard() {
     const update = () => {
       const w = window.innerWidth;
       setIsMobile(w < 640);
-      // For narrower PC/tablet widths, still treat as compact so ticks don't overlap.
       setIsCompactChart(w < 980);
     };
     update();
@@ -48,7 +47,7 @@ export default function UserDashboard() {
   };
 
 
-  const filteredTaxes = taxes.filter(t => t.year === selectedYear);
+  const filteredTaxes = useMemo(() => taxes.filter(t => t.year === selectedYear), [taxes, selectedYear]);
 
   // Helper: is a given month/year before registration?
   const isBeforeReg = (year, month) => {
@@ -57,37 +56,41 @@ export default function UserDashboard() {
     return false;
   };
 
-  const totalTax = filteredTaxes.reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
-  const paidTax = filteredTaxes.filter(t => t.status === 'PAID').reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
-  const pendingTax = filteredTaxes.filter(t => t.status === 'PENDING').reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
-  const totalPenalty = filteredTaxes.reduce((sum, tax) => sum + Number(tax.penalty || 0), 0);
+  const totals = useMemo(() => {
+    const total = filteredTaxes.reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
+    const paid = filteredTaxes.filter(t => t.status === 'PAID').reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
+    const pending = filteredTaxes.filter(t => t.status === 'PENDING').reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
+    const penalty = filteredTaxes.reduce((sum, tax) => sum + Number(tax.penalty || 0), 0);
+    return { total, paid, pending, penalty };
+  }, [filteredTaxes]);
 
-  const stats = [
-    { label: t('dashboard.totalTax'), value: `₹${totalTax}`, icon: FiDollarSign, color: 'from-saffron-400 to-saffron-600', bg: 'bg-saffron-50' },
-    { label: t('dashboard.paidTax'), value: `₹${paidTax}`, icon: FiCheckCircle, color: 'from-forest-400 to-forest-600', bg: 'bg-forest-50' },
-    { label: t('dashboard.pendingTax'), value: `₹${pendingTax}`, icon: FiAlertCircle, color: 'from-maroon-400 to-maroon-600', bg: 'bg-maroon-50' },
-    { label: t('dashboard.totalPenalty'), value: `₹${totalPenalty}`, icon: FiAlertTriangle, color: 'from-red-400 to-red-600', bg: 'bg-red-50' },
-  ];
+  const stats = useMemo(() => [
+    { label: t('dashboard.totalTax'), value: `₹${totals.total}`, icon: FiDollarSign, color: 'from-saffron-400 to-saffron-600', bg: 'bg-saffron-50' },
+    { label: t('dashboard.paidTax'), value: `₹${totals.paid}`, icon: FiCheckCircle, color: 'from-forest-400 to-forest-600', bg: 'bg-forest-50' },
+    { label: t('dashboard.pendingTax'), value: `₹${totals.pending}`, icon: FiAlertCircle, color: 'from-maroon-400 to-maroon-600', bg: 'bg-maroon-50' },
+    { label: t('dashboard.totalPenalty'), value: `₹${totals.penalty}`, icon: FiAlertTriangle, color: 'from-red-400 to-red-600', bg: 'bg-red-50' },
+  ], [t, totals]);
 
   const currentYear = new Date().getFullYear();
-  // Prepare data for BarChart (Only show months from registration onwards)
-  const chartData = Array.from({ length: 12 }, (_, i) => {
-     const monthNum = i + 1;
-     const record = filteredTaxes.find(t => t.month === monthNum);
-     return {
-       monthNum,
-       name: t(`months.${monthNum}`) || monthNum.toString(),
-       Paid: record?.status === 'PAID' ? Number(record.amount) : 0,
-       Pending: record?.status === 'PENDING' ? Number(record.amount) : 0,
-       Penalty: record ? Number(record.penalty) : 0,
-     };
-  }).filter(d => !isBeforeReg(selectedYear, d.monthNum));
 
-  // Prepare Data for PieChart
-  const pieData = [
-    { name: 'Paid Tax', value: paidTax, color: 'url(#colorPaid)' },
-    { name: 'Pending Tax', value: pendingTax, color: 'url(#colorPending)' }
-  ].filter(d => d.value > 0);
+  const chartData = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => {
+       const monthNum = i + 1;
+       const record = filteredTaxes.find(t => t.month === monthNum);
+       return {
+         monthNum,
+         name: t(`months.${monthNum}`) || monthNum.toString(),
+         Paid: record?.status === 'PAID' ? Number(record.amount) : 0,
+         Pending: record?.status === 'PENDING' ? Number(record.amount) : 0,
+         Penalty: record ? Number(record.penalty) : 0,
+       };
+    }).filter(d => !isBeforeReg(selectedYear, d.monthNum));
+  }, [filteredTaxes, t, selectedYear, registrationYear, registrationMonth]);
+
+  const pieData = useMemo(() => [
+    { name: 'Paid Tax', value: totals.paid, color: 'url(#colorPaid)' },
+    { name: 'Pending Tax', value: totals.pending, color: 'url(#colorPending)' }
+  ].filter(d => d.value > 0), [totals]);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center pt-16 mountain-bg">

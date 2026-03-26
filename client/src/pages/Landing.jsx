@@ -100,10 +100,18 @@ function FloatingParticles() {
 
 export default function Landing() {
   const { t } = useTranslation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-gray-800 overflow-hidden">
-      <HeroSection t={t} />
+      <HeroSection t={t} isMobile={isMobile} />
       <AboutSection t={t} />
       <HelpSection t={t} />
       <ComplaintSection t={t} />
@@ -132,7 +140,7 @@ const districtDetails = {
   };
 
 // ==================== HERO SECTION ====================
-function HeroSection({ t }) {
+function HeroSection({ t, isMobile }) {
   const [titleLangToggle, setTitleLangToggle] = useState(false);
   
   useEffect(() => {
@@ -146,7 +154,8 @@ function HeroSection({ t }) {
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+
+  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', isMobile ? '0%' : '30%']);
 
   return (
     <section ref={heroRef} className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50/40 via-white to-green-50/40 pt-16 overflow-hidden">
@@ -164,11 +173,11 @@ function HeroSection({ t }) {
         />
         <motion.div 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-red-100/10 to-green-100/10 rounded-full blur-3xl"
-          animate={{ rotate: 360 }}
+          animate={isMobile ? { opacity: 0.1 } : { rotate: 360 }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         />
       </div>
-      <FloatingParticles />
+      {!isMobile && <FloatingParticles />}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -260,7 +269,7 @@ function HeroSection({ t }) {
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-red-500/10 to-green-500/10 rounded-full blur-3xl -z-10 animate-pulse" />
 
-            <div className="animate-float w-full max-w-lg lg:max-w-xl xl:max-w-2xl flex justify-center">
+            <div className={`${isMobile ? '' : 'animate-float'} w-full max-w-lg lg:max-w-xl xl:max-w-2xl flex justify-center`}>
               <UttarakhandMap 
                 onDistrictClick={useCallback((district) => setSelectedDistrict({
                   ...district,
@@ -386,7 +395,6 @@ function AboutSection({ t }) {
             <motion.div 
               key={i}
               className="premium-card p-8 group cursor-default"
-              variants={scaleIn}
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
             >
               <div className={`w-14 h-14 mb-6 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
@@ -687,6 +695,7 @@ function AboutUsSection({ t }) {
                   <img 
                     src={member.image} 
                     alt={member.name} 
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>

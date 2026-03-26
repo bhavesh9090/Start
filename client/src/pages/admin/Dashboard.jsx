@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { adminAPI } from '../../services/api';
 import { FiUsers, FiDollarSign, FiCheckCircle, FiAlertCircle, FiTrendingUp, FiAlertTriangle, FiInfo, FiActivity, FiMap, FiMessageSquare } from 'react-icons/fi';
@@ -54,20 +54,39 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+  const statCards = useMemo(() => {
+    if (!stats) return [];
+    return [
+      { label: 'Total Shops', value: stats.totalUsers, icon: FiUsers, color: 'bg-saffron-500', trend: '+12%' },
+      { label: 'Paid This Month', value: stats.totalPaid, icon: FiCheckCircle, color: 'bg-forest-500', trend: 'Active' },
+      { label: 'Pending Dues', value: stats.totalUnpaid, icon: FiAlertCircle, color: 'bg-maroon-500', trend: 'Priority' },
+      { label: 'Total Revenue', value: `₹${(stats.totalRevenue || 0).toLocaleString('en-IN')}`, icon: FiTrendingUp, color: 'bg-blue-600', trend: 'Growth' },
+      { label: 'Pending Collection', value: `₹${(stats.pendingAmount || 0).toLocaleString('en-IN')}`, icon: FiDollarSign, color: 'bg-orange-600', trend: 'Recovery' },
+      { label: 'No. of Complaints', value: stats.complaints?.total || 0, icon: FiMessageSquare, color: 'bg-yellow-500', trend: 'Total' },
+    ];
+  }, [stats]);
+
+  const collectionData = useMemo(() => {
+    if (!stats) return [];
+    return [
+      { name: 'Paid', value: stats.totalPaid },
+      { name: 'Unpaid', value: stats.totalUnpaid }
+    ];
+  }, [stats]);
+
+  const complaintData = useMemo(() => {
+    if (!stats) return [];
+    return [
+      { name: t('notice.open'), value: stats.complaints?.pending || 0 },
+      { name: t('notice.resolved'), value: stats.complaints?.resolved || 0 }
+    ];
+  }, [stats, t]);
+
   if (loading || !stats) return (
     <div className="min-h-screen flex items-center justify-center pt-16 mountain-bg">
       <Loader message={t('common.loading')} />
     </div>
   );
-
-  const statCards = [
-    { label: 'Total Shops', value: stats.totalUsers, icon: FiUsers, color: 'bg-saffron-500', trend: '+12%' },
-    { label: 'Paid This Month', value: stats.totalPaid, icon: FiCheckCircle, color: 'bg-forest-500', trend: 'Active' },
-    { label: 'Pending Dues', value: stats.totalUnpaid, icon: FiAlertCircle, color: 'bg-maroon-500', trend: 'Priority' },
-    { label: 'Total Revenue', value: `₹${(stats.totalRevenue || 0).toLocaleString('en-IN')}`, icon: FiTrendingUp, color: 'bg-blue-600', trend: 'Growth' },
-    { label: 'Pending Collection', value: `₹${(stats.pendingAmount || 0).toLocaleString('en-IN')}`, icon: FiDollarSign, color: 'bg-orange-600', trend: 'Recovery' },
-    { label: 'No. of Complaints', value: stats.complaints?.total || 0, icon: FiMessageSquare, color: 'bg-yellow-500', trend: 'Total' },
-  ];
 
   const COLORS = ['#FF6B00', '#10B981', '#1a1a2e', '#3B82F6', '#F97316', '#6366F1'];
 
@@ -219,10 +238,7 @@ export default function AdminDashboard() {
             </div>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={[
-                  { name: 'Paid', value: stats.totalPaid },
-                  { name: 'Unpaid', value: stats.totalUnpaid }
-                ]}>
+                <BarChart data={collectionData}>
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} />
                   <Tooltip contentStyle={{ borderRadius: '15px' }} />
                   <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={35}>
@@ -247,10 +263,7 @@ export default function AdminDashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={[
-                      { name: t('notice.open'), value: stats.complaints?.pending || 0 },
-                      { name: t('notice.resolved'), value: stats.complaints?.resolved || 0 }
-                    ]}
+                    data={complaintData}
                     innerRadius={70}
                     outerRadius={100}
                     paddingAngle={5}
