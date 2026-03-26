@@ -232,7 +232,7 @@ export default function AdminUsers() {
             <h3 className="font-bold text-gray-800 flex items-center gap-2 text-sm uppercase tracking-widest">
               {t('adminPanel.users.filterAndSearch')}
             </h3>
-            <span className="text-xs text-saffron-600 font-bold">{filterPanelOpen ? t('adminPanel.users.hide') || 'HIDE' : t('adminPanel.users.show') || 'SHOW'}</span>
+            <span className="text-xs text-saffron-600 font-bold">{filterPanelOpen ? 'HIDE' : 'SHOW'}</span>
           </div>
           
           {filterPanelOpen && (
@@ -241,8 +241,10 @@ export default function AdminUsers() {
                 <div className="md:col-span-2 space-y-1.5">
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-1">{t('adminPanel.users.searchRecord')}</label>
                   <div className="relative group">
-                    <FiSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-saffron-500 transition-colors w-5 h-5" />
-                    <input type="text" placeholder={t('adminPanel.users.searchPlaceholder')} className="input-field pl-14 pr-14 py-3.5 shadow-inner bg-gray-50/50 text-center font-medium"
+                    <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-saffron-500 transition-colors w-5 h-5 z-10" />
+                    <input type="text" placeholder={t('adminPanel.users.searchPlaceholder')} 
+                      className="input-field pr-4 py-3.5 shadow-inner bg-gray-50/50 font-medium"
+                      style={{ paddingLeft: '4.5rem' }} 
                       value={search} onChange={(e) => setSearch(e.target.value)} />
                   </div>
                 </div>

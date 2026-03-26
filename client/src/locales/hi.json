@@ -397,7 +397,10 @@
     "payNow": "अभी भुगतान करें",
     "receipt": "रसीद",
     "paymentSuccess": "भुगतान सफल रहा!",
-    "paymentFailed": "भुगतान सत्यापन विफल रहा।"
+    "paymentFailed": "भुगतान सत्यापन विफल रहा।",
+    "notApplicable": "लागू नहीं",
+    "beforeRegistration": "पंजीकरण से पहले",
+    "registrationNotice": "आपकी दुकान {{month}} {{year}} में पंजीकृत हुई थी। कर दायित्व उसी माह से शुरू होता है।"
   },
   "profile": {
     "title": "मेरी प्रोफ़ाइल",

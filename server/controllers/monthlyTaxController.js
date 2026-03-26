@@ -19,6 +19,20 @@ const TAX_AMOUNTS = {
 const getPayments = async (req, res) => {
   try {
     const userId = req.user.id;
+
+    // Fetch user's registration date
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('created_at')
+      .eq('id', userId)
+      .single();
+
+    if (userError || !userData) throw userError || new Error('User not found');
+
+    const regDate = new Date(userData.created_at);
+    const registration_month = regDate.getMonth() + 1; // 1-12
+    const registration_year = regDate.getFullYear();
+
     // Get monthly payments
     const { data: payments, error } = await supabase
       .from('monthly_payments')
@@ -28,7 +42,7 @@ const getPayments = async (req, res) => {
       .order('month', { ascending: true });
 
     if (error) throw error;
-    res.json({ payments });
+    res.json({ payments, registration_month, registration_year });
   } catch (err) {
     console.error('Get payments error:', err);
     res.status(500).json({ error: 'Failed to fetch monthly payments' });
@@ -58,13 +72,25 @@ const createOrder = async (req, res) => {
     // Get user details and business type for tax calculation
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('*, business_type')
+      .select('*, business_type, created_at')
       .eq('id', userId)
       .single();
 
     if (userError || !user) {
       console.error('User fetch error:', userError);
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Determine registration month/year
+    const regDate = new Date(user.created_at);
+    const regMonth = regDate.getMonth() + 1; // 1-12
+    const regYear = regDate.getFullYear();
+
+    // ❌ Reject payment for months before registration
+    if (targetYear < regYear || (targetYear === regYear && targetMonth < regMonth)) {
+      return res.status(400).json({ 
+        error: `Tax obligation starts from ${regMonth}/${regYear}. You cannot pay for months before your registration.` 
+      });
     }
 
     const monthlyTaxAmount = TAX_AMOUNTS[user.business_type] || 500;
@@ -89,42 +115,31 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ error: 'This month is already paid' });
     }
 
-    // Allow retry: If the user previously started payment but cancelled, 
-    // it will be PENDING in DB. We allow generating a new Razorpay order.
-
-    // ❌ Sequential payment only: find oldest unpaid month
-    // We assume tax collection starts from this year or a specific past year. 
-    // To implement "Sequential payment only", we need to know the starting point.
-    // If we only enforce sequence based on what is in the DB, it's tricky.
-    // Let's assume tax starts Jan of current year, or just look back for unpaid past months before current/selected.
-    
-    // For sequential exact rule: We check if there are any strictly older months that are not PAID.
-    // However, since we might not pre-generate rows for all past months in `monthly_payments`,
-    // we determine missing past months by checking all months BEFORE the requested month,
-    // back to the start of the year (or previous year if applicable).
-    
-    // Simplified Sequential check:
-    // User cannot pay Month N if Month N-1 is unpaid (assuming it is <= current date).
+    // ❌ Sequential payment only: find oldest unpaid month starting from registration
     let oldestUnpaidYear = targetYear;
     let oldestUnpaidMonth = currentMonth;
     
     let foundOldestUnpaid = false;
-    let startM = 1; // Always start from January
-    let endM = (targetYear === currentYear) ? currentMonth : 12;
 
-    for (let m = startM; m <= endM; m++) {
-       const isPaid = existing.some(p => p.year === targetYear && p.month === m && p.status === 'PAID');
-       if (!isPaid && !foundOldestUnpaid) {
-          oldestUnpaidYear = targetYear;
+    // Iterate through each month from registration date up to target month
+    // We check year by year
+    for (let y = regYear; y <= targetYear; y++) {
+      const startM = (y === regYear) ? regMonth : 1;
+      const endM = (y === currentYear) ? currentMonth : (y < currentYear ? 12 : 0);
+      for (let m = startM; m <= endM; m++) {
+        const isPaid = existing.some(p => p.year === y && p.month === m && p.status === 'PAID');
+        if (!isPaid && !foundOldestUnpaid) {
+          oldestUnpaidYear = y;
           oldestUnpaidMonth = m;
           foundOldestUnpaid = true;
-       }
+        }
+      }
     }
 
     if (foundOldestUnpaid) {
-       if (targetYear !== oldestUnpaidYear || targetMonth !== oldestUnpaidMonth) {
-          return res.status(400).json({ error: `Sequential payment required. Please pay for Month ${oldestUnpaidMonth}, Year ${oldestUnpaidYear} first.` });
-       }
+      if (targetYear !== oldestUnpaidYear || targetMonth !== oldestUnpaidMonth) {
+        return res.status(400).json({ error: `Sequential payment required. Please pay for Month ${oldestUnpaidMonth}/${oldestUnpaidYear} first.` });
+      }
     }
 
     // ❌ Penalty rules

@@ -397,7 +397,10 @@
     "payNow": "Pay Now",
     "receipt": "Receipt",
     "paymentSuccess": "Payment successful!",
-    "paymentFailed": "Payment verification failed."
+    "paymentFailed": "Payment verification failed.",
+    "notApplicable": "N/A",
+    "beforeRegistration": "Before Registration",
+    "registrationNotice": "Your shop was registered in {{month}} {{year}}. Tax obligations start from that month."
   },
   "profile": {
     "title": "My Profile",

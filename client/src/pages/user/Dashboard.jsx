@@ -15,6 +15,8 @@ export default function UserDashboard() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [isMobile, setIsMobile] = useState(false);
   const [isCompactChart, setIsCompactChart] = useState(false);
+  const [registrationMonth, setRegistrationMonth] = useState(1);
+  const [registrationYear, setRegistrationYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
     loadData();
@@ -37,13 +39,23 @@ export default function UserDashboard() {
     try {
       const res = await monthlyTaxAPI.getPayments();
       setTaxes(res.data.payments || []);
+      if (res.data.registration_month) setRegistrationMonth(res.data.registration_month);
+      if (res.data.registration_year) setRegistrationYear(res.data.registration_year);
     } catch (err) {
       console.error('Dashboard load error:', err);
     }
     setLoading(false);
   };
 
+
   const filteredTaxes = taxes.filter(t => t.year === selectedYear);
+
+  // Helper: is a given month/year before registration?
+  const isBeforeReg = (year, month) => {
+    if (year < registrationYear) return true;
+    if (year === registrationYear && month < registrationMonth) return true;
+    return false;
+  };
 
   const totalTax = filteredTaxes.reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
   const paidTax = filteredTaxes.filter(t => t.status === 'PAID').reduce((sum, tax) => sum + Number(tax.amount) + Number(tax.penalty || 0), 0);
@@ -57,18 +69,19 @@ export default function UserDashboard() {
     { label: t('dashboard.totalPenalty'), value: `₹${totalPenalty}`, icon: FiAlertTriangle, color: 'from-red-400 to-red-600', bg: 'bg-red-50' },
   ];
 
-  // Prepare data for BarChart (12 Months)
   const currentYear = new Date().getFullYear();
+  // Prepare data for BarChart (Only show months from registration onwards)
   const chartData = Array.from({ length: 12 }, (_, i) => {
      const monthNum = i + 1;
      const record = filteredTaxes.find(t => t.month === monthNum);
      return {
+       monthNum,
        name: t(`months.${monthNum}`) || monthNum.toString(),
        Paid: record?.status === 'PAID' ? Number(record.amount) : 0,
        Pending: record?.status === 'PENDING' ? Number(record.amount) : 0,
        Penalty: record ? Number(record.penalty) : 0,
      };
-  });
+  }).filter(d => !isBeforeReg(selectedYear, d.monthNum));
 
   // Prepare Data for PieChart
   const pieData = [
@@ -108,7 +121,7 @@ export default function UserDashboard() {
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="bg-transparent border-none focus:ring-0 text-maroon-500 font-bold text-lg cursor-pointer"
             >
-              {[currentYear, currentYear - 1, currentYear - 2].map(y => (
+              {[currentYear, currentYear - 1, currentYear - 2].filter(y => y >= registrationYear).map(y => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>

@@ -26,6 +26,8 @@ export default function TaxTable() {
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [message, setMessage] = useState({ text: '', type: '' });
+  const [registrationMonth, setRegistrationMonth] = useState(1);
+  const [registrationYear, setRegistrationYear] = useState(new Date().getFullYear());
 
   const monthlyTax = TAX_AMOUNTS[user?.business_type] || 500;
 
@@ -57,11 +59,20 @@ export default function TaxTable() {
     try {
       const res = await monthlyTaxAPI.getPayments();
       setPayments(res.data.payments || []);
+      if (res.data.registration_month) setRegistrationMonth(res.data.registration_month);
+      if (res.data.registration_year) setRegistrationYear(res.data.registration_year);
     } catch (err) {
       console.error('Failed to load payments', err);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper: is a given month/year before registration?
+  const isBeforeReg = (year, month) => {
+    if (year < registrationYear) return true;
+    if (year === registrationYear && month < registrationMonth) return true;
+    return false;
   };
 
   // Generate 12 months for the selected year
@@ -72,7 +83,10 @@ export default function TaxTable() {
       const record = payments.find(p => p.year === yearNum && p.month === monthNum);
       
       let status = 'locked';
-      if (yearNum < currentYear || (yearNum === currentYear && monthNum <= currentMonth)) {
+
+      if (isBeforeReg(yearNum, monthNum)) {
+        status = 'not_applicable';
+      } else if (yearNum < currentYear || (yearNum === currentYear && monthNum <= currentMonth)) {
         status = record?.status === 'PAID' ? 'paid' : (record?.status === 'PENDING' ? 'pending' : 'due');
       }
 
@@ -80,7 +94,7 @@ export default function TaxTable() {
         id: record?.id || `temp-${yearNum}-${monthNum}`,
         year: yearNum,
         month: monthNum,
-        amount: record?.amount || 0, // We'll need to handle the display amount if record is missing
+        amount: record?.amount || 0,
         penalty: record?.penalty || 0,
         status: status,
         record: record
@@ -99,6 +113,7 @@ export default function TaxTable() {
     if (item.status === 'paid') return { label: t('tax.paid'), class: 'bg-forest-600 text-white shadow-sm shadow-forest-200' };
     if (item.status === 'locked') return { label: t('tax.locked'), class: 'bg-slate-200 text-slate-600' };
     if (item.status === 'pending') return { label: t('monthlyTax.pending'), class: 'bg-red-600 text-white shadow-sm shadow-red-200 animate-pulse' };
+    if (item.status === 'not_applicable') return { label: t('monthlyTax.notApplicable'), class: 'bg-gray-100 text-gray-400 border border-gray-200' };
     return { label: t('tax.due'), class: 'bg-saffron-500 text-white shadow-sm shadow-saffron-200' };
   };
 
@@ -128,8 +143,12 @@ export default function TaxTable() {
     a.click();
   };
 
-  const years = [currentYear, currentYear - 1, currentYear - 2];
-  const tableTaxes = getTableData();
+  const years = [currentYear, currentYear - 1, currentYear - 2].filter(y => y >= registrationYear);
+  const tableTaxes = getTableData().filter(item => {
+    if (item.year < registrationYear) return false;
+    if (item.year === registrationYear && item.month < registrationMonth) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 mountain-bg">
@@ -138,12 +157,22 @@ export default function TaxTable() {
           <div>
             <h1 className="text-3xl font-bold text-maroon-500">{t('tax.title')}</h1>
             {user?.business_type && (
-              <div className="mt-2 flex items-center gap-2 text-saffron-600 font-semibold animate-slide-in-left">
-                <div className="w-2 h-2 rounded-full bg-saffron-500 animate-ping"></div>
-                {t('monthlyTax.taxDescription', { 
-                  type: t(`auth.businessCategories.${Object.keys(TAX_AMOUNTS).find(k => k === user.business_type) ? (user.business_type === 'Grocery & Retail' ? 'grocery' : user.business_type === 'Restaurant & Cafe' ? 'restaurant' : user.business_type === 'Electronics & Hardware' ? 'electronics' : user.business_type === 'Medical & Pharmacy' ? 'medical' : user.business_type === 'Clothing & Apparels' ? 'clothing' : user.business_type === 'Services & Consultancy' ? 'services' : 'small') : 'small'}`), 
-                  amount: monthlyTax 
-                })}
+              <div className="mt-2 flex flex-col gap-1 anim-fade-in">
+                <div className="flex items-center gap-2 text-saffron-600 font-semibold">
+                  <div className="w-2 h-2 rounded-full bg-saffron-500 animate-ping"></div>
+                  {t('monthlyTax.taxDescription', { 
+                    type: t(`auth.businessCategories.${Object.keys(TAX_AMOUNTS).find(k => k === user.business_type) ? (user.business_type === 'Grocery & Retail' ? 'grocery' : user.business_type === 'Restaurant & Cafe' ? 'restaurant' : user.business_type === 'Electronics & Hardware' ? 'electronics' : user.business_type === 'Medical & Pharmacy' ? 'medical' : user.business_type === 'Clothing & Apparels' ? 'clothing' : user.business_type === 'Services & Consultancy' ? 'services' : 'small') : 'small'}`), 
+                    amount: monthlyTax 
+                  })}
+                </div>
+                {/* Registration Notice */}
+                <p className="text-xs text-gray-400 font-medium ml-4">
+                  🏪{' '}
+                  {t('monthlyTax.registrationNotice', {
+                    month: t(`months.${registrationMonth}`),
+                    year: registrationYear
+                  })}
+                </p>
               </div>
             )}
           </div>
