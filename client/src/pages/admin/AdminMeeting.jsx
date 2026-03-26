@@ -211,14 +211,17 @@ export default function AdminMeeting() {
             .eq('id', newMessage.id)
             .single();
           
-          setMessages(prev => [...prev, { 
-            ...rawMsgData, 
-            sender: {
-              name: rawMsgData.sender?.username,
-              district: rawMsgData.sender?.districts?.name,
-              photo_url: null
-            } 
-          }]);
+          setMessages(prev => {
+            if (prev.find(m => m.id === rawMsgData.id)) return prev;
+            return [...prev, { 
+              ...rawMsgData, 
+              sender: {
+                name: rawMsgData.sender?.username,
+                district: rawMsgData.sender?.districts?.name,
+                photo_url: null
+              } 
+            }];
+          });
 
           // Update last message time for sorting
           const otherId = newMessage.sender_id === user.id ? newMessage.receiver_id : newMessage.sender_id;
@@ -339,7 +342,7 @@ export default function AdminMeeting() {
           if (!fileData) { setSending(false); return; }
         }
 
-        const { error } = await supabase
+        const { data: insertedData, error } = await supabase
           .from('admin_messages')
           .insert([{
             sender_id: user.id,
@@ -348,9 +351,31 @@ export default function AdminMeeting() {
             file_url: fileData?.url || null,
             file_name: fileData?.name || null,
             reply_to_id: replyingTo?.id || null
-          }]);
+          }])
+          .select(`
+            *, 
+            sender:admins!sender_id(id, username),
+            reply_to:reply_to_id(id, content, sender_id, file_url, file_name)
+          `)
+          .single();
 
         if (error) throw error;
+
+        // Manually update state for instant feedback
+        if (insertedData) {
+          const formattedMsg = {
+            ...insertedData,
+            sender: {
+              name: insertedData.sender?.username,
+              district: insertedData.sender?.districts?.name,
+              photo_url: user.photo_url || null
+            }
+          };
+          setMessages(prev => {
+             if (prev.find(m => m.id === formattedMsg.id)) return prev;
+             return [...prev, formattedMsg];
+          });
+        }
       }
       
       setNewMessage('');
