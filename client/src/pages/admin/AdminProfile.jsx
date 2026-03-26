@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { 
   FiUser, FiMail, FiPhone, FiBriefcase, FiCalendar, 
   FiMapPin, FiSave, FiAlertCircle, FiCheckCircle, FiX, FiCamera, FiTrendingUp, FiBookOpen
@@ -11,6 +12,7 @@ import { supabase } from '../../services/supabase';
 const AdminProfile = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { updateUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -59,6 +61,7 @@ const AdminProfile = () => {
       }
 
       await adminAPI.updateAdminProfile({
+        username: profile.username,
         email: profile.email,
         mobile: profile.mobile,
         qualification: profile.qualification,
@@ -66,6 +69,15 @@ const AdminProfile = () => {
         member_since: profile.member_since,
         photo_url
       });
+      
+      // Update local state and global auth state
+      updateUser({
+        username: profile.username,
+        email: profile.email,
+        mobile: profile.mobile,
+        photo_url
+      });
+
       setMessage({ type: 'success', text: t('admin.profile.updateSuccess') });
     } catch (err) {
       setMessage({ type: 'error', text: t('admin.profile.updateError') });
@@ -107,7 +119,7 @@ const AdminProfile = () => {
         </button>
 
         <div className="mb-6 sm:mb-14 text-center animate-fade-in px-2 pt-6 sm:pt-0">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight mb-1.5 text-maroon-500 drop-shadow-sm leading-none flex items-center justify-center gap-2.5">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-heading tracking-tight mb-1.5 text-maroon-500 drop-shadow-sm leading-none flex items-center justify-center gap-2.5">
              <FiTrendingUp className="text-saffron-500 w-5 h-5 sm:w-8 sm:h-8" /> {t('admin.profile.title')}
           </h1>
           <p className="text-[10px] sm:text-sm font-bold font-sans text-gray-500 drop-shadow-sm">{t('admin.profile.subtitle')}</p>
@@ -149,12 +161,12 @@ const AdminProfile = () => {
               <h2 className="text-2xl sm:text-3xl font-bold font-heading text-black mb-1 tracking-tight">{profile.username}</h2>
               <p className="text-xs font-bold font-sans text-gray-400 mb-6">{profile.districts?.name || 'Uttarakhand'}</p>
 
-              <div className="p-3 sm:p-5 rounded-2xl bg-saffron-50 border border-saffron-100 flex gap-2.5 text-left">
+              {/* <div className="p-3 sm:p-5 rounded-2xl bg-saffron-50 border border-saffron-100 flex gap-2.5 text-left">
                 <FiAlertCircle className="w-3.5 h-3.5 text-saffron-600 flex-shrink-0 mt-0.5" />
                 <p className="text-[9px] sm:text-[11px] leading-relaxed text-saffron-900 font-bold">
                   {t('admin.profile.readOnly')}
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {/* Status Feedback */}
@@ -180,14 +192,28 @@ const AdminProfile = () => {
                 
                 <div className="grid md:grid-cols-2 gap-10">
                   <div className="group">
+                    <label className="block text-xs font-bold font-heading text-maroon-900 mb-2 ml-1">Full Name</label>
+                    <div className="relative">
+                      <FiUser className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 group-focus-within:text-maroon-500 transition-colors" />
+                      <input 
+                        type="text" 
+                        value={profile?.username || ''} 
+                        onChange={(e) => setProfile({...profile, username: e.target.value})}
+                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-white border border-gray-200 focus:border-maroon-500 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-900 transition-all outline-none focus:ring-4 focus:ring-maroon-500/5 hover:border-maroon-200"
+                        placeholder="e.g. John Doe"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="group">
                     <label className="block text-xs font-bold font-heading text-maroon-900 mb-2 ml-1">{t('admin.profile.email')}</label>
                     <div className="relative">
                       <FiMail className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 group-focus-within:text-maroon-500 transition-colors" />
                       <input 
                         type="email" 
                         value={profile?.email || ''} 
-                        readOnly 
-                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-gray-50 border border-gray-100 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-400 cursor-not-allowed focus:ring-0 transition-all"
+                        onChange={(e) => setProfile({...profile, email: e.target.value})}
+                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-white border border-gray-200 focus:border-maroon-500 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-900 transition-all outline-none focus:ring-4 focus:ring-maroon-500/5 hover:border-maroon-200"
                       />
                     </div>
                   </div>
@@ -199,8 +225,8 @@ const AdminProfile = () => {
                       <input 
                         type="tel" 
                         value={profile?.mobile || ''} 
-                        readOnly 
-                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-gray-50 border border-gray-100 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-400 cursor-not-allowed focus:ring-0 transition-all"
+                        onChange={(e) => setProfile({...profile, mobile: e.target.value})}
+                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-white border border-gray-200 focus:border-maroon-500 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-900 transition-all outline-none focus:ring-4 focus:ring-maroon-500/5 hover:border-maroon-200"
                       />
                     </div>
                   </div>
@@ -254,9 +280,10 @@ const AdminProfile = () => {
                       <FiCalendar className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-maroon-500 transition-colors" />
                       <input 
                         type="text" 
-                        value={new Date(profile.created_at).toLocaleDateString()} 
-                        readOnly 
-                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-gray-50 border border-gray-100 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-400 cursor-not-allowed focus:ring-0 transition-all"
+                        value={profile.member_since || ''} 
+                        onChange={(e) => setProfile({...profile, member_since: e.target.value})}
+                        placeholder="e.g. October 2023"
+                        className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-5 bg-white border border-gray-200 focus:border-maroon-500 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-gray-900 transition-all outline-none focus:ring-4 focus:ring-maroon-500/5 hover:border-maroon-200"
                       />
                     </div>
                   </div>

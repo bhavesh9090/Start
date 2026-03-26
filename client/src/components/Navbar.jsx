@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { FiMenu, FiX, FiGlobe, FiBell, FiLogOut, FiUser, FiShield, FiUserCheck } from 'react-icons/fi';
+import { supabase } from '../services/supabase';
 import { adminAPI } from '../services/api';
 import logoImg from '../assets/logo.png';
 
@@ -16,6 +18,7 @@ export default function Navbar() {
   const [showNotif, setShowNotif] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [unreadHubCount, setUnreadHubCount] = useState(0);
 
   const notifRef = useRef(null);
   const profileRef = useRef(null);
@@ -84,6 +87,43 @@ export default function Navbar() {
     fetchNotifs();
     const interval = setInterval(fetchNotifs, 30.2 * 1000); // 30.2s polling
     return () => clearInterval(interval);
+  }, [user]);
+
+  // Real-time Meeting Hub Notifications for Admins
+  useEffect(() => {
+    if (!user || !isAdmin()) return;
+
+    const fetchUnreadHub = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('admin_messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('receiver_id', user.id)
+          .eq('is_read', false);
+        
+        if (!error) setUnreadHubCount(count || 0);
+      } catch (err) {
+        console.error('Error fetching hub unread:', err);
+      }
+    };
+
+    fetchUnreadHub();
+
+    const channel = supabase
+      .channel('navbar-meeting-notifs')
+      .on('postgres_changes', {
+        event: '*', // Listen for all changes (inserts for new, updates for marking read)
+        schema: 'public',
+        table: 'admin_messages'
+      }, (payload) => {
+        // Simple strategy: refetch on any change that might affect unread count
+        fetchUnreadHub();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const toggleLanguage = () => {
@@ -180,12 +220,22 @@ export default function Navbar() {
                 </a>
               ) : (
                 <Link key={i} to={link.to}
-                  className={`px-3 py-2 text-[13px] font-bold rounded-xl transition-all relative group whitespace-nowrap ${
+                  className={`px-3 py-2 text-[13px] font-bold rounded-xl transition-all relative group flex items-center gap-1.5 whitespace-nowrap ${
                     isActive
                       ? 'text-saffron-600 bg-saffron-50/50 shadow-sm'
                       : 'text-gray-600 hover:text-saffron-600 hover:bg-saffron-50'
                   }`}>
-                  {link.label}
+                  <span className="relative flex items-center gap-1.5">
+                    {link.label}
+                    {link.to === '/admin/meeting' && unreadHubCount > 0 && (
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        <FiBell className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+                      </motion.div>
+                    )}
+                  </span>
                   {isActive && <span className="absolute bottom-1 left-3 right-3 h-0.5 bg-saffron-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)]"></span>}
                   {!isActive && <span className="absolute bottom-1 left-3 right-3 h-0.5 bg-saffron-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>}
                 </Link>
@@ -252,9 +302,9 @@ export default function Navbar() {
               </div>
             ) : (
                 <div className="relative flex items-center gap-2.5" ref={profileRef}>
-                  <div className="hidden sm:flex flex-col items-end leading-none">
-                    <span className="text-[13px] font-bold text-gray-800">{user.username}</span>
-                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5">
+                  <div className="hidden sm:flex flex-col items-end leading-tight mr-1 max-w-[120px] lg:max-w-[150px]">
+                    <span className="text-[13px] font-bold text-gray-800 truncate w-full text-right">{user.username}</span>
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5 whitespace-nowrap">
                       {isAdmin() 
                         ? (user.role === 'super_admin' ? 'Super Admin' : 'District Admin') 
                         : (user.gst_id ? user.gst_id : 'User')}
@@ -310,10 +360,16 @@ export default function Navbar() {
                 </a>
               ) : (
                 <Link key={i} to={link.to} onClick={() => setMenuOpen(false)}
-                  className={`block px-4 py-2.5 text-sm font-medium rounded-lg ${
+                  className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium rounded-lg ${
                     location.pathname === link.to ? 'text-saffron-600 bg-saffron-50' : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
                   }`}>
-                  {link.label}
+                  <span>{link.label}</span>
+                  {link.to === '/admin/meeting' && unreadHubCount > 0 && (
+                    <span className="flex items-center gap-1 text-red-500 text-[10px] font-bold bg-red-50 px-2 py-0.5 rounded-full">
+                      <FiBell className="w-3 h-3 fill-red-500" />
+                      {unreadHubCount}
+                    </span>
+                  )}
                 </Link>
               )
             ))}

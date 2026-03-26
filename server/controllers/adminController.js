@@ -418,9 +418,10 @@ const getAdminProfile = async (req, res) => {
 
 const updateAdminProfile = async (req, res) => {
   try {
-    const { email, mobile, qualification, office_field, member_since, photo_url } = req.body;
+    const { username, email, mobile, qualification, office_field, member_since, photo_url } = req.body;
     
     const updateData = {
+      username,
       email,
       mobile,
       qualification,

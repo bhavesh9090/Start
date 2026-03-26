@@ -76,7 +76,7 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div className="animate-slide-in-left">
-            <h1 className="text-4xl font-black text-maroon-500 tracking-tight mb-2">
+            <h1 className="text-2xl sm:text-4xl font-black text-maroon-500 tracking-tight mb-2">
               {t('notice.adminDashboard')}
               {user?.username && <span className="text-gray-400 font-normal">, {user.username}</span>}
             </h1>
