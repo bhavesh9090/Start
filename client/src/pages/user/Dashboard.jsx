@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { monthlyTaxAPI } from '../../services/api';
-import { FiDollarSign, FiCheckCircle, FiAlertCircle, FiAlertTriangle, FiBarChart2, FiTrendingUp, FiVolume2, FiMessageSquare, FiChevronRight } from 'react-icons/fi';
+import { FiDollarSign, FiCheckCircle, FiAlertCircle, FiAlertTriangle, FiBarChart2, FiTrendingUp, FiVolume2, FiMessageSquare, FiChevronRight, FiCalendar, FiUser } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import Loader from '../../components/Loader';
 
@@ -151,29 +151,7 @@ export default function UserDashboard() {
           ))}
         </div>
 
-        {/* Support & Quick Help Section */}
-        <div className="mb-8">
-          <Link to="/user/support" className="glass-card p-4 sm:p-6 border border-maroon-100/30 bg-maroon-50/5 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center justify-between group overflow-hidden relative border-l-8 border-l-maroon-500">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-maroon-400 rounded-full blur-[80px] opacity-10 group-hover:opacity-25 transition-opacity"></div>
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500">
-                <FiMessageSquare className="text-maroon-500 text-xl" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-800">{t('support.title')}</h3>
-                <p className="text-xs text-gray-500 font-medium">{t('support.trackTickets')}</p>
-              </div>
-            </div>
-            <div className="mt-4 sm:mt-0 flex items-center gap-3 relative z-10 w-full sm:w-auto">
-               <div className="hidden md:flex items-center gap-1 text-[10px] font-black text-maroon-600 bg-maroon-100/50 px-3 py-1.5 rounded-full uppercase tracking-widest">
-                 {t('support.pendingMsg').split(' ')[0]} ...
-               </div>
-               <div className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-maroon-500 text-white rounded-xl font-bold text-sm hover:bg-maroon-600 transition-colors shadow-lg shadow-maroon-500/20">
-                  {t('support.active')} <FiChevronRight />
-               </div>
-            </div>
-          </Link>
-        </div>
+
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Recent Activity */}
