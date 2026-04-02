@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { monthlyTaxAPI } from '../../services/api';
-import { FiDollarSign, FiCheckCircle, FiAlertCircle, FiAlertTriangle, FiBarChart2, FiTrendingUp } from 'react-icons/fi';
+import { FiDollarSign, FiCheckCircle, FiAlertCircle, FiAlertTriangle, FiBarChart2, FiTrendingUp, FiVolume2, FiMessageSquare, FiChevronRight } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import Loader from '../../components/Loader';
 
@@ -17,7 +18,6 @@ export default function UserDashboard() {
   const [isCompactChart, setIsCompactChart] = useState(false);
   const [registrationMonth, setRegistrationMonth] = useState(1);
   const [registrationYear, setRegistrationYear] = useState(new Date().getFullYear());
-
   useEffect(() => {
     loadData();
   }, []);
@@ -45,7 +45,6 @@ export default function UserDashboard() {
     }
     setLoading(false);
   };
-
 
   const filteredTaxes = useMemo(() => taxes.filter(t => t.year === selectedYear), [taxes, selectedYear]);
 
@@ -104,13 +103,19 @@ export default function UserDashboard() {
         {/* Welcome */}
         <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div className="flex items-center gap-4">
-            {user?.photo_url && (
+            {user?.photo_url ? (
               <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-white flex-shrink-0">
                 <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
               </div>
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-saffron-500 flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                {user?.username?.charAt(0).toUpperCase()}
+              </div>
             )}
             <div>
-              <h1 className="text-3xl font-bold text-maroon-500">{t('dashboard.welcome')}, {user?.username || user?.gst_id}!</h1>
+              <h1 className="text-3xl font-bold text-maroon-500 flex items-center gap-2">
+                {t('dashboard.welcome')}, {user?.username || user?.gst_id}!
+              </h1>
               <p className="text-gray-500 mt-1 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-forest-500"></span>
                 GST: {user?.gst_id} • {user?.district}
@@ -146,6 +151,30 @@ export default function UserDashboard() {
           ))}
         </div>
 
+        {/* Support & Quick Help Section */}
+        <div className="mb-8">
+          <Link to="/user/support" className="glass-card p-4 sm:p-6 border border-maroon-100/30 bg-maroon-50/5 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center justify-between group overflow-hidden relative border-l-8 border-l-maroon-500">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-maroon-400 rounded-full blur-[80px] opacity-10 group-hover:opacity-25 transition-opacity"></div>
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500">
+                <FiMessageSquare className="text-maroon-500 text-xl" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">{t('support.title')}</h3>
+                <p className="text-xs text-gray-500 font-medium">{t('support.trackTickets')}</p>
+              </div>
+            </div>
+            <div className="mt-4 sm:mt-0 flex items-center gap-3 relative z-10 w-full sm:w-auto">
+               <div className="hidden md:flex items-center gap-1 text-[10px] font-black text-maroon-600 bg-maroon-100/50 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                 {t('support.pendingMsg').split(' ')[0]} ...
+               </div>
+               <div className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-maroon-500 text-white rounded-xl font-bold text-sm hover:bg-maroon-600 transition-colors shadow-lg shadow-maroon-500/20">
+                  {t('support.active')} <FiChevronRight />
+               </div>
+            </div>
+          </Link>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Recent Activity */}
           <div className="glass-card p-4 sm:p-6">
@@ -159,7 +188,11 @@ export default function UserDashboard() {
                     <p className="text-sm font-medium text-gray-700">
                       {t(`months.${tax.month}`)} {tax.year}
                     </p>
-                    <p className="text-xs text-gray-400">₹{tax.amount}{tax.penalty > 0 ? ` + ₹${tax.penalty} penalty` : ''}</p>
+                    <div className="flex flex-wrap gap-4 text-[9px] text-gray-400 font-black uppercase tracking-tighter">
+                      {tax.name && <span className="flex items-center gap-1"><FiUser className="text-saffron-500" /> {tax.name}</span>}
+                      {tax.mobile && <span className="flex items-center gap-1"><FiMessageSquare className="text-blue-500" /> {tax.mobile}</span>}
+                      <span><FiCalendar className="text-gray-400" /> {new Date(tax.created_at).toLocaleString('en-IN')}</span>
+                    </div>
                   </div>
                   <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                     tax.status === 'PAID' ? 'bg-forest-100 text-forest-600' : 'bg-red-100 text-red-600'

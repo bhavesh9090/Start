@@ -34,7 +34,7 @@ export default function CustomDropdown({ options, value, onChange, placeholder, 
       </button>
 
       {isOpen && (
-        <div className="absolute z-[100] mt-2 min-w-[200px] right-0 md:left-0 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-scale-in max-h-60 overflow-y-auto hide-scrollbar">
+        <div className="absolute z-[100] mt-2 min-w-[200px] right-0 md:left-0 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-scale-in max-h-60 overflow-y-auto">
           <div className="p-1.5 space-y-1">
             {options.map((opt) => (
               <button

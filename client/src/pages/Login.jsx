@@ -67,9 +67,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4 pt-16 sm:pt-20 pb-8 sm:pb-10">
+    <div className="min-h-screen auth-grid-bg flex items-center justify-center px-4 pt-16 sm:pt-20 pb-8 sm:pb-10">
       <motion.div 
-        className="w-full max-w-md"
+        className="w-full max-w-md auth-grid-content"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -86,7 +86,7 @@ export default function Login() {
             </button>
             <button onClick={() => setIsAdmin(true)}
               className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
-                isAdmin ? 'bg-white text-maroon-500 shadow-sm' : 'text-gray-500'
+                isAdmin ? 'bg-white text-saffron-600 shadow-sm' : 'text-gray-500'
               }`}>
               <FiShield className="inline w-4 h-4 mr-1.5" />
               <span className="text-xs sm:text-sm">{t('auth.adminLoginTitle')}</span>
@@ -160,9 +160,7 @@ export default function Login() {
             </div>
 
             <motion.button type="submit" disabled={loading}
-              className={`w-full py-4 font-bold rounded-2xl transition-all duration-300 ${
-                isAdmin ? 'btn-maroon' : 'btn-saffron'
-              } disabled:opacity-50 shadow-xl group relative overflow-hidden`}
+              className={`w-full py-4 font-bold rounded-2xl transition-all duration-300 btn-saffron disabled:opacity-50 shadow-xl group relative overflow-hidden`}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
             >

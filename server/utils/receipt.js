@@ -79,6 +79,8 @@ const generateReceipt = async (paymentData) => {
         ['Receipt No', paymentData.receipt_no],
         ['Shop Owner', paymentData.username || 'N/A'],
         ['GST ID', paymentData.gst_id || 'N/A'],
+        ['District', paymentData.district || 'N/A'],
+        ['Block', paymentData.block || 'N/A'],
         ['Tax Period', `${paymentData.month}/${paymentData.year}`],
         ['Payment ID', paymentData.razorpay_payment_id || 'N/A'],
         ['Paid Date', new Date(paymentData.paid_at).toLocaleString('en-IN')],
@@ -94,7 +96,7 @@ const generateReceipt = async (paymentData) => {
       });
 
       // 4. Amount Summary Box
-      const summaryY = 360;
+      const summaryY = 410;
       doc.rect(340, summaryY, 205, 120).lineWidth(1).strokeColor(saffron).stroke();
       
       const amounts = [
@@ -122,11 +124,11 @@ const generateReceipt = async (paymentData) => {
         razorpay_id: paymentData.razorpay_payment_id,
       });
       const qrImage = await QRCode.toDataURL(qrData);
-      doc.image(qrImage, 50, 360, { width: 110 });
-      doc.fontSize(8).fillColor('#666').font('Helvetica-Bold').text('SCAN TO VERIFY', 50, 475, { width: 110, align: 'center' });
+      doc.image(qrImage, 50, 410, { width: 110 });
+      doc.fontSize(8).fillColor('#666').font('Helvetica-Bold').text('SCAN TO VERIFY', 50, 525, { width: 110, align: 'center' });
 
       // 6. Validity & Information
-      const infoY = 510;
+      const infoY = 560;
       doc.fontSize(12).font('Helvetica-Bold').fillColor(maroon).text('Validity & Information', 50, infoY);
       doc.moveTo(50, infoY + 18).lineTo(545, infoY + 18).lineWidth(1).strokeColor('#eee').stroke();
       

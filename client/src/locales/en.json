@@ -5,6 +5,7 @@
     "help": "Help",
     "complaint": "Complaint",
     "aboutUs": "About Us",
+    "howItWorks": "How It Works",
     "login": "Login",
     "register": "Register",
     "dashboard": "Dashboard",
@@ -29,7 +30,7 @@
   "hero": {
     "title": "E-TaxPay",
     "subtitle": "Digital Shop Tax Collection System",
-    "description": "Zila Panchayat Uttarakhand, Almora — A transparent, secure, and automated platform for digital tax collection under local governance.",
+    "description": "Zila Panchayat Uttarakhand — A transparent, secure, and automated platform for digital tax collection under local governance.",
     "cta": "Get Started",
     "learnMore": "Learn More",
     "districts": "Districts",
@@ -42,6 +43,22 @@
     "available": "Available",
     "digitalTax": "Digital Tax",
     "active": "Active"
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "heading": "Easy steps to register<br/>and Pay Taxes",
+    "step1": {
+      "title": "Register Account",
+      "desc": "Start by <strong>creating your account</strong> with basic details."
+    },
+    "step2": {
+      "title": "Pay Your Tax",
+      "desc": "Securely <strong>pay your pending taxes</strong> using various methods."
+    },
+    "step3": {
+      "title": "Save Record",
+      "desc": "Instantly <strong>download and save</strong> your official receipt."
+    }
   },
   "about": {
     "title": "Our Mission & Vision",
@@ -182,6 +199,8 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome",
+    "voiceTitle": "Voice Assistant",
+    "clickToHear": "Click to hear your status",
     "totalTax": "Total Tax",
     "paidTax": "Paid Tax",
     "pendingTax": "Pending Tax",
@@ -237,6 +256,7 @@
   },
   "notice": {
     "title": "Notices",
+    "description": "Official administrative updates and personal notifications for your shop records.",
     "noNotices": "No notices at this time.",
     "date": "Date",
     "type": "Type",
@@ -284,7 +304,8 @@
       "readOnly": "This field is managed by the system and cannot be edited.",
       "loading": "Loading profile...",
       "saving": "Updating...",
-      "save": "Save Profile"
+      "save": "Save Profile",
+      "photo_url": "Profile Photo URL"
     },
     "taxAnalytics": "Tax Analytics",
     "noticeGenerator": "Notices",
@@ -396,7 +417,9 @@
     "processing": "Processing...",
     "payNow": "Pay Now",
     "receipt": "Receipt",
-    "paymentSuccess": "Payment successful!",
+    "calendarView": "Calendar View",
+    "gridView": "Grid View",
+    "paymentSuccess": "Payment Successful!",
     "paymentFailed": "Payment verification failed.",
     "notApplicable": "N/A",
     "beforeRegistration": "Before Registration",
@@ -569,5 +592,29 @@
     "contactResponse": "You can reach us at huuuuii947@gmail.com or call our helpdesk at 7983630254.",
     "thankResponse": "You're welcome! Feel free to ask if you have more questions.",
     "fallback": "I'm sorry, I don't understand that yet. You can try asking about 'tax', 'complaints', 'team', or 'contact'."
+  },
+  "support": {
+    "title": "Support Hub",
+    "trackTickets": "Track Your Tickets",
+    "raiseTicket": "Raise New Ticket",
+    "noTickets": "No active support tickets found.",
+    "ticketId": "Ticket ID",
+    "subject": "Issue Subject",
+    "description": "Describe your problem",
+    "status": "Status",
+    "adminMsg": "Admin Response",
+    "lastUpdate": "Last Update",
+    "resolvedMsg": "Your ticket has been resolved. Check the feedback below.",
+    "pendingMsg": "Our team is reviewing your request.",
+    "successSubmit": "Support ticket raised successfully!",
+    "active": "Active Tickets",
+    "history": "Ticket History",
+    "newTicket": "Raise Ticket",
+    "statusLabel": {
+      "pending": "Pending",
+      "in_progress": "Under Review",
+      "resolved": "Resolved",
+      "rejected": "Rejected"
+    }
   }
 }

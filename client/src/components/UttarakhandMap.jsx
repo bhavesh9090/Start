@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import geoData from '../data/uttarakhand.json';
 
 // Exact colors matching the Pinterest reference design for a stunning map
@@ -20,6 +20,21 @@ const districtColors = {
   "Hardwar": "#ac1b27", // Dark Red
   "Haridwar": "#ac1b27", // Alias
 };
+const districtCentroids = [
+  { name: "Uttarkashi", label: "UTTARKASHI", coordinates: [78.50, 31.02], size: "14px", smSize: "20px" },
+  { name: "Dehradun", label: "DEHRADUN", coordinates: [77.96, 30.40], size: "8px", smSize: "14px" },
+  { name: "Tehri Garhwal", label: "TEHRI\nGARHWAL", coordinates: [78.65, 30.38], size: "9px", smSize: "15px" },
+  { name: "Rudraprayag", label: "RUDRA-\nPRAYAG", coordinates: [79.02, 30.52], size: "7px", smSize: "12px" },
+  { name: "Chamoli", label: "CHAMOLI", coordinates: [79.40, 30.48], smCoordinates: [79.46, 30.55], size: "14px", smSize: "20px" },
+  { name: "Pithoragarh", label: "PITHORAGARH", coordinates: [80.35, 30.05], size: "13px", smSize: "18px" },
+  { name: "Bageshwar", label: "BAGESHWAR", coordinates: [79.82, 29.85], size: "7px", smSize: "12px" },
+  { name: "Almora", label: "ALMORA", coordinates: [79.58, 29.70], size: "10px", smSize: "16px" },
+  { name: "Champawat", label: "CHAMPAWAT", coordinates: [80.08, 29.28], size: "8px", smSize: "14px" },
+  { name: "Nainital", label: "NAINITAL", coordinates: [79.52, 29.42], size: "10px", smSize: "16px" },
+  { name: "Udham Singh Nagar", label: "UDHAM SINGH\nNAGAR", coordinates: [79.48, 28.98], size: "7px", smSize: "12px" },
+  { name: "Haridwar", label: "HARIDWAR", coordinates: [78.08, 29.88], size: "10px", smSize: "16px" },
+  { name: "Pauri Garhwal", label: "PAURI\nGARHWAL", coordinates: [78.78, 29.98], size: "11px", smSize: "17px" },
+];
 
 export default React.memo(function UttarakhandMap({ onDistrictClick }) {
   const [hovered, setHovered] = useState(null);
@@ -48,11 +63,11 @@ export default React.memo(function UttarakhandMap({ onDistrictClick }) {
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: 12500,
+          scale: 11000,
           center: [79.3, 30.1]
         }}
         width={800}
-        height={600}
+        height={700}
         style={{ width: "100%", height: "auto" }}
       >
         <Geographies geography={geoData.features}>
@@ -109,6 +124,34 @@ export default React.memo(function UttarakhandMap({ onDistrictClick }) {
             })
           }
         </Geographies>
+
+        {/* District Labels */}
+        {districtCentroids.map(({ name, label, coordinates, smCoordinates, size, smSize }) => (
+          <Marker key={name} coordinates={isTouch && smCoordinates ? smCoordinates : coordinates}>
+            <text
+              textAnchor="middle"
+              dominantBaseline="central"
+              className="fill-white font-black pointer-events-none select-none"
+              style={{
+                fontSize: isTouch ? smSize : size,
+                textShadow: "0 0 5px rgba(0,0,0,1), 0 0 3px rgba(0,0,0,0.8)",
+                letterSpacing: "0.1em",
+                filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"
+              }}
+            >
+              {label.split('\n').map((line, index, arr) => (
+                <tspan 
+                  key={index} 
+                  x="0" 
+                  dy={index === 0 ? "0" : "1.1em"} 
+                  alignmentBaseline="central"
+                >
+                  {line}
+                </tspan>
+              ))}
+            </text>
+          </Marker>
+        ))}
       </ComposableMap>
 
       {/* Modern Tooltip */}

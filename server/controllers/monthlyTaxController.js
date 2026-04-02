@@ -256,7 +256,7 @@ const downloadReceipt = async (req, res) => {
 
     const { data: payment, error } = await supabase
       .from('monthly_payments')
-      .select('*, users(username, gst_id, photo_url)')
+      .select('*, users(username, gst_id, photo_url, district, block)')
       .eq('id', id)
       .single();
 
@@ -271,6 +271,8 @@ const downloadReceipt = async (req, res) => {
       username: payment.users?.username,
       gst_id: payment.users?.gst_id,
       photo_url: payment.users?.photo_url,
+      district: payment.users?.district,
+      block: payment.users?.block,
       month: payment.month,
       year: payment.year,
       amount: payment.amount,

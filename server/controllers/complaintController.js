@@ -68,14 +68,16 @@ const getAllComplaints = async (req, res) => {
     const district_id = req.user.district_id;
     if (!district_id) return res.status(403).json({ error: 'No district assigned' });
 
-    const { status } = req.query;
+    const { status, type } = req.query;
     let query = supabase
       .from('complaints')
-      .select('*, users(username, gst_id)')
+      .select('*, users(username, gst_id, photo_url, block)')
       .eq('district_id', district_id)
       .order('created_at', { ascending: false });
 
     if (status) query = query.eq('status', status);
+    if (type === 'support') query = query.not('user_id', 'is', null);
+    if (type === 'complaint') query = query.is('user_id', null);
 
     const { data: complaints, error } = await query;
     if (error) throw error;
@@ -127,32 +129,37 @@ const updateComplaint = async (req, res) => {
 const deleteComplaint = async (req, res) => {
   try {
     const { id } = req.params;
-    const district_id = req.user.district_id;
+    const { id: userId, district_id: adminDistrictId, role } = req.user;
+    const isAdmin = ['super_admin', 'district_admin'].includes(role);
 
-    if (!district_id) return res.status(403).json({ error: 'No district assigned' });
+    let query = supabase.from('complaints').delete().eq('id', id);
 
-    // Verify ownership and delete
-    const { data: deleted, error } = await supabase
-      .from('complaints')
-      .delete()
-      .eq('id', id)
-      .eq('district_id', district_id)
-      .select()
-      .single();
+    // Permission check: Admin by district, User by ownership
+    if (isAdmin) {
+      if (!adminDistrictId) return res.status(403).json({ error: 'No district assigned to admin' });
+      query = query.eq('district_id', adminDistrictId);
+    } else {
+      query = query.eq('user_id', userId);
+    }
+
+    const { data: deleted, error } = await query.select().single();
 
     if (error) throw error;
     if (!deleted) return res.status(404).json({ error: 'Complaint not found or unauthorized' });
 
-    await logAudit({
-      actorId: req.user.id,
-      actorType: 'admin',
-      action: 'COMPLAINT_DELETED',
-      targetTable: 'complaints',
-      targetId: id,
-      details: { deletedComplaintSubject: deleted.subject },
-      ipAddress: req.ip,
-      districtId: district_id,
-    });
+    // Audit log only for admins
+    if (isAdmin) {
+      await logAudit({
+        actorId: userId,
+        actorType: 'admin',
+        action: 'COMPLAINT_DELETED',
+        targetTable: 'complaints',
+        targetId: id,
+        details: { deletedComplaintSubject: deleted.subject },
+        ipAddress: req.ip,
+        districtId: adminDistrictId,
+      });
+    }
 
     res.json({ message: 'Complaint deleted successfully' });
   } catch (err) {

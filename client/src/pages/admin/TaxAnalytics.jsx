@@ -96,8 +96,8 @@ export default function TaxAnalytics() {
                 <table className="w-full text-left">
                   <thead className="bg-[#FAF9F6]">
                     <tr>
-                      <th className="px-2 sm:px-4 py-3 text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelYear')}</th>
-                      <th className="px-2 sm:px-4 py-3 text-right text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('analytics.labelCollection')}</th>
+                      <th className="px-2 sm:px-4 py-3 text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('tableHeaders.year')}</th>
+                      <th className="px-2 sm:px-4 py-3 text-right text-[8px] font-black text-gray-500 uppercase tracking-widest">{t('tableHeaders.amount')}</th>
                       <th className="px-2 sm:px-4 py-3 text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('analytics.growth')}</th>
                     </tr>
                   </thead>
@@ -254,7 +254,7 @@ export default function TaxAnalytics() {
   };
 
   return (
-    <div className="min-h-screen mountain-bg pt-8 sm:pt-12 pb-8 sm:pb-12 px-2 sm:px-4 md:px-8 animate-fade-in overflow-x-hidden">
+    <div className="min-h-screen mountain-bg pt-20 sm:pt-24 pb-8 sm:pb-12 px-2 sm:px-4 md:px-8 animate-fade-in overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 sm:mb-12">
           <div className="animate-slide-in-left">

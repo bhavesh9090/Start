@@ -67,7 +67,7 @@ export const paymentAPI = {
 export const complaintAPI = {
   create: (data) => api.post('/complaints', data),
   getUserComplaints: () => api.get('/complaints/my'),
-  getAll: (status) => api.get('/complaints/all', { params: { status } }),
+  getAll: (status, type) => api.get('/complaints/all', { params: { status, type } }),
   update: (id, data) => api.put(`/complaints/${id}`, data),
   delete: (id) => api.delete(`/complaints/${id}`),
 };

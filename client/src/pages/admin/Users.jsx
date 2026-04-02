@@ -171,6 +171,15 @@ export default function AdminUsers() {
   const { user } = useAuth();
   const [filterPanelOpen, setFilterPanelOpen] = useState(true);
 
+  // Normalize district name for block lookup (e.g., "ALMORA" -> "Almora")
+  const normalizedDistrict = useMemo(() => {
+    if (!user?.district) return '';
+    // Handle names like "Udham Singh Nagar" or "Tehri Garhwal"
+    return user.district.split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }, [user?.district]);
+
   const chartData = useMemo(() => {
     const counts = {};
     users.forEach(u => {
@@ -227,7 +236,7 @@ export default function AdminUsers() {
         </div>
 
         {/* Control Panel */}
-        <div className="glass-card mb-8 overflow-hidden animate-fade-in-up delay-400">
+        <div className="glass-card mb-8 animate-fade-in-up delay-400 relative z-20">
           <div className="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-100 flex justify-between items-center cursor-pointer" onClick={() => setFilterPanelOpen(!filterPanelOpen)}>
             <h3 className="font-bold text-gray-800 flex items-center gap-2 text-sm uppercase tracking-widest">
               {t('adminPanel.users.filterAndSearch')}
@@ -253,7 +262,9 @@ export default function AdminUsers() {
                   <CustomDropdown
                     options={[
                       { value: '', label: t('adminPanel.users.allRegions') },
-                      ...(uttarakhandData[user?.district] || []).map(b => ({ value: b, label: b }))
+                      ...(uttarakhandData[normalizedDistrict] || [])
+                        .filter(b => b !== t('adminPanel.users.allRegions')) // Prevent duplicates
+                        .map(b => ({ value: b, label: b }))
                     ]}
                     value={filters.block}
                     onChange={(val) => setFilters({ ...filters, block: val })}

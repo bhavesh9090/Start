@@ -94,19 +94,30 @@ export default function AdminDashboard() {
     <div className="min-h-screen mountain-bg pt-20 pb-10 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-          <div className="animate-slide-in-left">
-            <h1 className="text-2xl sm:text-4xl font-black text-maroon-500 tracking-tight mb-2">
-              {t('notice.adminDashboard')}
-              {user?.username && <span className="text-gray-400 font-normal">, {user.username}</span>}
-            </h1>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-saffron-100 text-saffron-700 text-[10px] font-black uppercase rounded-lg border border-saffron-200">
-                {user?.district || 'District'}
-              </span>
-              <p className="text-xs text-gray-400 font-bold uppercase flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-forest-500 animate-pulse"></span>
-                {t('notice.intelligenceEngine')}
-              </p>
+          <div className="flex items-center gap-5 animate-slide-in-left">
+            {user?.photo_url ? (
+              <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-white flex-shrink-0 bg-white">
+                <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-600 flex items-center justify-center text-white text-2xl font-black shadow-lg flex-shrink-0">
+                {user?.username?.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div>
+              <h1 className="text-2xl sm:text-4xl font-black text-maroon-500 tracking-tight mb-2">
+                {t('notice.adminDashboard')}
+                {user?.username && <span className="text-gray-400 font-normal">, {user.username}</span>}
+              </h1>
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 bg-saffron-100 text-saffron-700 text-[10px] font-black uppercase rounded-lg border border-saffron-200">
+                  {user?.district || 'District'}
+                </span>
+                <p className="text-xs text-gray-400 font-bold uppercase flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest-500 animate-pulse"></span>
+                  {t('notice.intelligenceEngine')}
+                </p>
+              </div>
             </div>
           </div>
           

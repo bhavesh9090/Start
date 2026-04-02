@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
-import { FiUser, FiPhone, FiMapPin, FiLock, FiCheckCircle, FiCamera, FiX } from 'react-icons/fi';
+import { FiUser, FiPhone, FiMapPin, FiLock, FiCheckCircle, FiCamera, FiX, FiAlertCircle } from 'react-icons/fi';
 import { supabase } from '../services/supabase';
 import uttarakhandData from '../data/uttarakhand';
 import OTPModal from '../components/OTPModal';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Loader from '../components/Loader';
 
 export default function Register() {
@@ -20,6 +20,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [otpModal, setOtpModal] = useState({ isOpen: false, otp: '' });
+  const [showOtpInstructionModal, setShowOtpInstructionModal] = useState(false);
 
   const districts = Object.keys(uttarakhandData);
 
@@ -39,11 +40,16 @@ export default function Register() {
     return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   };
 
-  const handleSendOTP = async () => {
+  const handleSendOtpTrigger = () => {
     if (!form.mobile || form.mobile.length < 10) {
       setError(t('auth.mobileRequired'));
       return;
     }
+    setShowOtpInstructionModal(true);
+  };
+
+  const executeSendOTP = async () => {
+    setShowOtpInstructionModal(false);
     setLoading(true);
     try {
       const res = await authAPI.sendOTP(form.mobile);
@@ -172,8 +178,8 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4 pt-20 pb-10">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen auth-grid-bg flex items-center justify-center px-4 pt-20 pb-10">
+      <div className="w-full max-w-lg auth-grid-content">
         <div className="glass-card p-8">
           <h2 className="text-2xl font-bold text-center text-maroon-500 mb-2">{t('auth.registerTitle')}</h2>
           <p className="text-sm text-center text-gray-500 mb-6">{t('nav.zilaPanchayat')}</p>
@@ -354,7 +360,7 @@ export default function Register() {
                 </div>
 
                 {!otpSent ? (
-                  <button type="button" onClick={handleSendOTP} disabled={loading}
+                  <button type="button" onClick={handleSendOtpTrigger} disabled={loading}
                     className="btn-saffron w-full text-lg py-3 disabled:opacity-50">
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
@@ -406,6 +412,59 @@ export default function Register() {
         onClose={() => setOtpModal({ ...otpModal, isOpen: false })} 
         otp={otpModal.otp} 
       />
+
+      {/* OTP Instruction Modal */}
+      <AnimatePresence>
+        {showOtpInstructionModal && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 40, opacity: 0 }} 
+              animate={{ scale: 1, y: 0, opacity: 1 }} 
+              exit={{ scale: 0.9, y: 40, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 max-w-[90%] sm:max-w-lg w-full shadow-2xl relative border border-gray-100"
+            >
+              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <FiAlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-gray-800 leading-tight">Security Notice</h3>
+              </div>
+              
+              <div className="space-y-4 mb-6 sm:mb-8">
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-3 sm:p-4 rounded-r-lg shadow-inner">
+                  <p className="text-xs sm:text-sm font-bold text-gray-800 mb-3">
+                    Since the site is in <span className="text-blue-600">Test Mode</span>, an actual SMS will not be sent to your phone. To ensure your security, the <span className="text-forest-600 bg-forest-100 px-1 rounded">OTP</span> will be displayed directly on this screen.
+                  </p>
+                  <p className="text-xs sm:text-sm font-bold text-gray-800 border-t border-blue-200 pt-3">
+                    चूंकि साइट <span className="text-blue-600">टेस्ट मोड (Test Mode)</span> में है, आपके फोन पर वास्तविक SMS नहीं भेजा जाएगा। आपकी सुरक्षा सुनिश्चित करने के लिए, <span className="text-forest-600 bg-forest-100 px-1 rounded">OTP</span> सीधे इसी स्क्रीन पर दिखाया जाएगा।
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button 
+                  onClick={() => setShowOtpInstructionModal(false)}
+                  className="flex-1 py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors uppercase tracking-wider text-xs"
+                >
+                  Cancel / रद्द करें
+                </button>
+                <button 
+                  onClick={executeSendOTP}
+                  className="flex-1 py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95 uppercase tracking-wider text-xs"
+                >
+                  Confirm & Got it
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

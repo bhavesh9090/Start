@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
@@ -9,7 +10,7 @@ import {
   FiShield, FiZap, FiEye, FiGlobe, FiMail, FiPhone, FiMapPin, FiClock, 
   FiSend, FiUsers, FiChevronRight, FiCheckCircle, FiInfo, FiFileText, 
   FiLayout, FiTruck, FiShoppingBag, FiTool, FiActivity, FiMessageSquare,
-  FiCreditCard, FiBell, FiLock, FiArrowRight, FiStar,
+  FiCreditCard, FiBell, FiLock, FiArrowRight, FiStar, FiClipboard, FiSearch, FiMousePointer,
   FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiGithub 
 } from 'react-icons/fi';
 import { complaintAPI, authAPI, helpAPI } from '../services/api';
@@ -112,6 +113,8 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white text-gray-800 overflow-hidden">
       <HeroSection t={t} isMobile={isMobile} />
+      <DevbhoomiBanner />
+      <HowItWorksSection t={t} />
       <AboutSection t={t} />
       <HelpSection t={t} />
       <ComplaintSection t={t} />
@@ -119,6 +122,216 @@ export default function Landing() {
       <Footer t={t} />
       <ChatBot />
       <ProjectDisclaimer t={t} />
+    </div>
+  );
+}
+
+// ==================== HOW IT WORKS SECTION ====================
+function HowItWorksSection({ t }) {
+  const steps = [
+    {
+      num: '01',
+      icon: <FiClipboard className="w-6 h-6" />,
+      title: t('howItWorks.step1.title'),
+      desc: t('howItWorks.step1.desc'),
+      color: "red"
+    },
+    {
+      num: '02',
+      icon: <FiSearch className="w-6 h-6" />,
+      title: t('howItWorks.step2.title'),
+      desc: t('howItWorks.step2.desc'),
+      color: "green"
+    },
+    {
+      num: '03',
+      icon: <FiMousePointer className="w-6 h-6" />,
+      title: t('howItWorks.step3.title'),
+      desc: t('howItWorks.step3.desc'),
+      color: "red"
+    }
+  ];
+
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <section className="hiw-section" id="howitworks" ref={ref}>
+      <div className="hiw-bg-pattern"></div>
+      <div className="hiw-blob-red"></div>
+      <div className="hiw-blob-green"></div>
+      
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-20 relative">
+          <motion.span 
+            className="text-[#e03434] tracking-widest uppercase font-bold text-sm mb-3 block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            {t('howItWorks.eyebrow')}
+          </motion.span>
+          <motion.h2 
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1a1a1a] leading-tight font-outfit"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {t('howItWorks.heading').split('<br/>')[0]}<br/>
+            <span className="text-[#e03434]">{t('howItWorks.heading').split('<br/>')[1]}</span>
+          </motion.h2>
+          <motion.p
+            className="text-gray-500 mt-5 max-w-xl mx-auto text-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            A secure digital pathway designed for property owners and citizens alike.
+          </motion.p>
+        </div>
+
+        <div className="relative">
+          {/* Animated Dashed Line with traveling dot */}
+          <div className="hiw-dashed-line hidden md:block">
+            <div className="hiw-traveling-dot"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
+            {steps.map((step, index) => (
+              <motion.div 
+                key={index}
+                className="hiw-premium-card group relative"
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.3 + (index * 0.15) }}
+              >
+                {/* Background Watermark Number */}
+                <div className="hiw-watermark-num">{step.num}</div>
+
+                {/* Content */}
+                <div className="relative z-10 flex flex-col items-center text-center h-full bg-white rounded-[20px] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.07)] hover:-translate-y-2 transition-all duration-300 border border-gray-50 hover:shadow-[0_20px_40px_rgba(224,52,52,0.08)]">
+                  
+                  {/* Icon Circle */}
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-300 ${
+                    step.color === 'red' 
+                      ? 'bg-red-50 text-[#e03434] group-hover:bg-[#e03434] group-hover:text-white group-hover:shadow-[0_0_20px_rgba(224,52,52,0.4)]' 
+                      : 'bg-green-50 text-[#22c87a] group-hover:bg-[#22c87a] group-hover:text-white group-hover:shadow-[0_0_20px_rgba(34,200,122,0.4)]'
+                  }`}>
+                    {step.icon}
+                  </div>
+
+                  <h3 className="text-xl font-bold text-[#1a1a1a] font-outfit mb-3">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed flex-grow hiw-desc text-[15px]" dangerouslySetInnerHTML={{ __html: step.desc }}></p>
+                  
+                  {/* Step Pill */}
+                  <div className="mt-8">
+                    <span className="inline-block px-4 py-1.5 bg-red-50 text-[#e03434] text-[11px] font-black uppercase tracking-widest rounded-full">
+                      Step {index + 1} of 3
+                    </span>
+                  </div>
+                </div>
+
+                {/* Connector Arrows */}
+                {index < steps.length - 1 && (
+                  <>
+                    {/* Desktop Curved Arrow */}
+                    <div className="hidden md:block absolute top-[40%] -right-[30px] w-20 pointer-events-none z-[1] opacity-60">
+                      <svg viewBox="0 0 100 40" fill="transparent" className="w-full h-full text-[#e03434] stroke-current stroke-[3] stroke-dasharray-[4,4] animate-[pulse_2s_infinite]">
+                        <path d="M0,20 Q50,-10 100,20" markerEnd="url(#arrowhead)"/>
+                        <defs>
+                          <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                            <polygon points="0 0, 6 2, 0 4" fill="#e03434" />
+                          </marker>
+                        </defs>
+                      </svg>
+                    </div>
+                    {/* Mobile Downward Arrow */}
+                    <div className="block md:hidden absolute left-1/2 -bottom-[40px] -translate-x-1/2 h-8 w-8 pointer-events-none z-[1] opacity-60">
+                      <svg viewBox="0 0 20 40" fill="transparent" className="w-full h-full text-[#e03434] stroke-current stroke-[3] stroke-dasharray-[4,4] animate-[pulse_2s_infinite]">
+                        <path d="M10,0 L10,36" markerEnd="url(#arrowhead-mob)"/>
+                        <defs>
+                          <marker id="arrowhead-mob" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                            <polygon points="0 0, 6 2, 0 4" fill="#e03434" />
+                          </marker>
+                        </defs>
+                      </svg>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Area */}
+        <motion.div 
+           className="mt-20 text-center"
+           initial={{ opacity: 0, y: 30 }}
+           animate={isInView ? { opacity: 1, y: 0 } : {}}
+           transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Link to="/register" className="inline-flex items-center gap-3 bg-[#e03434] text-white font-bold px-10 py-4 text-lg rounded-full shadow-[0_10px_30px_rgba(224,52,52,0.3)] hover:bg-[#c92a2a] hover:shadow-[0_15px_40px_rgba(224,52,52,0.4)] transition-all transform group">
+              Get Started Now
+              <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+          <div className="mt-6 flex items-center justify-center gap-2 text-[13px] text-gray-500 font-medium">
+            <FiLock className="w-4 h-4 text-[#22c87a]" /> 
+            <span>Secure &middot; Instant &middot; Government Verified</span>
+          </div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
+
+// ==================== DEVBHOOMI BANNER ====================
+function DevbhoomiBanner() {
+  const items = [
+    '🏔️ Uttarakhand Devbhoomi',
+    '✦',
+    '🏔️ उत्तराखंड देवभूमि',
+    '✦',
+    '🕉️ Land of the Gods',
+    '✦',
+    '🕉️ देवों की भूमि',
+    '✦',
+    '🏛️ Zila Panchayat',
+    '✦',
+    '🏛️ जिला पंचायत',
+    '✦',
+  ];
+
+  // Duplicate items 4 times for seamless infinite scroll
+  const marqueeItems = [...items, ...items, ...items, ...items];
+
+  return (
+    <div className="relative py-3 overflow-hidden my-0">
+      <div className="relative bg-black py-5 overflow-hidden border-y border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.4)] -rotate-1 scale-x-[1.12]">
+        {/* Fade edges */}
+        <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+
+        <div className="flex whitespace-nowrap animate-marquee-scroll">
+          {marqueeItems.map((item, i) => (
+            item === '✦' ? (
+              <span key={i} className="mx-6 text-white/40 text-lg flex-shrink-0">✦</span>
+            ) : (
+              <span
+                key={i}
+                className="mx-6 text-sm sm:text-base font-bold text-white tracking-wider uppercase flex-shrink-0 hover:text-white/60 transition-colors cursor-default"
+              >
+                {item}
+              </span>
+            )
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -141,141 +354,118 @@ const districtDetails = {
 
 // ==================== HERO SECTION ====================
 function HeroSection({ t, isMobile }) {
-  const [titleLangToggle, setTitleLangToggle] = useState(false);
-  
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const heroRef = useRef(null);
+  const [titleIdx, setTitleIdx] = useState(0);
+
+  const heroTitles = [
+    "ई-टैक्सपे",
+    "E-TaxPay"
+  ];
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setTitleLangToggle(prev => !prev);
+      setTitleIdx(prev => (prev + 1) % 2);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
 
-
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', isMobile ? '0%' : '30%']);
-
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50/40 via-white to-green-50/40 pt-16 overflow-hidden">
-      {/* Animated Background Orbs */}
-      <div className="absolute inset-0">
-        <motion.div 
-          className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-red-200/30 to-red-100/20 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-green-200/30 to-emerald-100/20 rounded-full blur-3xl"
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-red-100/10 to-green-100/10 rounded-full blur-3xl"
-          animate={isMobile ? { opacity: 0.1 } : { rotate: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-      {!isMobile && <FloatingParticles />}
+    <section ref={heroRef} className="hero-gov mountain-bg text-left relative selection:bg-red-500/20">
+      <div className="hero-gov-pattern"></div>
+      <div className="hero-gov-blob-red"></div>
+      <div className="hero-gov-blob-green"></div>
+      <div className="hero-gov-arc"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Text Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full pt-10">
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-12 items-center">
+          
+          {/* Left Text Content */}
           <motion.div 
-            className="text-center lg:text-left"
+            className="flex flex-col items-center lg:items-start text-center lg:text-left"
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
           >
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 backdrop-blur-xl border border-red-200/50 rounded-full mb-8 shadow-lg shadow-red-100/20">
-              <FiShield className="w-4 h-4 text-red-500" />
-              <span className="text-sm font-semibold text-gray-700">{t('nav.zilaPanchayat')}</span>
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <motion.div variants={fadeInUp} className="hero-gov-badge mb-6 shadow-sm">
+              <span className="w-4 h-4 flex items-center justify-center rounded-full bg-red-100 text-[10px]">🏛</span>
+              Government of Uttarakhand &middot; Official Portal
             </motion.div>
             
-            <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-6 leading-normal text-gray-900 h-[80px] sm:h-[100px] md:h-[130px] flex items-center justify-center lg:justify-start">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={titleLangToggle ? 'hi' : 'en'}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="bg-gradient-to-r from-red-800 via-rose-700 to-emerald-800 bg-clip-text text-transparent pt-6 pb-4 block w-full"
-                >
-                  {titleLangToggle ? 'ई-टैक्सपे' : 'E-TaxPay'}
-                </motion.span>
-              </AnimatePresence>
-            </motion.h1>
+            <AnimatePresence mode="wait">
+              <motion.h1 
+                key={titleIdx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="hero-gov-heading"
+              >
+                {heroTitles[titleIdx]}
+              </motion.h1>
+            </AnimatePresence>
             
-            <motion.p variants={fadeInUp} className="text-xl md:text-2xl font-semibold text-gray-600 mb-4">
+            <motion.p variants={fadeInUp} className="hero-gov-subheading">
               {t('hero.subtitle')}
             </motion.p>
             
-            <motion.p variants={fadeInUp} className="text-lg text-gray-500 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+            <motion.p variants={fadeInUp} className="hero-gov-desc mb-10">
               {t('hero.description')}
             </motion.p>
             
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-12">
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center gap-4 mb-14 w-full justify-center lg:justify-start">
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+                <Link to="/register" className="btn-gov-primary w-full justify-center group flex items-center gap-2">
+                  {t('hero.cta')}
+                  <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
               <motion.a 
-                href="/register"
-                className="bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold text-lg px-8 py-4 flex items-center gap-3 shadow-xl shadow-red-500/25 rounded-2xl group"
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {t('hero.cta')}
-                <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.a>
-              <motion.a 
-                href="#about"
-                className="px-8 py-4 text-lg font-semibold text-green-600 border-2 border-green-200 rounded-2xl hover:bg-green-50 transition-all duration-300 backdrop-blur-sm"
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.98 }}
+                href="#about" 
+                whileHover={{ scale: 1.02 }} 
+                whileTap={{ scale: 0.95 }} 
+                className="btn-gov-secondary w-full sm:w-auto text-center"
               >
                 {t('hero.learnMore')}
               </motion.a>
             </motion.div>
 
             {/* Animated Stats */}
-            <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <motion.div variants={fadeInUp} className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
               {[
                 { value: '13', label: t('hero.districts'), suffix: '' },
                 { value: '500', label: t('hero.registeredShops'), suffix: '+' },
                 { value: '100', label: t('hero.secure'), suffix: '%' },
                 { value: '24/7', label: t('hero.support'), suffix: '', isStatic: true },
               ].map((stat, i) => (
-                <motion.div 
-                  key={i} 
-                  className="bg-white/80 backdrop-blur-md border border-gray-100 shadow-md rounded-2xl p-4 text-center group cursor-default"
-                  whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(239,68,68,0.1)' }}
-                >
-                  <div className="text-2xl font-black text-red-500 group-hover:text-green-500 transition-colors">
+                <div key={i} className="hero-gov-stat-card">
+                  <span className="hero-gov-stat-val">
                     {stat.isStatic ? stat.value : <AnimatedCounter target={stat.value} suffix={stat.suffix} />}
-                  </div>
-                  <div className="text-xs font-bold text-gray-500 mt-1 uppercase tracking-wider">{stat.label}</div>
-                </motion.div>
+                  </span>
+                  <span className="hero-gov-stat-label">{stat.label}</span>
+                </div>
               ))}
             </motion.div>
           </motion.div>
 
-          {/* Interactive Map */}
+          {/* Right Map Visual */}
           <motion.div 
-            className="flex flex-col justify-center items-center relative order-first lg:order-last mb-12 lg:mb-0 lg:scale-[1.7] xl:scale-[2]"
+            className="flex flex-col justify-center items-center relative mt-16 lg:mt-0 lg:scale-[1.7] xl:scale-[2]"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            style={{ y: yParallax }}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-red-500/10 to-green-500/10 rounded-full blur-3xl -z-10 animate-pulse" />
 
-            <div className={`${isMobile ? '' : 'animate-float'} w-full max-w-lg lg:max-w-xl xl:max-w-2xl flex justify-center`}>
-              <UttarakhandMap 
-                onDistrictClick={useCallback((district) => setSelectedDistrict({
-                  ...district,
-                  ...districtDetails[district.name]
-                }), [])} 
-              />
+            <div className={`w-full flex justify-center relative ${isMobile ? '' : 'animate-float'}`}>
+              <div className="w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
+                <UttarakhandMap 
+                  onDistrictClick={useCallback((district) => setSelectedDistrict({
+                    ...district,
+                    ...districtDetails[district.name]
+                  }), [])} 
+                />
+              </div>
             </div>
             
             {/* District Info Popup */}
@@ -337,46 +527,119 @@ function HeroSection({ t, isMobile }) {
   );
 }
 
-// ==================== ABOUT SECTION ====================
+// ==================== ABOUT SECTION — BENTO DARK ====================
 function AboutSection({ t }) {
   const features = [
-    { icon: FiShield, title: t('about.feature1Title'), desc: t('about.feature1Desc'), gradient: 'from-red-500 to-red-400' },
-    { icon: FiCreditCard, title: t('about.feature2Title'), desc: t('about.feature2Desc'), gradient: 'from-red-400 to-rose-400' },
-    { icon: FiActivity, title: t('about.feature3Title'), desc: t('about.feature3Desc'), gradient: 'from-green-500 to-emerald-400' },
-    { icon: FiMessageSquare, title: t('about.feature4Title'), desc: t('about.feature4Desc'), gradient: 'from-green-400 to-green-300' },
-    { icon: FiBell, title: t('about.feature5Title'), desc: t('about.feature5Desc'), gradient: 'from-red-500 to-rose-400' },
-    { icon: FiLock, title: t('about.feature6Title'), desc: t('about.feature6Desc'), gradient: 'from-emerald-500 to-green-400' },
+    {
+      icon: FiShield,
+      title: t('about.feature1Title'),
+      desc: t('about.feature1Desc'),
+      badge: 'badge-crimson',
+      glow: 'glow-crimson',
+      layout: 'bento-card-wide',
+      iconColor: '#f87171',
+    },
+    {
+      icon: FiCreditCard,
+      title: t('about.feature2Title'),
+      desc: t('about.feature2Desc'),
+      badge: 'badge-emerald',
+      glow: 'glow-emerald',
+      layout: 'bento-card-normal',
+      iconColor: '#34d399',
+    },
+    {
+      icon: FiActivity,
+      title: t('about.feature3Title'),
+      desc: t('about.feature3Desc'),
+      badge: 'badge-crimson',
+      glow: 'glow-crimson',
+      layout: 'bento-card-normal',
+      iconColor: '#f87171',
+    },
+    {
+      icon: FiMessageSquare,
+      title: t('about.feature4Title'),
+      desc: t('about.feature4Desc'),
+      badge: 'badge-emerald',
+      glow: 'glow-emerald',
+      layout: 'bento-card-normal',
+      iconColor: '#34d399',
+    },
+    {
+      icon: FiBell,
+      title: t('about.feature5Title'),
+      desc: t('about.feature5Desc'),
+      badge: 'badge-crimson',
+      glow: 'glow-crimson',
+      layout: 'bento-card-normal',
+      iconColor: '#f87171',
+    },
+    {
+      icon: FiLock,
+      title: t('about.feature6Title'),
+      desc: t('about.feature6Desc'),
+      badge: 'badge-emerald',
+      glow: 'glow-emerald',
+      layout: 'bento-card-wide',
+      iconColor: '#34d399',
+    },
   ];
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        delay: i * 0.1,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    }),
+  };
+
   return (
-    <section id="about" className="py-28 px-4 bg-white relative overflow-hidden">
-      {/* Subtle bg decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-red-100/30 rounded-full blur-3xl -z-0" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-green-100/20 rounded-full blur-3xl -z-0" />
-      
+    <section id="about" className="mission-section py-28 px-4">
+      {/* Animated Mesh Gradient Blobs */}
+      <div className="mesh-blob mesh-blob-1" />
+      <div className="mesh-blob mesh-blob-2" />
+      <div className="mesh-blob mesh-blob-3" />
+
+      {/* Noise Texture */}
+      <div className="mission-noise" />
+
+      {/* Faint Grid Lines */}
+      <div className="mission-grid-lines" />
+
       <div className="max-w-6xl mx-auto relative z-10" ref={ref}>
+        {/* Header */}
         <div className="text-center mb-20">
-          <motion.span 
-            className="text-red-500 font-bold tracking-[0.3em] uppercase text-xs mb-4 block"
+          <motion.span
+            className="mission-eyebrow inline-block mb-5"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
           >
             WHY E-TAXPAY
           </motion.span>
-          <motion.h2 
-            className="section-title mb-5"
+
+          <motion.h2
+            className="mission-heading mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
           >
-            {t('about.title')}
+            Our Mission &{' '}
+            <span className="text-highlight">Vision</span>
           </motion.h2>
-          <motion.p 
-            className="text-lg text-gray-500 max-w-3xl mx-auto"
+
+          <motion.p
+            className="mission-subtitle mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -384,27 +647,33 @@ function AboutSection({ t }) {
             {t('about.description')}
           </motion.p>
         </div>
-        
-        <motion.div 
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
+
+        {/* Bento Grid */}
+        <div className="bento-grid">
           {features.map((f, i) => (
-            <motion.div 
+            <motion.div
               key={i}
-              className="premium-card p-8 group cursor-default"
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className={`bento-glass-card ${f.glow} ${f.layout} hover-lift cursor-default`}
+              whileHover={{ scale: 1.02 }}
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
             >
-              <div className={`w-14 h-14 mb-6 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                <f.icon className="w-7 h-7 text-white" />
+              {/* Shimmer Effect */}
+              <div className="card-shimmer" />
+
+              {/* Icon Badge */}
+              <div className={`bento-icon-badge ${f.badge}`}>
+                <f.icon style={{ width: 26, height: 26, color: f.iconColor }} />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-red-500 transition-colors">{f.title}</h3>
-              <p className="text-gray-500 leading-relaxed text-sm">{f.desc}</p>
+
+              {/* Content */}
+              <h3 className="bento-card-title">{f.title}</h3>
+              <p className="bento-card-desc">{f.desc}</p>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -433,63 +702,97 @@ function HelpSection({ t }) {
   };
 
   return (
-    <section id="help" className="py-28 px-4 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-      <div className="absolute top-20 left-1/4 w-64 h-64 bg-red-100/30 rounded-full blur-3xl" />
+    <section id="help" className="help-section py-28 px-4">
+      {/* Background Blobs */}
+      <div className="help-bg-blob help-blob-red" />
+      <div className="help-bg-blob help-blob-green" />
       
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16" data-aos="fade-up">
-          <span className="text-green-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">SUPPORT</span>
-          <h2 className="section-title mb-4">{t('help.title')}</h2>
-          <p className="text-lg text-gray-500">{t('help.description')}</p>
+          <span className="help-eyebrow mb-4 block">SUPPORT</span>
+          <h2 className="help-heading mb-4">
+            Need <span>Help?</span>
+          </h2>
+          <p className="help-subtitle max-w-2xl mx-auto">
+            Get in touch with our team for any tax-related discrepancies, technical support, or general queries. We're here to assist you.
+          </p>
         </div>
-        <div className="grid md:grid-cols-2 gap-10">
+        
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-start">
+          {/* Left Column - Contact Form */}
           <motion.form 
             onSubmit={handleSubmit} 
-            className="premium-card p-8 space-y-5"
-            data-aos="fade-right"
-            whileHover={{ boxShadow: '0 25px 50px rgba(239,68,68,0.08)' }}
+            className="help-card-form p-8 md:p-10 space-y-6"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
-            <input type="text" placeholder={t('help.name')} className="input-field focus:ring-red-400 focus:scale-[1.01] transition-all"
-              value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
-            <input type="email" placeholder={t('help.email')} className="input-field focus:ring-red-400 focus:scale-[1.01] transition-all"
-              value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} required />
-            <input type="tel" placeholder={t('help.mobile')} className="input-field focus:ring-red-400 focus:scale-[1.01] transition-all"
-              value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" />
-            <textarea placeholder={t('help.message')} rows={4} className="input-field resize-none focus:ring-red-400 focus:scale-[1.01] transition-all"
-              value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} required />
+            <div>
+              <input type="text" placeholder="Your Name" className="help-input"
+                value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
+            </div>
+            <div>
+              <input type="email" placeholder="Email Address" className="help-input"
+                value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} required />
+            </div>
+            <div>
+              <input type="tel" placeholder="Mobile Number" className="help-input"
+                value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" />
+            </div>
+            <div>
+              <textarea placeholder="Your Message" rows={4} className="help-input resize-none"
+                value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} required />
+            </div>
             <motion.button 
               type="submit" 
-              className="bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold w-full flex items-center justify-center gap-2 py-4 text-lg rounded-2xl shadow-lg shadow-red-500/20"
-              whileHover={{ scale: 1.02, y: -2 }}
+              className="btn-crimson w-full flex items-center justify-center gap-3"
               whileTap={{ scale: 0.98 }}
             >
-              <FiSend className="w-4 h-4" />
-              {sent ? `✓ ${t('tax.sent')}` : t('help.submit')}
+              <FiSend className="w-5 h-5" />
+              {sent ? `✓ Sent` : 'Send Message'}
             </motion.button>
           </motion.form>
 
-          <div className="space-y-4" data-aos="fade-left" data-aos-delay="100">
-            <h3 className="text-xl font-bold text-green-600 mb-2">{t('help.contactTitle')}</h3>
-            <div className="space-y-3">
-              {[
-                { icon: FiMapPin, text: t('help.address'), gradient: 'from-red-500 to-red-400' },
-                { icon: FiPhone, text: t('help.phone'), gradient: 'from-red-400 to-rose-400' },
-                { icon: FiMail, text: t('help.emailId'), gradient: 'from-green-500 to-emerald-400' },
-                { icon: FiClock, text: t('help.hours'), gradient: 'from-green-400 to-green-300' },
-              ].map((item, i) => (
-                <motion.div 
-                  key={i} 
-                  className="flex items-start gap-4 p-4 premium-card"
-                  whileHover={{ x: 6, transition: { duration: 0.2 } }}
-                >
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center flex-shrink-0 shadow-md`}>
-                    <item.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-gray-600 flex-1 pt-2 text-sm">{item.text}</span>
-                </motion.div>
-              ))}
+          {/* Right Column - Contact Info Panel */}
+          <motion.div 
+            className="help-card-info p-8 md:p-10 space-y-8"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h3 className="info-title">Contact Information</h3>
+            <div className="space-y-4">
+              <div className="info-row">
+                <div className="info-icon-badge badge-red-light">
+                  <FiMapPin className="w-5 h-5" />
+                </div>
+                <div className="info-text">📍 Zila Panchayat, Almora, Uttarakhand - 263601</div>
+              </div>
+              
+              <div className="info-row">
+                <div className="info-icon-badge badge-red-light">
+                  <FiPhone className="w-5 h-5" />
+                </div>
+                <div className="info-text">📞 +91 7983630254, +91 7906718235</div>
+              </div>
+              
+              <div className="info-row">
+                <div className="info-icon-badge badge-green-light">
+                  <FiMail className="w-5 h-5" />
+                </div>
+                <div className="info-text">✉️ huuuui947@gmail.com</div>
+              </div>
+              
+              <div className="info-row">
+                <div className="info-icon-badge badge-green-light">
+                  <FiClock className="w-5 h-5" />
+                </div>
+                <div className="info-text">🕐 Mon–Sat: 10:00 AM – 5:00 PM</div>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -514,6 +817,7 @@ function ComplaintSection({ t }) {
     { id: '220b8156-3d96-47c0-89bf-cca149fb6bfe', name: 'Uttarkashi' }
   ]);
   const [loading, setLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     authAPI.getDistricts().then(res => {
@@ -546,122 +850,168 @@ function ComplaintSection({ t }) {
   };
 
   return (
-    <section id="complaint" className="py-28 px-4 bg-gray-50 relative overflow-hidden">
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-100/20 rounded-full blur-3xl" />
+    <section id="complaint" className="grievance-section py-28 px-4">
+      {/* Soft Glow Blobs */}
+      <div className="grievance-bg-blob grievance-blob-red" />
+      <div className="grievance-bg-blob grievance-blob-green" />
       
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-12" data-aos="fade-up">
-          <span className="text-red-500 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">GRIEVANCE CELL</span>
-          <h2 className="section-title mb-4">{t('complaintSection.title')}</h2>
+          <span className="grievance-eyebrow mb-4 block">GRIEVANCE CELL</span>
+          <h2 className="grievance-heading mb-4">
+            File a <span>Complaint</span>
+          </h2>
           <div className="flex justify-center mb-4">
-            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-forest-50 border border-forest-100 text-forest-600 rounded-full text-xs font-bold animate-pulse uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 bg-forest-500 rounded-full" />
-              Real-time Routing Active
-            </span>
+            <div className="routing-badge">
+              <span className="routing-dot" />
+              Real-Time Routing Active
+            </div>
           </div>
-          <p className="text-lg text-gray-400">{t('complaintSection.description')}</p>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            Have an issue? Submit your complaint here and we'll address it promptly.
+          </p>
         </div>
         
-        <motion.form 
-          onSubmit={handleComplaintSubmit} 
-          className="premium-card p-8 space-y-5"
-          data-aos="zoom-in"
-          whileHover={{ boxShadow: '0 25px 50px rgba(128,0,0,0.08)' }}
+        <motion.div
+           initial={{ opacity: 0, y: 40 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.7 }}
         >
-          <div className="grid md:grid-cols-2 gap-5">
-            <input type="text" placeholder={t('complaintSection.name')} className="input-field focus:scale-[1.01] transition-all"
-              value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
-            <input type="tel" placeholder={t('complaintSection.mobile')} className="input-field focus:scale-[1.01] transition-all"
-              value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" required />
-          </div>
-          <div className="grid md:grid-cols-2 gap-5">
-            <select 
-              className="input-field bg-white focus:scale-[1.01] transition-all"
-              value={form.district_id}
-              onChange={(e) => setForm({...form, district_id: e.target.value})}
-              required
-            >
-              <option value="">{t('complaintSection.selectDistrict') || 'Select District Admin'}</option>
-              {districts.map(d => (
-                <option key={d.id} value={d.id}>{d.name} Admin</option>
-              ))}
-            </select>
-            <input type="text" placeholder={t('complaintSection.subject')} className="input-field focus:scale-[1.01] transition-all"
-              value={form.subject} onChange={(e) => setForm({...form, subject: e.target.value})} required />
-          </div>
-          <textarea placeholder={t('complaintSection.description_field')} rows={5} className="input-field resize-none focus:scale-[1.01] transition-all"
-            value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} required />
-          <motion.button 
-            type="submit" 
-            disabled={loading} 
-            className="bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold w-full disabled:opacity-50 flex items-center justify-center gap-2 py-4 text-lg rounded-2xl shadow-xl shadow-green-500/20"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
+          <form 
+            onSubmit={handleComplaintSubmit} 
+            className="grievance-card"
           >
-            {loading ? (
-              <Loader size="small" />
-            ) : (
-              <>
-                <FiSend className="w-5 h-5" />
-                {t('complaintSection.submit')}
-              </>
-            )}
-          </motion.button>
-        </motion.form>
+            {/* Step Indicator */}
+            <div className="step-indicator">
+              <span className="step-active"><span className="step-dot"/> Your Info</span>
+              <span className="step-arrow">→</span>
+              <span>Complaint Details</span>
+              <span className="step-arrow">→</span>
+              <span>Submit</span>
+            </div>
+
+            <div className="space-y-6">
+              {/* Row 1: Name and Mobile */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className={`float-group ${form.name ? 'has-value' : ''}`}>
+                  <input type="text" className="float-input" placeholder=" "
+                    value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
+                  <label className="float-label">Your Name</label>
+                </div>
+                <div className={`float-group ${form.mobile ? 'has-value' : ''}`}>
+                  <input type="tel" className="float-input" placeholder=" "
+                    value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" required />
+                  <label className="float-label">Mobile Number</label>
+                </div>
+              </div>
+
+              {/* Row 2: District and Subject */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className={`float-group relative ${form.district_id || isDropdownOpen ? 'has-value' : ''}`}>
+                  <div 
+                    className="float-input float-select cursor-pointer flex items-center justify-between"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    <span className={form.district_id ? "text-[#1a1a1a]" : "text-transparent select-none"}>
+                      {form.district_id ? districts.find(d => d.id === form.district_id)?.name + ' Admin' : 'Select'}
+                    </span>
+                  </div>
+                  <label className="float-label flex items-center pointer-events-none">
+                    Select District Admin
+                    <span className="info-tooltip-icon ml-2 pointer-events-auto cursor-help" title="Your complaint is routed directly to this district's nodal officer.">i</span>
+                  </label>
+                  
+                  <AnimatePresence>
+                    {isDropdownOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)} />
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute z-50 w-full mt-2 bg-white border border-gray-100 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] overflow-hidden max-h-60 overflow-y-auto"
+                        >
+                          {districts.map(d => (
+                            <div 
+                              key={d.id} 
+                              onClick={() => {
+                                setForm({...form, district_id: d.id});
+                                setIsDropdownOpen(false);
+                              }}
+                              className={`px-5 py-3 cursor-pointer transition-all duration-200 flex items-center gap-3 border-b border-gray-50 last:border-0 ${form.district_id === d.id ? 'bg-red-50 text-[#e03434] font-bold' : 'hover:bg-gray-50 text-gray-700 font-medium'}`}
+                            >
+                              <span className={`w-2 h-2 rounded-full transition-colors ${form.district_id === d.id ? 'bg-[#e03434] shadow-[0_0_8px_rgba(224,52,52,0.5)]' : 'bg-gray-200'}`}></span>
+                              {d.name} Admin
+                            </div>
+                          ))}
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <div className={`float-group ${form.subject ? 'has-value' : ''}`}>
+                  <input type="text" className="float-input" placeholder=" "
+                    value={form.subject} onChange={(e) => setForm({...form, subject: e.target.value})} required />
+                  <label className="float-label">Subject</label>
+                </div>
+              </div>
+
+              {/* Row 3: Description */}
+              <div className={`float-group float-group-textarea ${form.description ? 'has-value' : ''}`}>
+                <textarea 
+                  className="float-input resize-none h-36" 
+                  placeholder=" "
+                  value={form.description} 
+                  onChange={(e) => setForm({...form, description: e.target.value})} 
+                  required 
+                />
+                <label className="float-label">Describe your complaint in detail</label>
+                <div className="char-counter">{form.description.length}/1000</div>
+              </div>
+
+              {/* Submit Action */}
+              <div className="pt-4">
+                <motion.button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-emerald"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>{loading ? 'Submitting...' : 'Submit Complaint'}</span>
+                  {!loading && <FiSend className="w-5 h-5 btn-emerald-icon" />}
+                </motion.button>
+                <div className="secure-note">
+                  <FiLock className="w-3.5 h-3.5" />
+                  <span>Your complaint is encrypted and routed securely</span>
+                </div>
+              </div>
+            </div>
+          </form>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-const BlobPaths = [
-    "M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.6,90,-16.3,88.5,-0.9C87,14.6,81.4,29.2,72.1,40.1C62.8,51,49.8,58.3,36.5,66.4C23.2,74.5,9.6,83.5,-5.1,83.5C-19.8,83.5,-39.7,74.5,-53.1,66.4C-66.5,58.3,-73.4,51,-79.8,40.1C-86.2,29.2,-92.1,14.6,-91.4,0.4C-90.7,-13.8,-83.4,-27.6,-74.6,-38.5C-65.8,-49.4,-55.5,-57.4,-44.1,-64.6C-32.7,-71.8,-20.2,-78.2,-5.1,-78.2C10,-78.2,20.1,-71.8,44.7,-76.4Z",
-    "M42.2,-73.1C55.3,-64.5,67.1,-53.8,74.5,-40.5C81.9,-27.2,84.9,-11.3,83.5,4.1C82.1,19.5,76.3,34.4,66.4,45.8C56.5,57.2,42.5,65.1,28,71.2C13.5,77.3,-1.5,81.6,-16.5,80C-31.4,78.3,-46.3,70.7,-57.6,60.1C-68.9,49.5,-76.6,35.9,-80.6,21C-84.6,6.1,-84.9,-10.1,-79.7,-24.1C-74.5,-38.1,-63.8,-49.9,-51.1,-58.5C-38.4,-67.1,-23.7,-72.5,-8.4,-73.1C6.9,-73.7,21.1,-69.5,42.2,-73.1Z",
-    "M39.6,-66.1C52.1,-60.1,63.5,-50.2,71.2,-37.9C78.9,-25.6,82.9,-11,82.3,3.7C81.7,18.4,76.5,33.2,67.2,45C57.9,56.8,44.5,65.6,29.9,71.1C15.3,76.6,-0.5,78.8,-15.7,76.5C-30.9,74.2,-45.5,67.4,-57,56.8C-68.5,46.2,-76.9,31.8,-79.8,16.5C-82.7,1.2,-80.1,-15,-73.6,-28.9C-67.1,-42.8,-56.7,-54.4,-44.2,-60.4C-31.7,-66.4,-17.1,-66.8,-1.1,-66.8C14.9,-66.8,27.1,-72.1,39.6,-66.1Z",
-    "M35.6,-61.4C46.5,-54.3,55.9,-44.8,61.4,-33.5C66.9,-22.2,68.5,-9.1,68,-3.8C67.5,1.5,64.9,13.1,59.2,22.8C53.5,32.5,44.7,40.3,34.5,47.2C24.3,54.1,12.7,60.1,1.1,60.1C-10.5,60.1,-20.9,54.1,-29.9,47.2C-38.9,40.3,-46.5,32.5,-51.4,22.8C-56.3,13.1,-58.5,1.5,-57.6,-9.6C-56.7,-20.7,-52.7,-31.3,-46,-42.6C-39.3,-53.9,-29.9,-65.9,-19.1,-68.9C-8.3,-71.9,3.9,-65.9,16.4,-61.4C28.9,-56.9,24.7,-68.5,35.6,-61.4Z"
-];
-
-const BlobBackground = ({ color, index, className }) => {
-  const colors = {
-    red: "fill-red-500",
-    green: "fill-green-500",
-    purple: "fill-purple-500",
-    orange: "fill-orange-500",
-    blue: "fill-blue-500",
-    rose: "fill-rose-500"
-  };
-
-  const path = BlobPaths[index % BlobPaths.length];
-
-  return (
-    <svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <motion.path 
-        d={path} 
-        className={colors[color] || colors.purple}
-        initial={{ scale: 0.8, rotate: -10 }}
-        whileHover={{ scale: 1.05, rotate: 5 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      />
-    </svg>
-  );
-};
-
 function AboutUsSection({ t }) {
   const team = [
-    { name: t('aboutUs.member1'), role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: sumitImg, color: '#fbbf24', // Amber/Yellow
+    { name: "Sumit Bhandari", role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: sumitImg, 
       github: 'https://github.com/sumitbhandari2006', instagram: 'https://www.instagram.com/yeah_sumithere', linkedin: 'https://www.linkedin.com/in/sumit-bhandari-1424b133a' },
-    { name: t('aboutUs.member2'), role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: manishImg, color: '#60a5fa', // Blue
+    { name: "Manish Paliwal", role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: manishImg, isCoFounder: true,
       github: 'https://github.com/Manish363-dot', instagram: 'https://www.instagram.com/manish__uk_01', linkedin: 'https://www.linkedin.com/in/manish-paliwal-389a74327' },
-    { name: t('aboutUs.member3'), role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: bhaveshImg, color: '#34d399', // Emerald/Mint
+    { name: "Bhavesh Bisht", role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: bhaveshImg, 
       github: 'https://github.com/bhavesh9090', instagram: 'https://www.instagram.com/bhavesh_bishtttt', linkedin: 'https://www.linkedin.com/in/bhavesh-bisht-549530328' },
-    { name: t('aboutUs.member4'), role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: deepakImg, color: '#a3e635', // Lime
+    { name: "Deepak Bisht", role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: deepakImg, 
       github: 'https://github.com/Deepakbisht010', instagram: 'https://www.instagram.com/deepak_bisht.001/', linkedin: 'https://www.linkedin.com/in/deepak-singh-a05583328/' },
-    { name: t('aboutUs.member5'), role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: lalitImg, color: '#818cf8', // Indigo/Purple
+    { name: "Lalit Singh", role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: lalitImg, 
       github: 'https://github.com/Lalit-73-02', instagram: 'https://www.instagram.com/?hl=en', linkedin: 'https://www.linkedin.com/in/lalit-singh-kanyal-929583328/' },
-    { name: t('aboutUs.member6'), role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: sahilImg, color: '#fb923c', // Orange
+    { name: "Sahil Chand", role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: sahilImg, 
       github: 'https://github.com/sahil-chand-21', instagram: 'https://www.instagram.com/sahil._.chand', linkedin: 'https://www.linkedin.com/in/sahil-chand-077org' },
-    { name: t('aboutUs.member7'), role: t('aboutUs.role7'), email: "raja@taxpay.co", image: rajaImg, color: '#f472b6', // Pink
+    { name: "Raja Rautela", role: t('aboutUs.role7'), email: "raja@taxpay.co", image: rajaImg, 
       github: 'https://github.com/raja393-disigner', instagram: 'https://www.instagram.com/r_for_rautela', linkedin: 'https://www.linkedin.com/in/raja-rautela-07b589328/' },
-    { name: t('aboutUs.member8'), role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: gauravImg, color: '#fbbf24', // Yellow
+    { name: "Gaurav Bisht", role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: gauravImg, 
       github: 'https://www.instagram.com/gauri_bisht_07', instagram: 'https://instagram.com/manish', linkedin: 'https://www.linkedin.com/in/gaurav-bisht-04647a387' },
   ];
 
@@ -669,62 +1019,79 @@ function AboutUsSection({ t }) {
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <section id="about-us" className="py-24 px-4 bg-white relative overflow-hidden">
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+    <section id="about-us" className="team-section">
+      <div className="team-bg-blob team-blob-red" />
+      <div className="team-bg-blob team-blob-green" />
+
+      <div className="team-header-container" ref={ref}>
+        <motion.span 
+          className="team-eyebrow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
         >
-          {team.map((member, i) => (
+          OUR TEAM
+        </motion.span>
+        <motion.h2 
+          className="team-heading"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          Meet the <span>Team</span>
+        </motion.h2>
+        <motion.p 
+          className="team-subtitle"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2 }}
+        >
+          The passionate minds behind E-TaxPay's digital revolution
+        </motion.p>
+      </div>
+
+      <div className="team-grid">
+        {team.map((member, i) => {
+          const isRed = i % 2 === 0;
+          return (
             <motion.div 
               key={i} 
-              className="group flex flex-col items-center text-center"
-              variants={fadeInUp}
+              className={`team-card group ${isRed ? 'accent-red' : 'accent-green'}`}
+              initial={{ opacity: 0, y: 40 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 * i }}
+              title={member.name}
             >
-              <div className="relative w-40 h-40 mb-6">
-                {/* Colored Circle Background */}
-                <div 
-                  className="absolute inset-0 rounded-full transition-transform duration-500 group-hover:scale-110"
-                  style={{ backgroundColor: member.color }}
-                />
-                
-                {/* Person Image */}
-                <div className="absolute inset-0 rounded-full overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
+              <div className="team-photo-wrapper">
+                <img src={member.image} alt={member.name} loading="lazy" className="team-photo" />
+                <div className={`team-hover-overlay ${isRed ? 'team-overlay-red' : 'team-overlay-green'}`}></div>
               </div>
               
-              <div className="space-y-1">
-                <h3 className="text-xl font-bold text-gray-900 tracking-tight">
-                  {member.name}
-                </h3>
-                <p className="text-sm font-medium text-gray-500">
-                  {member.role}
-                </p>
+              <div className="team-info">
+                <h3 className="team-name">{member.name}</h3>
+                <p className="team-role">{member.role}</p>
                 
-                {/* Social Links - Fixed styles like screenshot */}
-                <div className="flex gap-4 justify-center pt-3">
-                  <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 transition-colors">
-                    <FiGithub className="w-5 h-5" />
-                  </a>
-                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 transition-colors">
-                    <FiLinkedin className="w-5 h-5" />
-                  </a>
-                  <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 transition-colors">
-                    <FiInstagram className="w-5 h-5" />
-                  </a>
+                <div className="flex justify-center gap-3 mt-4 h-9 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 ease-out pointer-events-none group-hover:pointer-events-auto">
+                  {member.github && (
+                    <a href={member.github} target="_blank" rel="noopener noreferrer" className={`w-9 h-9 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 transition-colors ${isRed ? 'hover:bg-red-50 hover:text-[#e03434] hover:border-red-100' : 'hover:bg-green-50 hover:text-[#22c87a] hover:border-green-100'}`}>
+                      <FiGithub size={16} />
+                    </a>
+                  )}
+                  {member.linkedin && (
+                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className={`w-9 h-9 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 transition-colors ${isRed ? 'hover:bg-red-50 hover:text-[#e03434] hover:border-red-100' : 'hover:bg-green-50 hover:text-[#22c87a] hover:border-green-100'}`}>
+                      <FiLinkedin size={16} />
+                    </a>
+                  )}
+                  {member.instagram && (
+                    <a href={member.instagram} target="_blank" rel="noopener noreferrer" className={`w-9 h-9 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 transition-colors ${isRed ? 'hover:bg-red-50 hover:text-[#e03434] hover:border-red-100' : 'hover:bg-green-50 hover:text-[#22c87a] hover:border-green-100'}`}>
+                      <FiInstagram size={16} />
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>
-          ))}
-        </motion.div>
+          );
+        })}
       </div>
     </section>
   );
@@ -732,8 +1099,15 @@ function AboutUsSection({ t }) {
 
 // ==================== PROJECT DISCLAIMER ====================
 function ProjectDisclaimer({ t }) {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(() => localStorage.getItem('eTaxPayDisclaimerAgreed') !== 'true');
   const [agreed, setAgreed] = useState(false);
+
+  const handleAgreeAndEnter = () => {
+    if (agreed) {
+      localStorage.setItem('eTaxPayDisclaimerAgreed', 'true');
+      setShow(false);
+    }
+  };
 
   if (!show) return null;
 
@@ -788,7 +1162,7 @@ function ProjectDisclaimer({ t }) {
           </div>
 
           <motion.button 
-            onClick={() => agreed && setShow(false)}
+            onClick={handleAgreeAndEnter}
             disabled={!agreed}
             className={`w-full py-4 rounded-2xl font-black text-[11px] shadow-xl transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-2 ${
               agreed 

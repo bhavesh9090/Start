@@ -219,10 +219,21 @@ const updateUser = async (req, res) => {
 const getAuditLogs = async (req, res) => {
   try {
     const { action, actor_type, limit: queryLimit } = req.query;
+    
+    // 24-hour Retention Policy: Delete logs older than 24 hours
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    
+    // Purge old logs for this district (or all if superadmin, but here we target district)
+    const purgeQuery = supabase.from('audit_logs').delete().lt('created_at', cutoff);
+    if (req.user.role === 'admin') {
+      purgeQuery.eq('district_id', req.user.district_id);
+    }
+    await purgeQuery;
 
     let query = supabase
       .from('audit_logs')
       .select('*')
+      .gte('created_at', cutoff) // Only select current day's data
       .order('created_at', { ascending: false })
       .limit(parseInt(queryLimit) || 100);
 
@@ -237,6 +248,7 @@ const getAuditLogs = async (req, res) => {
     if (error) throw error;
     res.json({ logs });
   } catch (err) {
+    console.error('Audit logs error:', err);
     res.status(500).json({ error: 'Failed to fetch audit logs' });
   }
 };
