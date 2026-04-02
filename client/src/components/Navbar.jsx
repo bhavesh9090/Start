@@ -204,11 +204,11 @@ export default function Navbar() {
   const isAuthPage = ['/login', '/register', '/forgot-password'].includes(location.pathname);
 
   const publicLinks = [
-    { href: '#about', label: t('nav.about') },
-    { href: '#howitworks', label: t('nav.howItWorks') },
-    { href: '#help', label: t('nav.help') },
-    { href: '#complaint', label: t('nav.complaint') },
-    { href: '#about-us', label: t('nav.aboutUs') },
+    { href: '/#about', label: t('nav.about') },
+    { href: '/#howitworks', label: t('nav.howItWorks') },
+    { href: '/#help', label: t('nav.help') },
+    { href: '/#complaint', label: t('nav.complaint') },
+    { href: '/#about-us', label: t('nav.aboutUs') },
   ];
 
   const userLinks = [
@@ -233,7 +233,7 @@ export default function Navbar() {
     { to: '/admin/audit-logs', label: t('admin.auditLogs') },
   ];
 
-  const navLinks = user ? (isAdmin() ? adminLinks : userLinks) : (isLanding ? publicLinks : []);
+  const navLinks = user ? (isAdmin() ? adminLinks : userLinks) : publicLinks;
 
   return (
     <>
@@ -241,15 +241,19 @@ export default function Navbar() {
       scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white/80 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo (Stays Left) */}
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow overflow-hidden p-1 sm:p-1.5 flex-shrink-0">
               <img src={logoImg} alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <div className="whitespace-nowrap">
-              <span className="text-lg sm:text-xl font-bold text-maroon-500 block leading-tight max-w-[9.5rem] overflow-hidden text-ellipsis">{t('nav.logoName')}</span>
-              <span className="hidden sm:block text-[10px] text-gray-500 -mt-1">{t('nav.zilaPanchayat')}</span>
+            <div className="flex flex-col min-w-0 py-1">
+              <span className="text-base sm:text-lg lg:text-xl font-bold text-maroon-500 block leading-relaxed max-w-[14rem] sm:max-w-[18rem] truncate pb-0.5">
+                {t('nav.logoName')}
+              </span>
+              <span className="text-[10px] sm:text-[11px] text-gray-500 font-medium leading-tight -mt-0.5 truncate">
+                {t('nav.zilaPanchayat')}
+              </span>
             </div>
           </Link>
 

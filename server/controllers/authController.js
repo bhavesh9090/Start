@@ -128,8 +128,11 @@ const registerUser = async (req, res) => {
         username: user.username,
         gst_id: user.gst_id,
         district: user.district,
+        district_id: user.district_id,
         block: user.block,
         business_type: user.business_type,
+        photo_url: user.photo_url,
+        father_name: user.father_name,
       },
     });
   } catch (err) {
