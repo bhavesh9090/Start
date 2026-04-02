@@ -452,9 +452,9 @@ export default function AdminUsers() {
                 {t('adminPanel.users.blockStrength')}
               </h3>
             </div>
-            <div className="p-6 h-[350px]">
+            <div className="p-6 h-[350px] sm:h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 40 }}>
+                <BarChart data={chartData} margin={{ top: 20, right: 20, left: -20, bottom: 40 }}>
                   <defs>
                     <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#D97706" stopOpacity={0.8}/>
@@ -462,7 +462,21 @@ export default function AdminUsers() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} barSize={40} />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 9, fontWeight: 700, fill: '#64748b' }} 
+                    interval={0}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#64748b' }} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                  />
+                  <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} barSize={30} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -478,15 +492,15 @@ export default function AdminUsers() {
                 {t('adminPanel.users.marketAnalytics')}
               </h3>
             </div>
-            <div className="p-6 h-[350px]">
+            <div className="p-6 h-[350px] sm:h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={chartData}
                     cx="50%"
-                    cy="45%"
-                    innerRadius={70}
-                    outerRadius={110}
+                    cy="40%"
+                    innerRadius={60}
+                    outerRadius={90}
                     paddingAngle={8}
                     dataKey="value"
                     strokeWidth={0}
@@ -498,7 +512,18 @@ export default function AdminUsers() {
                   <Tooltip 
                     contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', padding: '12px' }}
                   />
-                  <Legend verticalAlign="bottom" height={40} iconType="diamond" wrapperStyle={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    align="center"
+                    iconType="diamond" 
+                    wrapperStyle={{ 
+                      fontSize: '9px', 
+                      fontWeight: 700, 
+                      textTransform: 'uppercase', 
+                      color: '#64748b',
+                      paddingTop: '20px'
+                    }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>

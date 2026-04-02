@@ -69,6 +69,14 @@ export default function UserSupport() {
     description: ''
   });
   const [submitting, setSubmitting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     loadTickets();
@@ -209,27 +217,27 @@ export default function UserSupport() {
                    <FiPlus className="text-maroon-500" /> {t('support.raiseTicket')}
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-[10px] md:text-xs font-black text-maroon-400 uppercase tracking-widest mb-3 px-1">{t('support.subject')}</label>
-                    <input
-                      type="text"
-                      className="input-field text-lg py-4 px-6 bg-white/80 focus:bg-white"
-                      placeholder="e.g., Payment failed but amount deducted"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] md:text-xs font-black text-maroon-400 uppercase tracking-widest mb-3 px-1">{t('support.description')}</label>
-                    <textarea
-                      rows={6}
-                      className="input-field text-lg py-4 px-6 bg-white/80 focus:bg-white resize-none"
-                      placeholder="Describe the issue in detail..."
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                  </div>
+                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                   <div>
+                     <label className="block text-[10px] md:text-xs font-black text-maroon-400 uppercase tracking-widest mb-2 md:mb-3 px-1">{t('support.subject')}</label>
+                     <input
+                       type="text"
+                       className="input-field text-base md:text-lg py-3 md:py-4 px-4 md:px-6 bg-white/80 focus:bg-white"
+                       placeholder="e.g., Payment failed..."
+                       value={formData.subject}
+                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-[10px] md:text-xs font-black text-maroon-400 uppercase tracking-widest mb-2 md:mb-3 px-1">{t('support.description')}</label>
+                     <textarea
+                       rows={isMobile ? 4 : 6}
+                       className="input-field text-base md:text-lg py-3 md:py-4 px-4 md:px-6 bg-white/80 focus:bg-white resize-none"
+                       placeholder="Describe the issue in detail..."
+                       value={formData.description}
+                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                     />
+                   </div>
                   <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
                     <button 
                       type="button"
@@ -309,19 +317,19 @@ export default function UserSupport() {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-4 mt-1">
-                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter flex items-center gap-1">
-                            <FiCalendar /> {new Date(ticket.created_at).toLocaleDateString()}
-                          </span>
-                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter ${statusBg[ticket.status]}`}>
-                            {t(`support.statusLabel.${ticket.status}`)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-xs sm:text-sm text-gray-500 leading-relaxed sm:pl-13">
-                      {ticket.description}
-                    </p>
+                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 sm:mt-1">
+                           <span className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-tighter flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                             <FiCalendar /> {new Date(ticket.created_at).toLocaleDateString()}
+                           </span>
+                           <span className={`text-[9px] sm:text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter ${statusBg[ticket.status]}`}>
+                             {t(`support.statusLabel.${ticket.status}`)}
+                           </span>
+                         </div>
+                       </div>
+                     </div>
+                     <p className="text-xs sm:text-sm text-gray-500 leading-relaxed sm:pl-13 mt-2 sm:mt-0">
+                       {ticket.description}
+                     </p>
 
                     {ticket.admin_remarks && (
                       <motion.div 

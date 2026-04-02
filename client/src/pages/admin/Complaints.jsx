@@ -185,10 +185,28 @@ export default function AdminComplaints() {
                     <p className="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed break-words whitespace-pre-wrap italic bg-gray-50/50 p-3 rounded-xl border border-gray-100">
                       "{c.description}"
                     </p>
-                    <div className="flex flex-wrap gap-2 sm:gap-4 text-[9px] sm:text-[10px] text-gray-400 font-black uppercase tracking-tighter">
-                      {c.name && <span className="flex items-center gap-1 sm:gap-1.5 bg-white px-1.5 sm:px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiUser className="text-saffron-500" /> {c.name}</span>}
-                      {c.mobile && <span className="flex items-center gap-1 sm:gap-1.5 bg-white px-1.5 sm:px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiMessageSquare className="text-blue-500" /> {c.mobile}</span>}
-                      <span className="flex items-center gap-1 sm:gap-1.5"><FiCalendar className="text-gray-300" /> <span className="hidden sm:inline">{new Date(c.created_at).toLocaleString('en-IN')}</span><span className="sm:hidden">{new Date(c.created_at).toLocaleDateString()}</span></span>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] text-gray-400 font-black uppercase tracking-tighter">
+                      {c.name && (
+                        <div className="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border border-gray-100 shadow-sm pr-3">
+                          <div className="w-5 h-5 rounded-md bg-saffron-50 flex items-center justify-center text-saffron-500 flex-shrink-0">
+                            <FiUser className="w-3 h-3" />
+                          </div>
+                          <span className="text-gray-700">{c.name}</span>
+                        </div>
+                      )}
+                      {c.mobile && (
+                        <div className="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-lg border border-gray-100 shadow-sm pr-3">
+                          <div className="w-5 h-5 rounded-md bg-blue-50 flex items-center justify-center text-blue-500 flex-shrink-0">
+                            <FiMessageSquare className="w-3 h-3" />
+                          </div>
+                          <span className="text-gray-700">{c.mobile}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 px-1 py-1">
+                        <FiCalendar className="text-gray-300 w-3.5 h-3.5" /> 
+                        <span className="hidden sm:inline">{new Date(c.created_at).toLocaleString('en-IN')}</span>
+                        <span className="sm:hidden">{new Date(c.created_at).toLocaleDateString()}</span>
+                      </div>
                     </div>
                     {c.admin_remarks && (
                       <div className="mt-2 p-2 bg-saffron-50 rounded-lg">

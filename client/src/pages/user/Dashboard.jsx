@@ -192,7 +192,7 @@ export default function UserDashboard() {
             {totals.total === 0 ? (
                <p className="text-gray-400 text-sm">{t('dashboard.noPaidData')}</p>
             ) : (
-               <div className="w-full h-56 sm:h-64">
+               <div className="w-full h-64 sm:h-80">
                  <ResponsiveContainer width="100%" height="100%">
                    <PieChart>
                      <defs>
@@ -245,7 +245,7 @@ export default function UserDashboard() {
             <h2 className="text-lg font-semibold text-gray-800 mb-4 sm:mb-6 flex items-center gap-2">
               <FiTrendingUp className="text-saffron-500" /> {t('tax.revenueTrend')}
             </h2>
-             <div className="w-full h-64 sm:h-80">
+             <div className="w-full h-80 sm:h-96">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData} margin={{ top: 20, right: isMobile ? 10 : 30, left: 10, bottom: 5 }}>
                       <defs>
@@ -305,7 +305,7 @@ export default function UserDashboard() {
              <h2 className="text-lg font-semibold text-gray-800 mb-4 sm:mb-6 flex items-center gap-2">
                 <FiBarChart2 className="text-maroon-500" /> {selectedYear} {t('tax.monthlyOverview')}
              </h2>
-             <div className="w-full h-72 sm:h-80">
+             <div className="w-full h-80 sm:h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                    <BarChart
                      data={chartData}

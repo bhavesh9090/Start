@@ -209,15 +209,15 @@ export default function TaxAnalytics() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-in-up">
           <div className="lg:col-span-2 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 shadow-sm border border-gray-100 modern-card hover-glow transition-all">
             <h3 className="text-lg font-black text-gray-800 mb-6 sm:mb-8">{t('analytics.businessSector')}</h3>
-            <div className="h-[250px] sm:h-[300px] md:h-[400px]">
+            <div className="h-[350px] sm:h-[400px] lg:h-[450px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={data.typeWise}
                       cx="50%"
-                      cy="50%"
-                      innerRadius="60%"
-                      outerRadius="90%"
+                      cy="45%"
+                      innerRadius="50%"
+                      outerRadius="80%"
                       paddingAngle={5}
                       dataKey="collection"
                     >
@@ -225,8 +225,23 @@ export default function TaxAnalytics() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '20px' }} />
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '10px' }} />
+                    <Tooltip 
+                      cursor={{ fill: 'transparent' }} 
+                      contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} 
+                    />
+                    <Legend 
+                      verticalAlign="bottom" 
+                      align="center"
+                      iconType="circle"
+                      iconSize={8}
+                      wrapperStyle={{ 
+                        fontSize: '9px', 
+                        fontWeight: '700',
+                        paddingTop: '20px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }} 
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </div>

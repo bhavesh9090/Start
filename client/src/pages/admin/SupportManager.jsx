@@ -189,23 +189,25 @@ export default function AdminSupportHub() {
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-           <div className="flex p-1 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-inner w-full sm:w-auto">
-              {[
-                { id: '', label: t('adminPanel.status.all'), icon: FiFilter },
-                { id: 'pending', label: t('adminPanel.status.pending'), icon: FiClock },
-                { id: 'resolved', label: t('adminPanel.status.resolved'), icon: FiCheck }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setStatusFilter(tab.id)}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                    statusFilter === tab.id ? 'bg-white text-maroon-500 shadow-lg' : 'text-gray-400 hover:text-gray-600'
-                  }`}
-                >
-                  <tab.icon className="w-3.5 h-3.5" />
-                  {tab.label}
-                </button>
-              ))}
+           <div className="flex p-1 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-inner w-full sm:w-auto overflow-x-auto no-scrollbar">
+              <div className="flex gap-1 min-w-max sm:min-w-0 w-full">
+                {[
+                  { id: '', label: t('adminPanel.status.all'), icon: FiFilter },
+                  { id: 'pending', label: t('adminPanel.status.pending'), icon: FiClock },
+                  { id: 'resolved', label: t('adminPanel.status.resolved'), icon: FiCheck }
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setStatusFilter(tab.id)}
+                    className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap ${
+                      statusFilter === tab.id ? 'bg-white text-maroon-500 shadow-lg' : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                  >
+                    <tab.icon className="w-3.5 h-3.5" />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
            </div>
            
            {newCount > 0 && (
@@ -255,21 +257,27 @@ export default function AdminSupportHub() {
                     </p>
 
                     <div className="flex flex-wrap gap-4 text-[10px] text-gray-400 font-black uppercase tracking-tighter items-center">
-                      <div className="flex items-center gap-4 bg-white px-4 py-2.5 rounded-2xl border border-maroon-100/50 shadow-sm pr-6 hover:shadow-md transition-shadow group/user">
-                        <div className="w-12 h-12 rounded-2xl bg-saffron-100 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm ring-4 ring-saffron-50 group-hover/user:ring-saffron-100 transition-all">
-                           {ticket.users?.photo_url ? (
-                             <img src={ticket.users.photo_url} alt={ticket.name} className="w-full h-full object-cover" />
-                           ) : (
-                             <FiUser className="text-saffron-600 w-6 h-6" />
-                           )}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-white p-3 sm:px-4 sm:py-2.5 rounded-2xl border border-maroon-100/50 shadow-sm sm:pr-6 hover:shadow-md transition-shadow group/user w-full sm:w-auto">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-saffron-100 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm ring-4 ring-saffron-50 group-hover/user:ring-saffron-100 transition-all">
+                             {ticket.users?.photo_url ? (
+                               <img src={ticket.users.photo_url} alt={ticket.name} className="w-full h-full object-cover" />
+                             ) : (
+                               <FiUser className="text-saffron-600 w-5 h-5 sm:w-6 sm:h-6" />
+                             )}
+                          </div>
+                          <div className="sm:hidden">
+                             <p className="text-sm font-black text-gray-800 leading-tight">{ticket.name || 'User'}</p>
+                             <p className="text-[9px] font-bold text-gray-400 tabular-nums">ID: {ticket.users?.gst_id || 'GUEST'}</p>
+                          </div>
                         </div>
-                        <div>
-                           <p className="text-base font-black text-gray-800 leading-tight">{ticket.name || 'User'}</p>
-                           <div className="flex items-center gap-2 mt-1">
+                        <div className="flex-1">
+                           <p className="hidden sm:block text-base font-black text-gray-800 leading-tight">{ticket.name || 'User'}</p>
+                           <div className="flex flex-wrap items-center gap-2 mt-1">
                               <span className="px-1.5 py-0.5 bg-maroon-50 text-maroon-600 text-[8px] font-black uppercase tracking-widest rounded border border-maroon-100">
                                 {ticket.users?.block || 'General'} Block
                               </span>
-                              <span className="text-[9px] font-bold text-gray-400 tabular-nums">ID: {ticket.users?.gst_id || 'GUEST'}</span>
+                              <span className="hidden sm:inline text-[9px] font-bold text-gray-400 tabular-nums">ID: {ticket.users?.gst_id || 'GUEST'}</span>
                            </div>
                         </div>
                       </div>

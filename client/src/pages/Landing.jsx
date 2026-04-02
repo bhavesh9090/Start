@@ -18,8 +18,9 @@ import UttarakhandMap from '../components/UttarakhandMap';
 import ChatBot from '../components/ChatBot';
 import logoImg from '../assets/logo.png';
 import manishImg from '../assets/manish.jpeg';
-import bhaveshImg from '../assets/team/bhavesh.png';
-import sumitImg from '../assets/team/sumit1.png';
+import bhaveshImg from '../assets/bhavesh.jpeg';
+import sumitImg from '../assets/sumit.png';
+import deepakImg from '../assets/deepak.png';
 
 // Shared helper to render title with the last word highlighted
 const renderTitle = (text, highlightClass = "text-highlight") => {
