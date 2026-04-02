@@ -17,10 +17,23 @@ import { complaintAPI, authAPI, helpAPI } from '../services/api';
 import UttarakhandMap from '../components/UttarakhandMap';
 import ChatBot from '../components/ChatBot';
 import logoImg from '../assets/logo.png';
-import sumitImg from '../assets/sumit.png';
 import manishImg from '../assets/manish.jpeg';
-import bhaveshImg from '../assets/bhavesh.jpeg';
-import deepakImg from '../assets/deepak.png';
+import bhaveshImg from '../assets/team/bhavesh.png';
+import sumitImg from '../assets/team/sumit1.png';
+
+// Shared helper to render title with the last word highlighted
+const renderTitle = (text, highlightClass = "text-highlight") => {
+  if (!text) return "";
+  const words = text.split(' ');
+  if (words.length <= 1) return text;
+  const lastWord = words.pop();
+  return (
+    <>
+      {words.join(' ')}{' '}
+      <span className={highlightClass}>{lastWord}</span>
+    </>
+  );
+};
 import lalitImg from '../assets/lalit.jpeg';
 import sahilImg from '../assets/sahil.jpeg';
 import rajaImg from '../assets/raja.jpeg';
@@ -186,7 +199,7 @@ function HowItWorksSection({ t }) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            A secure digital pathway designed for property owners and citizens alike.
+            {t('howItWorks.subtitle')}
           </motion.p>
         </div>
 
@@ -389,7 +402,7 @@ function HeroSection({ t, isMobile }) {
           >
             <motion.div variants={fadeInUp} className="hero-gov-badge mb-6 shadow-sm">
               <span className="w-4 h-4 flex items-center justify-center rounded-full bg-red-100 text-[10px]">🏛</span>
-              Government of Uttarakhand &middot; Official Portal
+              {t('hero.govBadge')}
             </motion.div>
             
             <AnimatePresence mode="wait">
@@ -625,17 +638,17 @@ function AboutSection({ t }) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
           >
-            WHY E-TAXPAY
+            {t('about.eyebrow')}
           </motion.span>
 
-          <motion.h2
-            className="mission-heading mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.1 }}
+          <motion.h2 
+            className="mission-heading"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Our Mission &{' '}
-            <span className="text-highlight">Vision</span>
+            {renderTitle(t('about.title'))}
           </motion.h2>
 
           <motion.p
@@ -709,12 +722,12 @@ function HelpSection({ t }) {
       
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16" data-aos="fade-up">
-          <span className="help-eyebrow mb-4 block">SUPPORT</span>
+          <span className="help-eyebrow mb-4 block">{t('help.supportEyebrow')}</span>
           <h2 className="help-heading mb-4">
-            Need <span>Help?</span>
+            {renderTitle(t('help.title'), "text-red-600")}
           </h2>
           <p className="help-subtitle max-w-2xl mx-auto">
-            Get in touch with our team for any tax-related discrepancies, technical support, or general queries. We're here to assist you.
+            {t('help.description')}
           </p>
         </div>
         
@@ -729,19 +742,19 @@ function HelpSection({ t }) {
             transition={{ duration: 0.6 }}
           >
             <div>
-              <input type="text" placeholder="Your Name" className="help-input"
+              <input type="text" placeholder={t('help.name')} className="help-input"
                 value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
             </div>
             <div>
-              <input type="email" placeholder="Email Address" className="help-input"
+              <input type="email" placeholder={t('help.email')} className="help-input"
                 value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} required />
             </div>
             <div>
-              <input type="tel" placeholder="Mobile Number" className="help-input"
+              <input type="tel" placeholder={t('help.mobile')} className="help-input"
                 value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" />
             </div>
             <div>
-              <textarea placeholder="Your Message" rows={4} className="help-input resize-none"
+              <textarea placeholder={t('help.message')} rows={4} className="help-input resize-none"
                 value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} required />
             </div>
             <motion.button 
@@ -750,7 +763,7 @@ function HelpSection({ t }) {
               whileTap={{ scale: 0.98 }}
             >
               <FiSend className="w-5 h-5" />
-              {sent ? `✓ Sent` : 'Send Message'}
+              {sent ? `✓ ${t('tax.sent')}` : t('help.submit')}
             </motion.button>
           </motion.form>
 
@@ -762,34 +775,34 @@ function HelpSection({ t }) {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="info-title">Contact Information</h3>
+            <h3 className="info-title">{t('help.contactTitle')}</h3>
             <div className="space-y-4">
               <div className="info-row">
                 <div className="info-icon-badge badge-red-light">
                   <FiMapPin className="w-5 h-5" />
                 </div>
-                <div className="info-text">📍 Zila Panchayat, Almora, Uttarakhand - 263601</div>
+                <div className="info-text">📍 {t('help.address')}</div>
               </div>
               
               <div className="info-row">
                 <div className="info-icon-badge badge-red-light">
                   <FiPhone className="w-5 h-5" />
                 </div>
-                <div className="info-text">📞 +91 7983630254, +91 7906718235</div>
+                <div className="info-text">📞 {t('help.phone')}</div>
               </div>
               
               <div className="info-row">
                 <div className="info-icon-badge badge-green-light">
                   <FiMail className="w-5 h-5" />
                 </div>
-                <div className="info-text">✉️ huuuui947@gmail.com</div>
+                <div className="info-text">✉️ {t('help.emailId')}</div>
               </div>
               
               <div className="info-row">
                 <div className="info-icon-badge badge-green-light">
                   <FiClock className="w-5 h-5" />
                 </div>
-                <div className="info-text">🕐 Mon–Sat: 10:00 AM – 5:00 PM</div>
+                <div className="info-text">🕐 {t('help.hours')}</div>
               </div>
             </div>
           </motion.div>
@@ -857,18 +870,18 @@ function ComplaintSection({ t }) {
       
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-12" data-aos="fade-up">
-          <span className="grievance-eyebrow mb-4 block">GRIEVANCE CELL</span>
+          <span className="grievance-eyebrow mb-4 block">{t('complaintSection.grievanceCell')}</span>
           <h2 className="grievance-heading mb-4">
-            File a <span>Complaint</span>
+            {renderTitle(t('complaintSection.title'), "text-red-600")}
           </h2>
           <div className="flex justify-center mb-4">
             <div className="routing-badge">
               <span className="routing-dot" />
-              Real-Time Routing Active
+              {t('complaintSection.routingActive')}
             </div>
           </div>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Have an issue? Submit your complaint here and we'll address it promptly.
+            {t('complaintSection.description')}
           </p>
         </div>
         
@@ -884,11 +897,11 @@ function ComplaintSection({ t }) {
           >
             {/* Step Indicator */}
             <div className="step-indicator">
-              <span className="step-active"><span className="step-dot"/> Your Info</span>
+              <span className="step-active"><span className="step-dot"/> {t('complaintSection.step1')}</span>
               <span className="step-arrow">→</span>
-              <span>Complaint Details</span>
+              <span>{t('complaintSection.step2')}</span>
               <span className="step-arrow">→</span>
-              <span>Submit</span>
+              <span>{t('complaintSection.step3')}</span>
             </div>
 
             <div className="space-y-6">
@@ -897,12 +910,12 @@ function ComplaintSection({ t }) {
                 <div className={`float-group ${form.name ? 'has-value' : ''}`}>
                   <input type="text" className="float-input" placeholder=" "
                     value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
-                  <label className="float-label">Your Name</label>
+                  <label className="float-label">{t('complaintSection.name')}</label>
                 </div>
                 <div className={`float-group ${form.mobile ? 'has-value' : ''}`}>
                   <input type="tel" className="float-input" placeholder=" "
                     value={form.mobile} onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g, '').slice(0, 10)})} maxLength="10" required />
-                  <label className="float-label">Mobile Number</label>
+                  <label className="float-label">{t('complaintSection.mobile')}</label>
                 </div>
               </div>
 
@@ -914,12 +927,12 @@ function ComplaintSection({ t }) {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   >
                     <span className={form.district_id ? "text-[#1a1a1a]" : "text-transparent select-none"}>
-                      {form.district_id ? districts.find(d => d.id === form.district_id)?.name + ' Admin' : 'Select'}
+                      {form.district_id ? districts.find(d => d.id === form.district_id)?.name + ' Admin' : t('common.select')}
                     </span>
                   </div>
                   <label className="float-label flex items-center pointer-events-none">
-                    Select District Admin
-                    <span className="info-tooltip-icon ml-2 pointer-events-auto cursor-help" title="Your complaint is routed directly to this district's nodal officer.">i</span>
+                    {t('complaintSection.selectDistrict')}
+                    <span className="info-tooltip-icon ml-2 pointer-events-auto cursor-help" title={t('complaintSection.tooltip')}>i</span>
                   </label>
                   
                   <AnimatePresence>
@@ -954,7 +967,7 @@ function ComplaintSection({ t }) {
                 <div className={`float-group ${form.subject ? 'has-value' : ''}`}>
                   <input type="text" className="float-input" placeholder=" "
                     value={form.subject} onChange={(e) => setForm({...form, subject: e.target.value})} required />
-                  <label className="float-label">Subject</label>
+                  <label className="float-label">{t('complaintSection.subject')}</label>
                 </div>
               </div>
 
@@ -967,7 +980,7 @@ function ComplaintSection({ t }) {
                   onChange={(e) => setForm({...form, description: e.target.value})} 
                   required 
                 />
-                <label className="float-label">Describe your complaint in detail</label>
+                <label className="float-label">{t('complaintSection.description_field')}</label>
                 <div className="char-counter">{form.description.length}/1000</div>
               </div>
 
@@ -979,12 +992,12 @@ function ComplaintSection({ t }) {
                   className="btn-emerald"
                   whileTap={{ scale: 0.98 }}
                 >
-                  <span>{loading ? 'Submitting...' : 'Submit Complaint'}</span>
+                  <span>{loading ? t('common.loading') : t('complaintSection.submit')}</span>
                   {!loading && <FiSend className="w-5 h-5 btn-emerald-icon" />}
                 </motion.button>
                 <div className="secure-note">
                   <FiLock className="w-3.5 h-3.5" />
-                  <span>Your complaint is encrypted and routed securely</span>
+                  <span>{t('complaintSection.secureNote')}</span>
                 </div>
               </div>
             </div>
@@ -997,21 +1010,21 @@ function ComplaintSection({ t }) {
 
 function AboutUsSection({ t }) {
   const team = [
-    { name: "Sumit Bhandari", role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: sumitImg, 
+    { name: t('aboutUs.member1'), role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: sumitImg, 
       github: 'https://github.com/sumitbhandari2006', instagram: 'https://www.instagram.com/yeah_sumithere', linkedin: 'https://www.linkedin.com/in/sumit-bhandari-1424b133a' },
-    { name: "Manish Paliwal", role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: manishImg, isCoFounder: true,
+    { name: t('aboutUs.member2'), role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: manishImg, isCoFounder: true,
       github: 'https://github.com/Manish363-dot', instagram: 'https://www.instagram.com/manish__uk_01', linkedin: 'https://www.linkedin.com/in/manish-paliwal-389a74327' },
-    { name: "Bhavesh Bisht", role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: bhaveshImg, 
+    { name: t('aboutUs.member3'), role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: bhaveshImg, 
       github: 'https://github.com/bhavesh9090', instagram: 'https://www.instagram.com/bhavesh_bishtttt', linkedin: 'https://www.linkedin.com/in/bhavesh-bisht-549530328' },
-    { name: "Deepak Bisht", role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: deepakImg, 
+    { name: t('aboutUs.member4'), role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: deepakImg, 
       github: 'https://github.com/Deepakbisht010', instagram: 'https://www.instagram.com/deepak_bisht.001/', linkedin: 'https://www.linkedin.com/in/deepak-singh-a05583328/' },
-    { name: "Lalit Singh", role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: lalitImg, 
+    { name: t('aboutUs.member5'), role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: lalitImg, 
       github: 'https://github.com/Lalit-73-02', instagram: 'https://www.instagram.com/?hl=en', linkedin: 'https://www.linkedin.com/in/lalit-singh-kanyal-929583328/' },
-    { name: "Sahil Chand", role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: sahilImg, 
+    { name: t('aboutUs.member6'), role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: sahilImg, 
       github: 'https://github.com/sahil-chand-21', instagram: 'https://www.instagram.com/sahil._.chand', linkedin: 'https://www.linkedin.com/in/sahil-chand-077org' },
-    { name: "Raja Rautela", role: t('aboutUs.role7'), email: "raja@taxpay.co", image: rajaImg, 
+    { name: t('aboutUs.member7'), role: t('aboutUs.role7'), email: "raja@taxpay.co", image: rajaImg, 
       github: 'https://github.com/raja393-disigner', instagram: 'https://www.instagram.com/r_for_rautela', linkedin: 'https://www.linkedin.com/in/raja-rautela-07b589328/' },
-    { name: "Gaurav Bisht", role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: gauravImg, 
+    { name: t('aboutUs.member8'), role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: gauravImg, 
       github: 'https://www.instagram.com/gauri_bisht_07', instagram: 'https://instagram.com/manish', linkedin: 'https://www.linkedin.com/in/gaurav-bisht-04647a387' },
   ];
 
@@ -1030,7 +1043,7 @@ function AboutUsSection({ t }) {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          OUR TEAM
+          {t('aboutUs.eyebrow')}
         </motion.span>
         <motion.h2 
           className="team-heading"
@@ -1038,7 +1051,7 @@ function AboutUsSection({ t }) {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Meet the <span>Team</span>
+          {renderTitle(t('aboutUs.title'), "text-red-600")}
         </motion.h2>
         <motion.p 
           className="team-subtitle"
@@ -1046,7 +1059,7 @@ function AboutUsSection({ t }) {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          The passionate minds behind E-TaxPay's digital revolution
+          {t('aboutUs.subtitle')}
         </motion.p>
       </div>
 

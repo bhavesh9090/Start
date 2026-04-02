@@ -109,31 +109,31 @@ export default function AdminComplaints() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-             <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-saffron-100 flex items-center justify-center text-saffron-600">
-                   <FiClock className="w-4 h-4" />
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+             <div className="bg-white px-3 sm:px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-2 sm:gap-3">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-saffron-100 flex items-center justify-center text-saffron-600 flex-shrink-0">
+                   <FiClock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div>
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Pending</p>
-                   <p className="text-lg font-black text-gray-800 leading-tight">{complaints.filter(c => c.status === 'pending').length}</p>
+                   <p className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Pending</p>
+                   <p className="text-base sm:text-lg font-black text-gray-800 leading-tight">{complaints.filter(c => c.status === 'pending').length}</p>
                 </div>
              </div>
-             <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-forest-100 flex items-center justify-center text-forest-600">
-                   <FiCheck className="w-4 h-4" />
+             <div className="bg-white px-3 sm:px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-2 sm:gap-3">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-forest-100 flex items-center justify-center text-forest-600 flex-shrink-0">
+                   <FiCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div>
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Resolved</p>
-                   <p className="text-lg font-black text-gray-800 leading-tight">{complaints.filter(c => c.status === 'resolved').length}</p>
+                   <p className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Resolved</p>
+                   <p className="text-base sm:text-lg font-black text-gray-800 leading-tight">{complaints.filter(c => c.status === 'resolved').length}</p>
                 </div>
              </div>
           </div>
         </div>
 
         {/* Improved Tabs Filter */}
-        <div className="flex items-center justify-between mb-6 bg-white/50 p-1.5 rounded-2xl w-full sm:w-fit shadow-inner border border-white/20">
-           <div className="flex gap-1">
+        <div className="flex items-center justify-between mb-6 bg-white/50 p-1.5 rounded-2xl w-full sm:w-fit shadow-inner border border-white/20 overflow-x-auto no-scrollbar">
+           <div className="flex gap-1 min-w-max sm:min-w-0">
               {[
                 { id: '', label: t('adminPanel.status.all'), icon: FiFilter },
                 { id: 'pending', label: t('adminPanel.status.pending'), icon: FiClock },
@@ -142,11 +142,11 @@ export default function AdminComplaints() {
                 <button
                   key={tab.id}
                   onClick={() => setStatusFilter(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                  className={`flex items-center gap-2 px-4 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap ${
                     statusFilter === tab.id ? 'bg-white text-maroon-500 shadow-md' : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
-                  <tab.icon className="w-4 h-4" />
+                  <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   {tab.label}
                 </button>
               ))}
@@ -170,8 +170,8 @@ export default function AdminComplaints() {
                 <div className="flex flex-col md:flex-row items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-gray-800">{c.subject}</h3>
-                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusColors[c.status]}`}>
+                      <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{c.subject}</h3>
+                      <span className={`px-2 py-0.5 text-[10px] sm:text-xs font-medium rounded-full whitespace-nowrap ${statusColors[c.status]}`}>
                         {t(`adminPanel.status.${c.status}`)}
                       </span>
                       <button 
@@ -185,10 +185,10 @@ export default function AdminComplaints() {
                     <p className="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed break-words whitespace-pre-wrap italic bg-gray-50/50 p-3 rounded-xl border border-gray-100">
                       "{c.description}"
                     </p>
-                    <div className="flex flex-wrap gap-4 text-[10px] text-gray-400 font-black uppercase tracking-tighter">
-                      {c.name && <span className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiUser className="text-saffron-500" /> {c.name}</span>}
-                      {c.mobile && <span className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiMessageSquare className="text-blue-500" /> {c.mobile}</span>}
-                      <span className="flex items-center gap-1.5"><FiCalendar className="text-gray-300" /> {new Date(c.created_at).toLocaleString('en-IN')}</span>
+                    <div className="flex flex-wrap gap-2 sm:gap-4 text-[9px] sm:text-[10px] text-gray-400 font-black uppercase tracking-tighter">
+                      {c.name && <span className="flex items-center gap-1 sm:gap-1.5 bg-white px-1.5 sm:px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiUser className="text-saffron-500" /> {c.name}</span>}
+                      {c.mobile && <span className="flex items-center gap-1 sm:gap-1.5 bg-white px-1.5 sm:px-2 py-1 rounded-md border border-gray-100 shadow-sm"><FiMessageSquare className="text-blue-500" /> {c.mobile}</span>}
+                      <span className="flex items-center gap-1 sm:gap-1.5"><FiCalendar className="text-gray-300" /> <span className="hidden sm:inline">{new Date(c.created_at).toLocaleString('en-IN')}</span><span className="sm:hidden">{new Date(c.created_at).toLocaleDateString()}</span></span>
                     </div>
                     {c.admin_remarks && (
                       <div className="mt-2 p-2 bg-saffron-50 rounded-lg">

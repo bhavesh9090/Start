@@ -177,19 +177,19 @@ export default function UserSupport() {
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 mountain-bg">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
           <div className="animate-slide-in-left">
-            <h1 className="text-3xl font-black text-maroon-500 mb-2">{t('support.title')}</h1>
-            <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-maroon-500 mb-2">{t('support.title')}</h1>
+            <p className="text-gray-500 font-bold uppercase text-[9px] sm:text-[10px] tracking-widest flex items-center gap-2">
                <FiUser className="text-saffron-500" /> {user.district} District Portal
             </p>
           </div>
 
           <button
             onClick={() => setShowNewForm(!showNewForm)}
-            className="flex items-center gap-2 px-6 py-3 bg-maroon-500 text-white rounded-2xl font-bold hover:bg-maroon-600 transition-all shadow-xl hover:-translate-y-0.5 active:scale-95"
+            className="flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-maroon-500 text-white rounded-2xl font-bold hover:bg-maroon-600 transition-all shadow-xl hover:-translate-y-0.5 active:scale-95 text-sm sm:text-base w-full sm:w-auto justify-center"
           >
-            <FiPlus className={`w-5 h-5 transition-transform ${showNewForm ? 'rotate-45' : ''}`} />
+            <FiPlus className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform ${showNewForm ? 'rotate-45' : ''}`} />
             {t('support.newTicket')}
           </button>
         </div>
@@ -253,10 +253,10 @@ export default function UserSupport() {
         </AnimatePresence>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-white/50 p-1 rounded-2xl mb-8 w-fit shadow-inner border border-white/20">
+        <div className="flex gap-1 bg-white/50 p-1 rounded-2xl mb-8 w-full sm:w-fit shadow-inner border border-white/20">
           <button
             onClick={() => setActiveTab('active')}
-            className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
               activeTab === 'active' ? 'bg-white text-maroon-500 shadow-md' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
@@ -264,7 +264,7 @@ export default function UserSupport() {
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
               activeTab === 'history' ? 'bg-white text-maroon-500 shadow-md' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
@@ -319,7 +319,7 @@ export default function UserSupport() {
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 leading-relaxed pl-13">
+                    <p className="text-xs sm:text-sm text-gray-500 leading-relaxed sm:pl-13">
                       {ticket.description}
                     </p>
 
@@ -327,12 +327,12 @@ export default function UserSupport() {
                       <motion.div 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-6 ml-13 p-4 bg-gray-50/80 rounded-2xl border border-gray-100 relative"
+                        className="mt-6 sm:ml-13 p-4 bg-gray-50/80 rounded-2xl border border-gray-100 relative"
                       >
-                         <div className="absolute -top-2 left-4 px-2 bg-white text-[9px] font-black text-forest-600 uppercase tracking-widest border border-forest-100 rounded">
+                         <div className="absolute -top-2 left-4 px-2 bg-white text-[8px] sm:text-[9px] font-black text-forest-600 uppercase tracking-widest border border-forest-100 rounded">
                            {t('support.adminMsg')}
                          </div>
-                         <p className="text-sm text-gray-600 font-medium italic">"{ticket.admin_remarks}"</p>
+                         <p className="text-xs sm:text-sm text-gray-600 font-medium italic">"{ticket.admin_remarks}"</p>
                       </motion.div>
                     )}
                   </div>

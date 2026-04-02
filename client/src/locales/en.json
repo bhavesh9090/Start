@@ -42,7 +42,8 @@
     "activeBlocks": "Active Blocks",
     "available": "Available",
     "digitalTax": "Digital Tax",
-    "active": "Active"
+    "active": "Active",
+    "govBadge": "Government of Uttarakhand • Official Portal"
   },
   "howItWorks": {
     "eyebrow": "How it works",
@@ -58,10 +59,12 @@
     "step3": {
       "title": "Save Record",
       "desc": "Instantly <strong>download and save</strong> your official receipt."
-    }
+    },
+    "subtitle": "A secure digital pathway designed for property owners and citizens alike."
   },
   "about": {
     "title": "Our Mission & Vision",
+    "eyebrow": "WHY E-TAXPAY",
     "description": "Digital transformation of tax collection for transparent governance.",
     "feature1Title": "Governance Transparency",
     "feature1Desc": "Full tracking of every penny collected for the development of our blocks.",
@@ -78,7 +81,8 @@
   },
   "help": {
     "title": "Need Help?",
-    "description": "We're here to assist you with any questions about tax payment, registration, or system usage.",
+    "supportEyebrow": "SUPPORT",
+    "description": "Get in touch with our team for any tax-related discrepancies, technical support, or general queries. We're here to assist you.",
     "name": "Your Name",
     "email": "Email Address",
     "mobile": "Mobile Number",
@@ -103,11 +107,19 @@
     "otpRequired": "OTP Verification Required",
     "sendOtp": "Send OTP",
     "enterOtp": "Enter OTP",
-    "verifyOtp": "Verify OTP"
+    "verifyOtp": "Verify OTP",
+    "grievanceCell": "GRIEVANCE CELL",
+    "routingActive": "Real-Time Routing Active",
+    "step1": "Your Info",
+    "step2": "Complaint Details",
+    "step3": "Submit",
+    "secureNote": "Your complaint is encrypted and routed securely",
+    "tooltip": "Your complaint is routed directly to this district's nodal officer."
   },
   "aboutUs": {
     "title": "Meet Our Team",
-    "subtitle": "Expert Member",
+    "eyebrow": "OUR TEAM",
+    "subtitle": "The passionate minds behind E-TaxPay's digital revolution",
     "description": "Meet the team behind E-TaxPay — dedicated to building transparent governance solutions for Uttarakhand.",
     "member1": "Sumit Bhandari",
     "role1": "Senior Designer",

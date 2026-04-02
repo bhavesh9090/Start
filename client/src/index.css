@@ -34,6 +34,8 @@ body {
 [lang="hi"], 
 .font-hindi {
   font-family: 'Inter', 'Tiro Devanagari Hindi', sans-serif;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
@@ -2149,4 +2151,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 @media (max-width: 640px) {
   .team-grid { grid-template-columns: 1fr; }
   .team-ribbon-container { display: none; }
+}
+
+/* Hindi Specific UI Adjustments */
+[lang="hi"] .mission-eyebrow, 
+[lang="hi"] .team-eyebrow, 
+[lang="hi"] .help-eyebrow, 
+[lang="hi"] .grievance-eyebrow {
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+[lang="hi"] .mission-heading,
+[lang="hi"] .team-heading,
+[lang="hi"] .help-heading,
+[lang="hi"] .grievance-heading {
+  letter-spacing: normal !important;
 }
