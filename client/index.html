@@ -27,8 +27,14 @@
 
     <!-- Razorpay -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      // Prevent white flash in standalone mode
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        document.documentElement.style.backgroundColor = '#000000';
+      }
+    </script>
   </head>
-  <body>
+  <body style="margin: 0;">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
