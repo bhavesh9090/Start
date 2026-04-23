@@ -13,7 +13,13 @@
     "language": "English",
     "tools": "उपकरण",
     "zilaPanchayat": "ज़िला पंचायत उत्तराखंड",
-    "logoName": "ई-टैक्सपे"
+    "logoName": "ई-टैक्सपे",
+    "myTaxes": "मेरे कर",
+    "payments": "भुगतान",
+    "notices": "सूचनाएं"
+  },
+  "monthlyTax": {
+    "navTitle": "मासिक कर"
   },
   "tableHeaders": {
     "year": "वर्ष",
@@ -300,6 +306,7 @@
     "pendingComplaints": "लंबित शिकायतें",
     "recentPayments": "हाल के भुगतान",
     "users": "उपयोगकर्ता",
+    "manageUsers": "उपयोगकर्ता प्रबंधन",
     "taxAnalytics": "कर विश्लेषण",
     "profile": {
       "title": "व्यवस्थापक प्रोफ़ाइल",

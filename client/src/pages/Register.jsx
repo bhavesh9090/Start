@@ -21,7 +21,6 @@ export default function Register() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpModal, setOtpModal] = useState({ isOpen: false, otp: '' });
   const [showOtpInstructionModal, setShowOtpInstructionModal] = useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
 
   const districts = Object.keys(uttarakhandData);
 
@@ -408,58 +407,6 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Welcome Onboarding Modal */}
-      <AnimatePresence>
-        {showWelcomeModal && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 40, opacity: 0 }} 
-              animate={{ scale: 1, y: 0, opacity: 1 }} 
-              exit={{ scale: 0.9, y: 40, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="bg-white rounded-[2.5rem] p-6 sm:p-10 max-w-lg w-full shadow-2xl relative border border-gray-100"
-            >
-              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <div className="w-12 h-12 bg-maroon-100 text-maroon-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <FiInfo className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-black text-gray-800 leading-tight">System Guide</h3>
-              </div>
-              
-              <div className="space-y-4 mb-8 sm:mb-10">
-                <div className="bg-maroon-50 border-l-4 border-maroon-500 p-4 sm:p-6 rounded-r-2xl shadow-inner">
-                  <p className="text-sm sm:text-base font-bold text-gray-800 mb-5 leading-relaxed">
-                    To help us build and test the most <span className="text-maroon-600">interactive dashboard</span> experience, we recommend choosing <span className="bg-maroon-100 px-1 rounded">Almora District</span> during registration.
-                  </p>
-                  <p className="text-sm sm:text-base font-bold text-gray-800 leading-relaxed border-t border-maroon-200 pt-5 font-hindi">
-                    डैशबोर्ड अनुभव को बेहतर बनाने में हमारी मदद करने के लिए, हम पंजीकरण के दौरान <span className="text-maroon-600 bg-maroon-100 px-1 rounded">Almora जिला</span> चुनने की सलाह देते हैं।
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button 
-                  onClick={() => setShowWelcomeModal(false)}
-                  className="flex-1 py-4 px-4 bg-gray-100 text-gray-600 font-black rounded-2xl hover:bg-gray-200 transition-colors uppercase tracking-wider text-xs"
-                >
-                  Dismiss / बंद करें
-                </button>
-                <button 
-                  onClick={() => setShowWelcomeModal(false)}
-                  className="flex-1 py-4 px-4 bg-maroon-600 text-white font-black rounded-2xl hover:bg-maroon-700 shadow-lg shadow-maroon-500/30 transition-all active:scale-95 uppercase tracking-wider text-xs"
-                >
-                  Confirm & Got it
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <OTPModal 
         isOpen={otpModal.isOpen} 

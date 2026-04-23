@@ -13,7 +13,13 @@
     "language": "हिंदी",
     "tools": "Tools",
     "zilaPanchayat": "Zila Panchayat Uttarakhand",
-    "logoName": "E-TaxPay"
+    "logoName": "E-TaxPay",
+    "myTaxes": "My Taxes",
+    "payments": "Payments",
+    "notices": "Notices"
+  },
+  "monthlyTax": {
+    "navTitle": "Monthly Tax"
   },
   "tableHeaders": {
     "year": "Year",
@@ -300,6 +306,7 @@
     "pendingComplaints": "Pending Complaints",
     "recentPayments": "Recent Payments",
     "users": "Users",
+    "manageUsers": "Manage Users",
     "profile": {
       "title": "Admin Profile",
       "subtitle": "Professional Identity & Office Records",

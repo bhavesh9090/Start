@@ -31,7 +31,7 @@ const ASSET_IMAGES = {
   raja: `${STORAGE_BASE}/raja.jpeg`,
   gaurav: `${STORAGE_BASE}/gaurav.jpeg`,
   logo: `${STORAGE_BASE}/logo.png`,
-  mountains: `${STORAGE_BASE}/mountains.png`
+  mountains: `${STORAGE_BASE}/hola.jpg`
 };
 
 // Shared helper to render title with the last word highlighted
@@ -405,7 +405,7 @@ function HeroSection({ t, isMobile }) {
       ref={heroRef} 
       className="hero-gov mountain-bg text-left relative selection:bg-red-500/20"
       style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(250, 250, 250, 0.85), rgba(250, 250, 250, 0.95)), url('${ASSET_IMAGES.mountains}')`,
+        backgroundImage: `linear-gradient(to bottom, rgba(250, 250, 250, 0.4), rgba(250, 250, 250, 0.5)), url('${ASSET_IMAGES.mountains}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center bottom',
         backgroundAttachment: 'fixed',

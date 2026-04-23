@@ -125,7 +125,7 @@ const AppRoutes = () => {
 
 const SplashScreen = ({ finishLoading }) => {
   useEffect(() => {
-    const timer = setTimeout(finishLoading, 2500);
+    const timer = setTimeout(finishLoading, 3000);
     return () => clearTimeout(timer);
   }, [finishLoading]);
 
@@ -133,44 +133,84 @@ const SplashScreen = ({ finishLoading }) => {
     <motion.div 
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#fafaf8]"
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black overflow-hidden"
     >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute bottom-0 left-0 right-0 h-[40vh] bg-gradient-to-t from-black/5 to-transparent"></div>
-      </div>
+      {/* Cinematic Background with Blur */}
+      <motion.div 
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.6 }}
+        transition={{ duration: 2.5, ease: "easeOut" }}
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('${STORAGE_BASE}/hola.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(4px)'
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-0" />
 
-      <div className="relative flex flex-col items-center">
+      {/* Content Container */}
+      <div className="relative z-10 flex flex-col items-center">
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ y: 30, opacity: 0, scale: 0.9 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-          className="relative w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-3xl shadow-xl flex items-center justify-center p-6 border border-gray-100 overflow-hidden"
+          className="relative w-36 h-36 sm:w-44 sm:h-44 bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-center p-8 border border-white/20 overflow-hidden group"
         >
-          <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <motion.img 
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ 
+              repeat: Infinity, 
+              repeatType: "reverse", 
+              duration: 2,
+              ease: "easeInOut"
+            }}
+            src={logoUrl} 
+            alt="Logo" 
+            className="w-full h-full object-contain drop-shadow-2xl" 
+          />
         </motion.div>
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-10 text-center"
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-12 text-center"
         >
-          <h1 className="text-3xl font-black text-black tracking-tighter flex items-center gap-2">
-            E-Tax<span className="text-maroon-700 font-extrabold uppercase bg-maroon-50 px-2.5 py-0.5 rounded-xl border border-maroon-100">Pay</span>
+          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-3 drop-shadow-2xl">
+            E-Tax<span className="text-white font-extrabold uppercase bg-maroon-600 px-3 py-1 rounded-2xl shadow-lg border border-maroon-500">Pay</span>
           </h1>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mt-3">Zila Panchayat Uttarakhand</p>
+          <div className="flex flex-col items-center gap-2 mt-4">
+            <p className="text-[10px] sm:text-[11px] font-black text-white/60 uppercase tracking-[0.4em]">Zila Panchayat Uttarakhand</p>
+            <div className="h-[1px] w-12 bg-maroon-500/50 mt-1"></div>
+          </div>
         </motion.div>
       </div>
 
-      <div className="absolute bottom-20 w-48 h-1 bg-gray-100 rounded-full overflow-hidden">
+      {/* Progress Bar */}
+      <div className="absolute bottom-20 w-56 h-1 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
         <motion.div 
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
-          transition={{ duration: 2.2, ease: "easeInOut" }}
-          className="h-full bg-black shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+          transition={{ duration: 2.8, ease: "easeInOut" }}
+          className="h-full bg-gradient-to-r from-maroon-500 to-orange-500 shadow-[0_0_15px_rgba(255,107,0,0.5)]"
         />
       </div>
+
+      {/* Footer Text */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-10 flex items-center gap-2 text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+        Secure Government Gateway
+      </motion.div>
     </motion.div>
   );
 };
@@ -178,11 +218,6 @@ const SplashScreen = ({ finishLoading }) => {
 export default function App() {
   const { i18n } = useTranslation();
   const [isInitializing, setIsInitializing] = useState(true);
-
-  const isStandalone = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(display-mode: standalone)').matches || (window.navigator && 'standalone' in window.navigator && window.navigator.standalone);
-  }, []);
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -192,33 +227,34 @@ export default function App() {
       once: true,
       offset: 60,
     });
-
-    if (!isStandalone) {
-      setIsInitializing(false);
-    }
-  }, [i18n.language, isStandalone]);
+  }, [i18n.language]);
 
   return (
     <ErrorBoundary>
       <AuthProvider>
         <ToastProvider>
-          <AnimatePresence>
-            {isInitializing && isStandalone && (
+          <AnimatePresence mode="wait">
+            {isInitializing ? (
               <SplashScreen finishLoading={() => setIsInitializing(false)} key="splash" />
+            ) : (
+              <motion.div
+                key="main-app"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Router>
+                  <TopHeader />
+                  <Navbar />
+                  <ConnectivityManager />
+                  <PWAInstallButton />
+                  <NotificationManager />
+                  <UpdatePrompt />
+                  <AppRoutes />
+                </Router>
+              </motion.div>
             )}
           </AnimatePresence>
-          
-          {( !isInitializing || !isStandalone ) && (
-            <Router>
-              <TopHeader />
-              <Navbar />
-              <ConnectivityManager />
-              <PWAInstallButton />
-              <NotificationManager />
-              <UpdatePrompt />
-              <AppRoutes />
-            </Router>
-          )}
         </ToastProvider>
       </AuthProvider>
     </ErrorBoundary>

@@ -213,32 +213,32 @@ export default function MonthlyTaxPayment() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafaf8] dark:bg-[#121212]">
+    <div className="min-h-screen flex items-center justify-center bg-[#fafaf8]">
       <Loader />
     </div>
   );
 
   return (
-    <div className="min-h-screen pt-20 pb-10 px-4 animate-fade-in transition-opacity duration-700 bg-[#fafaf8] dark:bg-[#121212] overflow-x-hidden">
+    <div className="min-h-screen pt-20 pb-10 px-4 animate-fade-in transition-opacity duration-700 bg-[#fafaf8] overflow-x-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
           <div>
             <h1 className="text-4xl font-black text-maroon-500 dark:text-maroon-400 mb-2 tracking-tight">{t('monthlyTax.title')}</h1>
             <p className="text-gray-500 dark:text-gray-400 font-medium">{t('monthlyTax.subtitle')}</p>
-            <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2 font-black uppercase tracking-widest bg-white/50 dark:bg-white/5 w-fit px-2 py-1 rounded-lg border border-gray-100 dark:border-white/5">
+            <p className="text-[10px] text-gray-400 mt-2 font-black uppercase tracking-widest bg-white/50 w-fit px-2 py-1 rounded-lg border border-gray-100">
               🏪 {t('monthlyTax.registrationNotice', { month: t(`months.${registrationMonth}`), year: registrationYear })}
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-white dark:bg-[#1E1E1E] px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10">
+          <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('tax.year')}</span>
             <select 
               value={selectedYear} 
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="bg-transparent border-none focus:ring-0 text-maroon-500 dark:text-maroon-400 font-black text-lg cursor-pointer"
+              className="bg-transparent border-none focus:ring-0 text-maroon-500 font-black text-lg cursor-pointer"
             >
               {[currentYear, currentYear - 1, currentYear - 2].filter(y => y >= registrationYear).map(y => (
-                <option key={y} value={y} className="dark:bg-[#1E1E1E]">{y}</option>
+                <option key={y} value={y}>{y}</option>
               ))}
             </select>
           </div>
@@ -265,7 +265,7 @@ export default function MonthlyTaxPayment() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: m * 0.04 }}
-                className={`flex flex-col items-center justify-center p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 transform ${data.bgColor} ${data.state === 'NOT_APPLICABLE' ? 'opacity-50 cursor-not-allowed' : ''} ${data.state === 'FUTURE' ? 'dark:bg-[#1E1E1E]/40 dark:border-white/5' : ''}`}
+                className={`flex flex-col items-center justify-center p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 transform ${data.bgColor} ${data.state === 'NOT_APPLICABLE' ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <div className={`text-xl font-black mb-3 drop-shadow-sm ${data.state === 'FUTURE' || data.state === 'NOT_APPLICABLE' ? 'text-gray-400 dark:text-gray-500' : 'text-white'}`}>{monthName} {selectedYear}</div>
                 <div className="mb-6 bg-white/10 dark:bg-black/20 p-4 rounded-2xl backdrop-blur-sm">{data.icon}</div>
