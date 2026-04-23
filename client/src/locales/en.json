@@ -629,5 +629,27 @@
       "resolved": "Resolved",
       "rejected": "Rejected"
     }
+  },
+  "offline": {
+    "title": "Mountain Signal Helper",
+    "statusOnline": "Status: Online — Full Access",
+    "statusOffline": "Status: Offline — Limited Mode",
+    "syncNow": "Sync Now",
+    "syncing": "Syncing...",
+    "connected": "Connected to Gov-Servers",
+    "noSignal": "Weak or No Signal — PWA Active",
+    "connectedDesc": "Your system is connected to the centralized grid. All data is synchronized.",
+    "offlineDesc": "Dont worry! E-TaxPay's offline mode is active. You can still view previous local records.",
+    "lastSync": "Last Synced",
+    "dataProtected": "All data locally protected",
+    "guideTitle": "Hilly Region Guide: How to use offline?",
+    "step1Title": "Install the App",
+    "step1Desc": "Go to your browser menu and click 'Add to Home Screen' or 'Install App'.",
+    "step2Title": "Let it Save Data",
+    "step2Desc": "Open the dashboard once while online so it caches the shop records locally.",
+    "step3Title": "Use Anywhere",
+    "step3Desc": "Open the app even without internet; your previous tax status remains accessible.",
+    "proTipTitle": "Pro Tip",
+    "proTipDesc": "Always open the dashboard when you have signal to ensure the latest data is saved."
   }
 }

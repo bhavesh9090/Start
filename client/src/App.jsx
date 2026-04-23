@@ -100,6 +100,8 @@ const AppRoutes = () => {
 };
 
 import { ToastProvider } from './context/ToastContext';
+import ConnectivityManager from './components/ConnectivityManager';
+import PWAInstallButton from './components/PWAInstallButton';
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -119,6 +121,8 @@ export default function App() {
       <ToastProvider>
         <Router>
           <Navbar />
+          <ConnectivityManager />
+          <PWAInstallButton />
           <AppRoutes />
         </Router>
       </ToastProvider>

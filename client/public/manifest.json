@@ -1,0 +1,24 @@
+{
+  "name": "E-TaxPay | Zila Panchayat Uttarakhand",
+  "short_name": "E-TaxPay",
+  "description": "Digital Shop Tax Collection System for Uttarakhand",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf8",
+  "theme_color": "#e03434",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
