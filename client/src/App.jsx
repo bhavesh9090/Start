@@ -128,7 +128,7 @@ const AppRoutes = () => {
 const SplashScreen = ({ finishLoading }) => {
   const { t, i18n } = useTranslation();
   useEffect(() => {
-    const timer = setTimeout(finishLoading, 4000); // Slightly longer for better effect
+    const timer = setTimeout(finishLoading, 3500); 
     return () => clearTimeout(timer);
   }, [finishLoading]);
 
@@ -136,98 +136,71 @@ const SplashScreen = ({ finishLoading }) => {
     <motion.div 
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1.2, ease: "easeInOut" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black overflow-hidden"
     >
-      {/* Cinematic Deep Background */}
+      {/* Optimized Background - Removed filter:blur for performance */}
       <motion.div 
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.4 }}
+        initial={{ scale: 1, opacity: 0 }}
+        animate={{ scale: 1.05, opacity: 0.3 }}
         transition={{ duration: 4, ease: "easeOut" }}
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 bg-center bg-cover"
         style={{
           backgroundImage: `url('${STORAGE_BASE}/hola.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(8px) brightness(0.5)'
         }}
       />
       
-      {/* Light Leaks / Glow Blobs */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-0 opacity-80" />
+      {/* Simplified Overlays */}
+      <div className="absolute inset-0 bg-black/60 z-0" />
+      
+      {/* Subtle Glow - Reduced complexity */}
       <motion.div 
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.1, 0.2, 0.1],
-          x: [0, 50, 0],
-          y: [0, -30, 0]
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-red-500/20 rounded-full blur-[120px] pointer-events-none"
-      />
-      <motion.div 
-        animate={{ 
-          scale: [1.2, 1, 1.2],
-          opacity: [0.1, 0.15, 0.1],
-          x: [0, -40, 0],
-          y: [0, 40, 0]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-maroon-500/20 rounded-full blur-[100px] pointer-events-none"
+        animate={{ opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-20%] right-[-10%] w-96 h-96 bg-red-600/20 rounded-full blur-[100px] pointer-events-none"
       />
 
-      {/* Floating Particles Simulation */}
+      {/* Reduced Particles Count for Smoothness */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ 
               x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight,
+              y: window.innerHeight + 10,
               opacity: 0 
             }}
             animate={{ 
-              y: [null, Math.random() * -100 - 50],
-              opacity: [0, 0.4, 0],
-              scale: [0, 1, 0]
+              y: -100,
+              opacity: [0, 0.3, 0],
             }}
             transition={{ 
-              duration: 4 + Math.random() * 4, 
+              duration: 5 + Math.random() * 3, 
               repeat: Infinity, 
-              delay: Math.random() * 5,
-              ease: "easeInOut"
+              delay: Math.random() * 4,
+              ease: "linear"
             }}
-            className="absolute w-1 h-1 bg-white rounded-full blur-[1px]"
+            className="absolute w-1 h-1 bg-white/40 rounded-full"
           />
         ))}
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
-        {/* Logo with Heavy Glow */}
+        {/* Logo - Simplified entry */}
         <motion.div
-          initial={{ scale: 0, rotate: -15, opacity: 0 }}
-          animate={{ scale: 1, rotate: 0, opacity: 1 }}
-          transition={{ 
-            type: "spring",
-            stiffness: 100,
-            damping: 15,
-            delay: 0.2
-          }}
-          className="relative group"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          className="relative"
         >
-          {/* Pulsing Outer Glow */}
-          <motion.div 
-            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-[-20px] bg-white/10 rounded-full blur-3xl"
-          />
+          {/* Static Glow for Performance */}
+          <div className="absolute inset-[-15px] bg-white/5 rounded-full blur-2xl" />
           
-          <div className="relative w-44 h-44 sm:w-56 sm:h-56 bg-white/5 backdrop-blur-3xl rounded-full shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex items-center justify-center p-4 border border-white/10 group-hover:border-white/20 transition-colors duration-700">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-20" />
+          <div className="relative w-40 h-40 sm:w-48 sm:h-48 bg-white/10 backdrop-blur-xl rounded-full shadow-2xl flex items-center justify-center p-5 border border-white/10">
             <motion.img 
-              initial={{ filter: "brightness(0)", scale: 0.8 }}
-              animate={{ filter: "brightness(1)", scale: 1 }}
-              transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
               src={logoUrl} 
               alt="Logo" 
               className="w-full h-full object-contain" 
@@ -235,53 +208,47 @@ const SplashScreen = ({ finishLoading }) => {
           </div>
         </motion.div>
 
-        {/* Text Brand Reveal */}
-        <div className="mt-14 text-center overflow-hidden">
+        {/* Text Brand */}
+        <div className="mt-12 text-center">
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
+            transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <h1 className="text-5xl sm:text-6xl font-black text-white tracking-tighter flex items-center gap-4 drop-shadow-2xl">
+            <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
               {t('nav.logoName')}
             </h1>
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, letterSpacing: "1em" }}
-            animate={{ opacity: 0.5, letterSpacing: "0.5em" }}
-            transition={{ delay: 1.5, duration: 1.2 }}
-            className="mt-6 flex flex-col items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            transition={{ delay: 1.2, duration: 1 }}
+            className="mt-4 flex flex-col items-center gap-3"
           >
-            <p className="text-[11px] font-black text-white uppercase">{t('nav.zilaPanchayat')}</p>
-            <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-maroon-500 to-transparent"></div>
+            <p className="text-[10px] font-bold text-white uppercase tracking-[0.4em]">{t('nav.zilaPanchayat')}</p>
+            <div className="h-[1px] w-12 bg-white/20"></div>
           </motion.div>
         </div>
       </div>
 
-      {/* Modern Slim Progress Bar */}
-      <div className="absolute bottom-24 w-64 h-[2px] bg-white/5 rounded-full overflow-hidden backdrop-blur-sm">
+      {/* Progress Bar - Simplified */}
+      <div className="absolute bottom-24 w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
         <motion.div 
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 3.5, ease: "easeInOut" }}
-          className="h-full bg-gradient-to-r from-transparent via-white to-transparent"
-          style={{ boxShadow: '0 0 10px rgba(255,255,255,0.8)' }}
+          initial={{ x: "-100%" }}
+          animate={{ x: "100%" }}
+          transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
+          className="w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent"
         />
       </div>
 
-      {/* Minimal Footer */}
+      {/* Footer */}
       <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.5 }}
-        className="absolute bottom-12 flex items-center gap-3 text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.3 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-10 text-[9px] font-bold text-white uppercase tracking-[0.3em]"
       >
-        <div className="flex gap-1.5">
-          <div className="w-1 h-1 rounded-full bg-red-500"></div>
-          <div className="w-1 h-1 rounded-full bg-white/50"></div>
-          <div className="w-1 h-1 rounded-full bg-green-500"></div>
-        </div>
         {i18n.language === 'en' ? 'Official Digital Portal' : 'आधिकारिक डिजिटल पोर्टल'}
       </motion.div>
     </motion.div>
