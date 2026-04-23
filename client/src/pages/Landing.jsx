@@ -148,7 +148,6 @@ export default function Landing() {
       <AboutUsSection t={t} />
       <Footer t={t} />
       <ChatBot />
-      <ProjectDisclaimer t={t} />
     </div>
   );
 }
@@ -1153,117 +1152,7 @@ function AboutUsSection({ t }) {
 }
 
 // ==================== PROJECT DISCLAIMER ====================
-function ProjectDisclaimer({ t }) {
-  const [show, setShow] = useState(false);
-  const [agreed, setAgreed] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-
-  useEffect(() => {
-    // Check if running in PWA standalone mode
-    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    setIsStandalone(standalone);
-    
-    // Only show disclaimer if NOT in standalone mode AND not already agreed
-    if (!standalone && localStorage.getItem('eTaxPayDisclaimerAgreed') !== 'true') {
-      setShow(true);
-    }
-  }, []);
-
-  const handleAgreeAndEnter = () => {
-    if (agreed) {
-      localStorage.setItem('eTaxPayDisclaimerAgreed', 'true');
-      setShow(false);
-    }
-  };
-
-  if (!show || isStandalone) return null;
-
-  return (
-    <motion.div 
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div 
-        className="bg-white/95 backdrop-blur-2xl rounded-[2.5rem] p-8 sm:p-10 w-full max-w-sm sm:max-w-md shadow-[0_40px_100px_rgba(0,0,0,0.3)] border border-white/20 relative overflow-hidden"
-        initial={{ scale: 0.9, y: 40, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      >
-        {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -mr-16 -mt-16" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl -ml-16 -mb-16" />
-
-        <div className="text-center mb-8 relative">
-          <motion.div 
-            className="w-20 h-20 bg-gradient-to-br from-maroon-600 to-maroon-700 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-2xl shadow-maroon-900/20"
-            animate={{ rotate: [0, 5, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          >
-            <FiInfo className="w-10 h-10" />
-          </motion.div>
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-tight mb-2">Important Disclaimer</h2>
-          <div className="flex flex-col items-center gap-1">
-             <span className="text-[12px] font-black text-maroon-600 uppercase tracking-widest bg-maroon-50 px-3 py-1 rounded-full border border-maroon-100">Educational Project</span>
-             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">{t('nav.zilaPanchayat')}</p>
-          </div>
-        </div>
-        
-        <div className="space-y-6 relative">
-          <div className="space-y-3">
-            <div className="flex gap-4 items-start p-5 bg-orange-50/50 rounded-3xl border border-orange-100">
-              <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                <FiZap className="w-4 h-4 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-[11px] font-black text-gray-800 uppercase tracking-tighter">Educational Only / शैक्षणिक कार्य</p>
-                <p className="text-[10px] text-gray-500 font-medium leading-relaxed">This site is for project demonstration only.<br/>यह वेबसाइट केवल प्रोजेक्ट प्रदर्शन के लिए है।</p>
-              </div>
-            </div>
-            <div className="flex gap-4 items-start p-5 bg-blue-50/50 rounded-3xl border border-blue-100">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <FiEye className="w-4 h-4 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-[11px] font-black text-gray-800 uppercase tracking-tighter">Dummy Data / डमी डेटा</p>
-                <p className="text-[10px] text-gray-500 font-medium leading-relaxed">No real financial transactions occur here.<br/>यहाँ कोई वास्तविक वित्तीय लेनदेन नहीं होता है।</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 py-4 px-2 border-y border-gray-100 group cursor-pointer" onClick={() => setAgreed(!agreed)}>
-            <motion.div 
-              className={`w-6 h-6 rounded-lg border-2 flex-shrink-0 flex items-center justify-center transition-all duration-300 ${agreed ? 'bg-maroon-600 border-maroon-600 text-white shadow-lg' : 'bg-white border-gray-200 group-hover:border-maroon-400'}`}
-              whileTap={{ scale: 0.85 }}
-            >
-              {agreed && <FiCheckCircle className="w-4 h-4" />}
-            </motion.div>
-            <p className="text-[11px] sm:text-xs font-black text-gray-800 leading-tight">
-              I understand and agree to the terms.<br/>
-              <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">मैं सहमत हूँ।</span>
-            </p>
-          </div>
-
-          <motion.button 
-            onClick={handleAgreeAndEnter}
-            disabled={!agreed}
-            className={`w-full py-5 rounded-2xl font-black text-[12px] shadow-2xl transition-all uppercase tracking-[0.3em] flex items-center justify-center gap-3 ${
-              agreed 
-                ? 'bg-gradient-to-r from-maroon-600 to-maroon-700 text-white shadow-maroon-900/20' 
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
-            }`}
-            whileHover={agreed ? { scale: 1.02, y: -2 } : {}}
-            whileTap={agreed ? { scale: 0.98 } : {}}
-          >
-            <span>Enter Website</span>
-            <FiArrowRight className="w-5 h-5" />
-          </motion.button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
+// ProjectDisclaimer removed from here and moved to App.jsx for global scope.
 
 function Footer({ t }) {
   const [isStandalone, setIsStandalone] = useState(false);
