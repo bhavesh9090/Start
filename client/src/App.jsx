@@ -126,7 +126,7 @@ const AppRoutes = () => {
 };
 
 const SplashScreen = ({ finishLoading }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     const timer = setTimeout(finishLoading, 4000); // Slightly longer for better effect
     return () => clearTimeout(timer);
@@ -243,10 +243,7 @@ const SplashScreen = ({ finishLoading }) => {
             transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
           >
             <h1 className="text-5xl sm:text-6xl font-black text-white tracking-tighter flex items-center gap-4 drop-shadow-2xl">
-              {t('nav.logoName').split('-').map((part, idx) => (
-                <span key={idx}>{part}{idx === 0 ? '-' : ''}</span>
-              ))}
-              {/* Note: In Hindi t('nav.logoName') is 'ई-टैक्सपे', no split needed usually but this is safer */}
+              {t('nav.logoName')}
             </h1>
           </motion.div>
           
