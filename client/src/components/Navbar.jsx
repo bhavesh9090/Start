@@ -247,7 +247,14 @@ export default function Navbar() {
           {/* Logo (Stays Left) */}
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow overflow-hidden p-1 sm:p-1.5 flex-shrink-0">
-              <img src={logoUrl} alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-full h-full object-contain drop-shadow-md" 
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              />
             </div>
             <div className="flex flex-col min-w-0 py-1">
               <span className="text-base sm:text-lg lg:text-xl font-bold text-maroon-500 block leading-relaxed max-w-[14rem] sm:max-w-[18rem] truncate pb-0.5">

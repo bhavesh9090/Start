@@ -46,7 +46,7 @@
     "govBadge": "Government of Uttarakhand • Official Portal"
   },
   "howItWorks": {
-    "eyebrow": "How it works",
+    "eyebrow": "HOW IT WORKS",
     "heading": "Easy steps to register<br/>and Pay Taxes",
     "step1": {
       "title": "Register Account",
@@ -81,6 +81,7 @@
   },
   "help": {
     "title": "Need Help?",
+    "eyebrow": "HELP",
     "supportEyebrow": "SUPPORT",
     "description": "Get in touch with our team for any tax-related discrepancies, technical support, or general queries. We're here to assist you.",
     "name": "Your Name",

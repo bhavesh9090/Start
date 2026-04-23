@@ -29,7 +29,8 @@ const ASSET_IMAGES = {
   sahil: `${STORAGE_BASE}/sahil.jpeg`,
   raja: `${STORAGE_BASE}/raja.jpeg`,
   gaurav: `${STORAGE_BASE}/gaurav.jpeg`,
-  logo: `${STORAGE_BASE}/logo.png`
+  logo: `${STORAGE_BASE}/logo.png`,
+  mountains: `${STORAGE_BASE}/mountains.png`
 };
 
 // Shared helper to render title with the last word highlighted
@@ -188,9 +189,9 @@ function HowItWorksSection({ t }) {
       <div className="max-w-6xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20 relative">
           <motion.span 
-            className="text-[#e03434] tracking-widest uppercase font-bold text-sm mb-3 block"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            className="hiw-eyebrow inline-block mb-3"
+            initial={{ opacity: 0, y: 20, rotate: -4.5 }}
+            animate={isInView ? { opacity: 1, y: 0, rotate: -4.5 } : {}}
             transition={{ duration: 0.5 }}
           >
             {t('howItWorks.eyebrow')}
@@ -395,7 +396,17 @@ function HeroSection({ t, isMobile }) {
   }, []);
 
   return (
-    <section ref={heroRef} className="hero-gov mountain-bg text-left relative selection:bg-red-500/20">
+    <section 
+      ref={heroRef} 
+      className="hero-gov mountain-bg text-left relative selection:bg-red-500/20"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(250, 250, 250, 0.85), rgba(250, 250, 250, 0.95)), url('${ASSET_IMAGES.mountains}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center bottom',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <div className="hero-gov-pattern"></div>
       <div className="hero-gov-blob-red"></div>
       <div className="hero-gov-blob-green"></div>
@@ -645,8 +656,8 @@ function AboutSection({ t }) {
         <div className="text-center mb-20">
           <motion.span
             className="mission-eyebrow inline-block mb-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            initial={{ opacity: 0, y: 20, rotate: -4.5 }}
+            animate={isInView ? { opacity: 1, y: 0, rotate: -4.5 } : {}}
             transition={{ duration: 0.5 }}
           >
             {t('about.eyebrow')}
@@ -732,10 +743,18 @@ function HelpSection({ t }) {
       <div className="help-bg-blob help-blob-green" />
       
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16" data-aos="fade-up">
-          <span className="help-eyebrow mb-4 block">{t('help.supportEyebrow')}</span>
+        <div className="text-center mb-10 md:mb-16">
+          <motion.span 
+            className="help-eyebrow inline-block mb-4"
+            initial={{ opacity: 0, y: 20, rotate: -4.5 }}
+            whileInView={{ opacity: 1, y: 0, rotate: -4.5 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            {t('help.eyebrow')}
+          </motion.span>
           <h2 className="help-heading mb-4">
-            {renderTitle(t('help.title'), "text-red-600")}
+            {renderTitle(t('help.title'))}
           </h2>
           <p className="help-subtitle max-w-2xl mx-auto">
             {t('help.description')}
@@ -881,7 +900,15 @@ function ComplaintSection({ t }) {
       
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-12" data-aos="fade-up">
-          <span className="grievance-eyebrow mb-4 block">{t('complaintSection.grievanceCell')}</span>
+          <motion.span 
+            className="grievance-eyebrow mb-4 inline-block"
+            initial={{ opacity: 0, y: 20, rotate: -4.5 }}
+            whileInView={{ opacity: 1, y: 0, rotate: -4.5 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            {t('complaintSection.grievanceCell')}
+          </motion.span>
           <h2 className="grievance-heading mb-4">
             {renderTitle(t('complaintSection.title'), "text-red-600")}
           </h2>
@@ -1051,8 +1078,8 @@ function AboutUsSection({ t }) {
       <div className="team-header-container" ref={ref}>
         <motion.span 
           className="team-eyebrow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 20, rotate: -4.5 }}
+          animate={isInView ? { opacity: 1, y: 0, rotate: -4.5 } : {}}
           transition={{ duration: 0.5 }}
         >
           {t('aboutUs.eyebrow')}
@@ -1088,7 +1115,13 @@ function AboutUsSection({ t }) {
               title={member.name}
             >
               <div className="team-photo-wrapper">
-                <img src={member.image} alt={member.name} loading="lazy" className="team-photo" />
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  loading="lazy" 
+                  decoding="async"
+                  className="team-photo" 
+                />
               </div>
               
               <div className="team-info">
