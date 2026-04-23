@@ -362,7 +362,7 @@ export default function App() {
               >
                 <Router>
                   <ProjectDisclaimer />
-                  {!isStandalone && <TopHeader />}
+                  <TopHeader />
                   <Navbar />
                   <ConnectivityManager />
                   {!isStandalone && <PWAInstallButton />}
