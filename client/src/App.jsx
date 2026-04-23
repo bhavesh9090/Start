@@ -126,8 +126,9 @@ const AppRoutes = () => {
 };
 
 const SplashScreen = ({ finishLoading }) => {
+  const { t } = useTranslation();
   useEffect(() => {
-    const timer = setTimeout(finishLoading, 3000);
+    const timer = setTimeout(finishLoading, 4000); // Slightly longer for better effect
     return () => clearTimeout(timer);
   }, [finishLoading]);
 
@@ -135,79 +136,156 @@ const SplashScreen = ({ finishLoading }) => {
     <motion.div 
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1, ease: "easeInOut" }}
+      transition={{ duration: 1.2, ease: "easeInOut" }}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black overflow-hidden"
     >
+      {/* Cinematic Deep Background */}
       <motion.div 
-        initial={{ scale: 1.2, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.6 }}
-        transition={{ duration: 2.5, ease: "easeOut" }}
+        initial={{ scale: 1.1, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.4 }}
+        transition={{ duration: 4, ease: "easeOut" }}
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url('${STORAGE_BASE}/hola.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          filter: 'blur(4px)'
+          filter: 'blur(8px) brightness(0.5)'
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-0" />
+      
+      {/* Light Leaks / Glow Blobs */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-0 opacity-80" />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.2, 0.1],
+          x: [0, 50, 0],
+          y: [0, -30, 0]
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-red-500/20 rounded-full blur-[120px] pointer-events-none"
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1.2, 1, 1.2],
+          opacity: [0.1, 0.15, 0.1],
+          x: [0, -40, 0],
+          y: [0, 40, 0]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-maroon-500/20 rounded-full blur-[100px] pointer-events-none"
+      />
 
-      <div className="relative z-10 flex flex-col items-center">
-        <motion.div
-          initial={{ y: 30, opacity: 0, scale: 0.9 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-          className="relative w-36 h-36 sm:w-44 sm:h-44 bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-center p-8 border border-white/20 overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <motion.img 
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
+      {/* Floating Particles Simulation */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ 
+              x: Math.random() * window.innerWidth, 
+              y: Math.random() * window.innerHeight,
+              opacity: 0 
+            }}
+            animate={{ 
+              y: [null, Math.random() * -100 - 50],
+              opacity: [0, 0.4, 0],
+              scale: [0, 1, 0]
+            }}
             transition={{ 
+              duration: 4 + Math.random() * 4, 
               repeat: Infinity, 
-              repeatType: "reverse", 
-              duration: 2,
+              delay: Math.random() * 5,
               ease: "easeInOut"
             }}
-            src={logoUrl} 
-            alt="Logo" 
-            className="w-full h-full object-contain drop-shadow-2xl" 
+            className="absolute w-1 h-1 bg-white rounded-full blur-[1px]"
           />
-        </motion.div>
-
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="mt-12 text-center"
-        >
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-3 drop-shadow-2xl">
-            E-Tax<span className="text-white font-extrabold uppercase bg-maroon-600 px-3 py-1 rounded-2xl shadow-lg border border-maroon-500">Pay</span>
-          </h1>
-          <div className="flex flex-col items-center gap-2 mt-4">
-            <p className="text-[10px] sm:text-[11px] font-black text-white/60 uppercase tracking-[0.4em]">Zila Panchayat Uttarakhand</p>
-            <div className="h-[1px] w-12 bg-maroon-500/50 mt-1"></div>
-          </div>
-        </motion.div>
+        ))}
       </div>
 
-      <div className="absolute bottom-20 w-56 h-1 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
+      <div className="relative z-10 flex flex-col items-center">
+        {/* Logo with Heavy Glow */}
+        <motion.div
+          initial={{ scale: 0, rotate: -15, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 100,
+            damping: 15,
+            delay: 0.2
+          }}
+          className="relative group"
+        >
+          {/* Pulsing Outer Glow */}
+          <motion.div 
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-20px] bg-white/10 rounded-full blur-3xl"
+          />
+          
+          <div className="relative w-44 h-44 sm:w-56 sm:h-56 bg-white/5 backdrop-blur-3xl rounded-full shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex items-center justify-center p-4 border border-white/10 group-hover:border-white/20 transition-colors duration-700">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-20" />
+            <motion.img 
+              initial={{ filter: "brightness(0)", scale: 0.8 }}
+              animate={{ filter: "brightness(1)", scale: 1 }}
+              transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
+              src={logoUrl} 
+              alt="Logo" 
+              className="w-full h-full object-contain" 
+            />
+          </div>
+        </motion.div>
+
+        {/* Text Brand Reveal */}
+        <div className="mt-14 text-center overflow-hidden">
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
+          >
+            <h1 className="text-5xl sm:text-6xl font-black text-white tracking-tighter flex items-center gap-4 drop-shadow-2xl">
+              {t('nav.logoName').split('-').map((part, idx) => (
+                <span key={idx}>{part}{idx === 0 ? '-' : ''}</span>
+              ))}
+              {/* Note: In Hindi t('nav.logoName') is 'ई-टैक्सपे', no split needed usually but this is safer */}
+            </h1>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, letterSpacing: "1em" }}
+            animate={{ opacity: 0.5, letterSpacing: "0.5em" }}
+            transition={{ delay: 1.5, duration: 1.2 }}
+            className="mt-6 flex flex-col items-center gap-3"
+          >
+            <p className="text-[11px] font-black text-white uppercase">{t('nav.zilaPanchayat')}</p>
+            <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-maroon-500 to-transparent"></div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Modern Slim Progress Bar */}
+      <div className="absolute bottom-24 w-64 h-[2px] bg-white/5 rounded-full overflow-hidden backdrop-blur-sm">
         <motion.div 
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
-          transition={{ duration: 2.8, ease: "easeInOut" }}
-          className="h-full bg-gradient-to-r from-maroon-500 to-orange-500 shadow-[0_0_15px_rgba(255,107,0,0.5)]"
+          transition={{ duration: 3.5, ease: "easeInOut" }}
+          className="h-full bg-gradient-to-r from-transparent via-white to-transparent"
+          style={{ boxShadow: '0 0 10px rgba(255,255,255,0.8)' }}
         />
       </div>
 
+      {/* Minimal Footer */}
       <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-10 flex items-center gap-2 text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.5 }}
+        className="absolute bottom-12 flex items-center gap-3 text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-        Secure Government Gateway
+        <div className="flex gap-1.5">
+          <div className="w-1 h-1 rounded-full bg-red-500"></div>
+          <div className="w-1 h-1 rounded-full bg-white/50"></div>
+          <div className="w-1 h-1 rounded-full bg-green-500"></div>
+        </div>
+        {i18n.language === 'en' ? 'Official Digital Portal' : 'आधिकारिक डिजिटल पोर्टल'}
       </motion.div>
     </motion.div>
   );

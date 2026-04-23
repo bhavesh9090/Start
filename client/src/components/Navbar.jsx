@@ -241,10 +241,10 @@ const Navbar = () => {
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="text-base sm:text-xl font-black text-[#1a202c] tracking-tight">
-                  E-TaxPay
+                  {t('nav.logoName')}
                 </span>
                 <span className="hidden md:block text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">
-                  Zila Panchayat Uttarakhand
+                  {t('nav.zilaPanchayat')}
                 </span>
               </div>
             </Link>
@@ -316,19 +316,19 @@ const Navbar = () => {
                   {/* Desktop Login/Register */}
                   <div className="hidden sm:flex items-center gap-8">
                     <Link to="/login" className="text-[14px] font-black text-[#ff6b00] hover:scale-105 transition-all">
-                      Login
+                      {t('nav.login')}
                     </Link>
                     <Link to="/register" className="px-8 py-3 bg-[#ff6b00] text-white text-[14px] font-black rounded-full shadow-lg shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
-                      Register
+                      {t('nav.register')}
                     </Link>
                   </div>
                   {/* Mobile Login/Register */}
                   <div className="flex sm:hidden items-center gap-2">
                     <Link to="/login" className="text-[12px] font-black text-[#ff6b00] px-3 py-1.5">
-                      Login
+                      {t('nav.login')}
                     </Link>
                     <Link to="/register" className="px-4 py-1.5 bg-[#ff6b00] text-white text-[12px] font-black rounded-full shadow-md">
-                      Register
+                      {t('nav.register')}
                     </Link>
                   </div>
                 </>
