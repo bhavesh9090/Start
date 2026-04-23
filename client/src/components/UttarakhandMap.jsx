@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import geoData from '../data/uttarakhand.json';
+// Supabase Data URL
+const GEO_DATA_URL = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/assets/uttarakhand.json`;
 
 // Exact colors matching the Pinterest reference design for a stunning map
 const districtColors = {
@@ -40,7 +41,16 @@ export default React.memo(function UttarakhandMap({ onDistrictClick }) {
   const [hovered, setHovered] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isTouch, setIsTouch] = useState(false);
+  const [geoData, setGeoData] = useState(null);
   const mapRef = useRef(null);
+
+  useEffect(() => {
+    // Fetch geography data from Supabase
+    fetch(GEO_DATA_URL)
+      .then(res => res.json())
+      .then(data => setGeoData(data))
+      .catch(err => console.error("Map fetch error:", err));
+  }, []);
 
   useEffect(() => {
     // Detect if device is touch-based or has a small screen
@@ -57,6 +67,12 @@ export default React.memo(function UttarakhandMap({ onDistrictClick }) {
     if (isTouch) return;
     setMousePos({ x: e.clientX, y: e.clientY });
   };
+
+  if (!geoData) return (
+    <div className="w-full aspect-[4/3] flex items-center justify-center">
+      <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
     <div className="w-full relative drop-shadow-2xl" onMouseMove={handleMouseMove} ref={mapRef}>

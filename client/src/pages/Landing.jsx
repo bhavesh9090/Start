@@ -16,11 +16,21 @@ import {
 import { complaintAPI, authAPI, helpAPI } from '../services/api';
 import UttarakhandMap from '../components/UttarakhandMap';
 import ChatBot from '../components/ChatBot';
-import logoImg from '../assets/logo.png';
-import manishImg from '../assets/manish.jpeg';
-import bhaveshImg from '../assets/bhavesh.jpeg';
-import sumitImg from '../assets/sumit.png';
-import deepakImg from '../assets/deepak.png';
+// Supabase Storage Configuration
+const BUCKET_NAME = "assets";
+const STORAGE_BASE = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}`;
+
+const ASSET_IMAGES = {
+  sumit: `${STORAGE_BASE}/sumit.png`,
+  manish: `${STORAGE_BASE}/manish.jpeg`,
+  bhavesh: `${STORAGE_BASE}/bhavesh.jpeg`,
+  deepak: `${STORAGE_BASE}/deepak.png`,
+  lalit: `${STORAGE_BASE}/lalit.jpeg`,
+  sahil: `${STORAGE_BASE}/sahil.jpeg`,
+  raja: `${STORAGE_BASE}/raja.jpeg`,
+  gaurav: `${STORAGE_BASE}/gaurav.jpeg`,
+  logo: `${STORAGE_BASE}/logo.png`
+};
 
 // Shared helper to render title with the last word highlighted
 const renderTitle = (text, highlightClass = "text-highlight") => {
@@ -1007,25 +1017,26 @@ function ComplaintSection({ t }) {
       </div>
     </section>
   );
+  
 }
 
 function AboutUsSection({ t }) {
   const team = [
-    { name: t('aboutUs.member1'), role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: sumitImg, 
+    { name: t('aboutUs.member1'), role: t('aboutUs.role1'), email: "bhandari@taxpay.co", image: ASSET_IMAGES.sumit, 
       github: 'https://github.com/sumitbhandari2006', instagram: 'https://www.instagram.com/yeah_sumithere', linkedin: 'https://www.linkedin.com/in/sumit-bhandari-1424b133a' },
-    { name: t('aboutUs.member2'), role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: manishImg, isCoFounder: true,
+    { name: t('aboutUs.member2'), role: t('aboutUs.role2'), email: "paliwal@taxpay.co", image: ASSET_IMAGES.manish, isCoFounder: true,
       github: 'https://github.com/Manish363-dot', instagram: 'https://www.instagram.com/manish__uk_01', linkedin: 'https://www.linkedin.com/in/manish-paliwal-389a74327' },
-    { name: t('aboutUs.member3'), role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: bhaveshImg, 
+    { name: t('aboutUs.member3'), role: t('aboutUs.role3'), email: "bhavesh@taxpay.co", image: ASSET_IMAGES.bhavesh, 
       github: 'https://github.com/bhavesh9090', instagram: 'https://www.instagram.com/bhavesh_bishtttt', linkedin: 'https://www.linkedin.com/in/bhavesh-bisht-549530328' },
-    { name: t('aboutUs.member4'), role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: deepakImg, 
+    { name: t('aboutUs.member4'), role: t('aboutUs.role4'), email: "bisht@taxpay.co", image: ASSET_IMAGES.deepak, 
       github: 'https://github.com/Deepakbisht010', instagram: 'https://www.instagram.com/deepak_bisht.001/', linkedin: 'https://www.linkedin.com/in/deepak-singh-a05583328/' },
-    { name: t('aboutUs.member5'), role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: lalitImg, 
+    { name: t('aboutUs.member5'), role: t('aboutUs.role5'), email: "kanyal@taxpay.co", image: ASSET_IMAGES.lalit, 
       github: 'https://github.com/Lalit-73-02', instagram: 'https://www.instagram.com/?hl=en', linkedin: 'https://www.linkedin.com/in/lalit-singh-kanyal-929583328/' },
-    { name: t('aboutUs.member6'), role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: sahilImg, 
+    { name: t('aboutUs.member6'), role: t('aboutUs.role6'), email: "sahil@taxpay.co", image: ASSET_IMAGES.sahil, 
       github: 'https://github.com/sahil-chand-21', instagram: 'https://www.instagram.com/sahil._.chand', linkedin: 'https://www.linkedin.com/in/sahil-chand-077org' },
-    { name: t('aboutUs.member7'), role: t('aboutUs.role7'), email: "raja@taxpay.co", image: rajaImg, 
+    { name: t('aboutUs.member7'), role: t('aboutUs.role7'), email: "raja@taxpay.co", image: ASSET_IMAGES.raja, 
       github: 'https://github.com/raja393-disigner', instagram: 'https://www.instagram.com/r_for_rautela', linkedin: 'https://www.linkedin.com/in/raja-rautela-07b589328/' },
-    { name: t('aboutUs.member8'), role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: gauravImg, 
+    { name: t('aboutUs.member8'), role: t('aboutUs.role8'), email: "gaurav@taxpay.co", image: ASSET_IMAGES.gaurav, 
       github: 'https://www.instagram.com/gauri_bisht_07', instagram: 'https://instagram.com/manish', linkedin: 'https://www.linkedin.com/in/gaurav-bisht-04647a387' },
   ];
 
@@ -1078,7 +1089,6 @@ function AboutUsSection({ t }) {
             >
               <div className="team-photo-wrapper">
                 <img src={member.image} alt={member.name} loading="lazy" className="team-photo" />
-                <div className={`team-hover-overlay ${isRed ? 'team-overlay-red' : 'team-overlay-green'}`}></div>
               </div>
               
               <div className="team-info">
@@ -1207,7 +1217,7 @@ function Footer({ t }) {
           <div data-aos="fade-up">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center overflow-hidden p-1.5 shadow-lg border border-white/10">
-                <img src={logoImg} alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
+                <img src={ASSET_IMAGES.logo} alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
               </div>
               <span className="text-2xl font-bold text-white tracking-tight">{t('nav.logoName')}</span>
             </div>
