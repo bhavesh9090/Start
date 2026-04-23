@@ -35,8 +35,22 @@ export default function ChatBot() {
   const BASE_URL = import.meta.env.VITE_API_URL || '';
   const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : (BASE_URL ? `${BASE_URL}/api` : '/api');
 
-  // Load History from Supabase on Mount
+  // Handle Mutual Exclusion
   useEffect(() => {
+    const handleClose = (e) => {
+      if (e.detail.id !== 'chatbot') {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('close-all-overlays', handleClose);
+    return () => window.removeEventListener('close-all-overlays', handleClose);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      window.dispatchEvent(new CustomEvent('close-all-overlays', { detail: { id: 'chatbot' } }));
+    }
+
     const token = localStorage.getItem('token');
     if (token && isOpen) {
       fetch(`${API_URL}/chatbot/history`, {

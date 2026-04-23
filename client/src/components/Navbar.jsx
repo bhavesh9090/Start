@@ -239,11 +239,13 @@ export default function Navbar() {
 
   return (
     <>
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white/80 backdrop-blur-sm'
-    }`}>
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+    <nav className="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
+      <div className={`max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 rounded-full border border-white/20 shadow-2xl ${
+        scrolled 
+          ? 'bg-white/70 backdrop-blur-xl py-2' 
+          : 'bg-white/40 backdrop-blur-lg py-3 sm:py-4'
+      }`}>
+        <div className="flex items-center justify-between">
           {/* Logo (Stays Left) */}
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow overflow-hidden p-1 sm:p-1.5 flex-shrink-0">
@@ -402,81 +404,76 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Admin Tier 2: Dedicated Navigation Modules Ribon */}
-      {user && isAdmin() && (
-        <div className="hidden lg:block bg-gradient-to-r from-gray-50 via-white to-gray-50 border-t border-gray-100 shadow-sm py-1.5 scrollbar-hide">
-          <div className="max-w-7xl mx-auto px-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
-            <div className="flex items-center justify-center gap-1.5">
-              {navLinks.map((link, i) => {
-                const isActive = location.pathname === link.to;
-                return (
-                  <Link key={i} to={link.to}
-                    className={`px-3 py-1.5 text-[13.5px] font-bold rounded-xl transition-all relative group flex items-center gap-1.5 whitespace-nowrap ${
-                      isActive
-                        ? 'text-saffron-600 bg-saffron-50/70 shadow-sm ring-1 ring-saffron-100'
-                        : 'text-gray-500 hover:text-saffron-600 hover:bg-saffron-50/50'
-                    }`}>
-                    <span className="relative flex items-center gap-1.5">
-                      {link.label}
-                      {link.to === '/admin/meeting' && unreadHubCount > 0 && (
-                        <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
-                          <FiBell className="w-3 h-3 text-red-500 fill-red-500" />
-                        </motion.div>
-                      )}
-                    </span>
-                  </Link>
-                );
-              })}
+        {/* Admin Tier 2: Dedicated Navigation Modules Ribon */}
+        {user && isAdmin() && (
+          <div className="hidden lg:block bg-gradient-to-r from-gray-50/50 via-white/50 to-gray-50/50 border-t border-white/20 shadow-sm py-1.5 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
+              <div className="flex items-center justify-center gap-1.5">
+                {navLinks.map((link, i) => {
+                  const isActive = location.pathname === link.to;
+                  return (
+                    <Link key={i} to={link.to}
+                      className={`px-3 py-1.5 text-[13.5px] font-bold rounded-xl transition-all relative group flex items-center gap-1.5 whitespace-nowrap ${
+                        isActive
+                          ? 'text-saffron-600 bg-saffron-50/70 shadow-sm ring-1 ring-saffron-100'
+                          : 'text-gray-500 hover:text-saffron-600 hover:bg-saffron-50/50'
+                      }`}>
+                      <span className="relative flex items-center gap-1.5">
+                        {link.label}
+                        {link.to === '/admin/meeting' && unreadHubCount > 0 && (
+                          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
+                            <FiBell className="w-3 h-3 text-red-500 fill-red-500" />
+                          </motion.div>
+                        )}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Separate Rectangular Card */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden bg-white border-t border-gray-100 shadow-lg max-h-[calc(100vh-56px)] overflow-y-auto sm:max-h-[calc(100vh-64px)] origin-top"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="lg:hidden absolute top-20 inset-x-4 bg-white/90 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl overflow-hidden z-40"
           >
-            <div className="px-3 sm:px-4 py-3 space-y-1">
+            <div className="px-5 py-6 space-y-2">
               {navLinks.map((link, i) => (
                 link.href ? (
                   <a key={i} href={link.href} onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 rounded-lg">
+                    className="block px-4 py-3 text-sm font-bold text-gray-700 hover:text-saffron-600 hover:bg-saffron-50 rounded-xl transition-all">
                     {link.label}
                   </a>
                 ) : (
                   <Link key={i} to={link.to} onClick={() => setMenuOpen(false)}
-                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium rounded-lg ${
-                      location.pathname === link.to ? 'text-saffron-600 bg-saffron-50' : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
+                    className={`flex items-center justify-between px-4 py-3 text-sm font-bold rounded-xl transition-all ${
+                      location.pathname === link.to ? 'text-saffron-600 bg-saffron-50/50 shadow-sm' : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
                     }`}>
                     <span>{link.label}</span>
-                    {link.to === '/admin/meeting' && unreadHubCount > 0 && (
-                      <span className="flex items-center gap-1 text-red-500 text-[10px] font-bold bg-red-50 px-2 py-0.5 rounded-full">
-                        <FiBell className="w-3 h-3 fill-red-500" />
-                        {unreadHubCount}
-                      </span>
-                    )}
                   </Link>
                 )
               ))}
+              
               {!user ? (
-                <div className="pt-2 space-y-1 border-t border-gray-100">
+                <div className="pt-4 space-y-2 border-t border-gray-100">
                   <Link to="/login" onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-medium text-saffron-600">{t('nav.login')}</Link>
+                    className="block px-4 py-3 text-sm font-bold text-saffron-600 hover:bg-saffron-50 rounded-xl transition-all">{t('nav.login')}</Link>
                   <Link to="/register" onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-medium text-white bg-saffron-500 rounded-lg text-center">{t('nav.register')}</Link>
+                    className="block px-4 py-3 text-sm font-bold text-white bg-saffron-500 rounded-xl shadow-lg text-center transition-all active:scale-95">{t('nav.register')}</Link>
                 </div>
               ) : (
-                <div className="pt-2 border-t border-gray-100">
-                  <div className="flex items-center gap-3 px-4 py-4 bg-gray-50/50 rounded-xl mb-2">
-                    <div className="w-10 h-10 rounded-lg bg-white shadow-sm overflow-hidden flex-shrink-0 flex items-center justify-center">
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-3 px-4 py-4 bg-gray-50/50 rounded-2xl mb-2 border border-gray-100">
+                    <div className="w-11 h-11 rounded-xl bg-white shadow-sm overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-100">
                       {user.photo_url ? (
                         <img src={user.photo_url} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
@@ -488,14 +485,12 @@ export default function Navbar() {
                     <div className="flex flex-col min-w-0">
                       <span className="text-sm font-bold text-gray-900 truncate">{user.username}</span>
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest truncate">
-                        {isAdmin() 
-                          ? (user.role === 'super_admin' ? 'Super Admin' : 'District Admin') 
-                          : (user.gst_id ? user.gst_id : 'User')}
+                        {isAdmin() ? 'Admin Access' : (user.gst_id || 'Digital Citizen')}
                       </span>
                     </div>
                   </div>
                   <button onClick={handleLogout}
-                    className="w-full px-4 py-2.5 text-sm font-medium text-maroon-500 text-left rounded-lg hover:bg-maroon-50 flex items-center gap-2">
+                    className="w-full px-4 py-3 text-sm font-bold text-maroon-600 text-left rounded-xl hover:bg-maroon-50 flex items-center gap-2 transition-all">
                     <FiLogOut className="w-4 h-4" />
                     {t('nav.logout')}
                   </button>
@@ -506,8 +501,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
     </nav>
-    {/* Spacer to prevent Two-Tier overlap on admin pages */}
-    {user && isAdmin() && <div className="w-full h-[46px] hidden lg:block pointer-events-none"></div>}
     </>
   );
 }
