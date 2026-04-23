@@ -213,39 +213,39 @@ export default function MonthlyTaxPayment() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center mountain-bg">
+    <div className="min-h-screen flex items-center justify-center bg-[#fafaf8] dark:bg-[#121212]">
       <Loader />
     </div>
   );
 
   return (
-    <div className="min-h-screen pt-20 pb-10 px-4 animate-fade-in transition-opacity duration-700 mountain-bg">
+    <div className="min-h-screen pt-20 pb-10 px-4 animate-fade-in transition-opacity duration-700 bg-[#fafaf8] dark:bg-[#121212] overflow-x-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
           <div>
-            <h1 className="text-4xl font-black text-maroon-500 mb-2 tracking-tight">{t('monthlyTax.title')}</h1>
-            <p className="text-gray-500 font-medium">{t('monthlyTax.subtitle')}</p>
-            <p className="text-[10px] text-gray-400 mt-2 font-black uppercase tracking-widest bg-white/50 w-fit px-2 py-1 rounded-lg border border-gray-100">
+            <h1 className="text-4xl font-black text-maroon-500 dark:text-maroon-400 mb-2 tracking-tight">{t('monthlyTax.title')}</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-medium">{t('monthlyTax.subtitle')}</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2 font-black uppercase tracking-widest bg-white/50 dark:bg-white/5 w-fit px-2 py-1 rounded-lg border border-gray-100 dark:border-white/5">
               🏪 {t('monthlyTax.registrationNotice', { month: t(`months.${registrationMonth}`), year: registrationYear })}
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 bg-white dark:bg-[#1E1E1E] px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('tax.year')}</span>
             <select 
               value={selectedYear} 
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="bg-transparent border-none focus:ring-0 text-maroon-500 font-black text-lg cursor-pointer"
+              className="bg-transparent border-none focus:ring-0 text-maroon-500 dark:text-maroon-400 font-black text-lg cursor-pointer"
             >
               {[currentYear, currentYear - 1, currentYear - 2].filter(y => y >= registrationYear).map(y => (
-                <option key={y} value={y}>{y}</option>
+                <option key={y} value={y} className="dark:bg-[#1E1E1E]">{y}</option>
               ))}
             </select>
           </div>
         </div>
         
         {message && (
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8 p-5 rounded-2xl bg-forest-50 text-forest-700 font-bold border-l-4 border-forest-500 shadow-sm">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8 p-5 rounded-2xl bg-forest-50 dark:bg-forest-900/20 text-forest-700 dark:text-forest-400 font-bold border-l-4 border-forest-500 shadow-sm">
             {message}
           </motion.div>
         )}
@@ -265,10 +265,10 @@ export default function MonthlyTaxPayment() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: m * 0.04 }}
-                className={`flex flex-col items-center justify-center p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 transform ${data.bgColor} ${data.state === 'NOT_APPLICABLE' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`flex flex-col items-center justify-center p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 transform ${data.bgColor} ${data.state === 'NOT_APPLICABLE' ? 'opacity-50 cursor-not-allowed' : ''} ${data.state === 'FUTURE' ? 'dark:bg-[#1E1E1E]/40 dark:border-white/5' : ''}`}
               >
-                <div className={`text-xl font-black mb-3 drop-shadow-sm ${data.state === 'FUTURE' || data.state === 'NOT_APPLICABLE' ? 'text-gray-400' : 'text-white'}`}>{monthName} {selectedYear}</div>
-                <div className="mb-6 bg-white/10 p-4 rounded-2xl backdrop-blur-sm">{data.icon}</div>
+                <div className={`text-xl font-black mb-3 drop-shadow-sm ${data.state === 'FUTURE' || data.state === 'NOT_APPLICABLE' ? 'text-gray-400 dark:text-gray-500' : 'text-white'}`}>{monthName} {selectedYear}</div>
+                <div className="mb-6 bg-white/10 dark:bg-black/20 p-4 rounded-2xl backdrop-blur-sm">{data.icon}</div>
                 <div className={`text-lg font-black uppercase tracking-widest ${data.textColor}`}>{data.text}</div>
                 <div className={`text-[10px] font-bold mb-8 uppercase tracking-widest opacity-80 ${data.textColor}`}>{data.subtext}</div>
 
@@ -276,7 +276,7 @@ export default function MonthlyTaxPayment() {
                    <button 
                      onClick={() => initiatePayment(m)}
                      disabled={paying === m}
-                     className="mt-auto w-full py-4 bg-white text-maroon-500 font-black rounded-xl shadow-lg active:scale-95 transition-all text-[10px] uppercase tracking-[0.2em]"
+                     className="mt-auto w-full py-4 bg-white dark:bg-white/90 text-maroon-500 font-black rounded-xl shadow-lg active:scale-95 transition-all text-[10px] uppercase tracking-[0.2em]"
                    >
                      {paying === m ? t('monthlyTax.processing') : t('monthlyTax.payNow')}
                    </button>
@@ -289,7 +289,7 @@ export default function MonthlyTaxPayment() {
                   >
                     <FiDownload className="w-4 h-4" /> {t('monthlyTax.receipt')}
                   </button>
-                )}
+                 )}
               </motion.div>
             );
           })}
@@ -303,39 +303,60 @@ export default function MonthlyTaxPayment() {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 40, opacity: 0 }} 
               animate={{ scale: 1, y: 0, opacity: 1 }} 
               exit={{ scale: 0.9, y: 40, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 max-w-[90%] sm:max-w-lg w-full shadow-2xl relative border border-gray-100"
+              className="bg-white dark:bg-[#1E1E1E] rounded-3xl p-5 sm:p-8 max-w-[90%] sm:max-w-lg w-full shadow-2xl relative border border-gray-100 dark:border-white/10 overflow-hidden"
             >
-              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <FiAlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-maroon-500/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-saffron-500/5 rounded-full blur-3xl -ml-16 -mb-16 pointer-events-none" />
+
+              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 relative">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-maroon-50 dark:bg-maroon-900/30 text-maroon-600 dark:text-maroon-400 rounded-full flex items-center justify-center flex-shrink-0">
+                  <FiCreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-black text-maroon-600 leading-tight">Important Instructions</h3>
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight">भुगतान निर्देश</h3>
               </div>
               
-              <div className="space-y-4 mb-6 sm:mb-8">
-                <div className="bg-orange-50 border-l-4 border-orange-500 p-3 sm:p-4 rounded-r-lg shadow-inner">
-                  <p className="text-xs sm:text-sm font-bold text-gray-800 mb-3">
-                    This payment is in <span className="text-red-600">Test Mode</span>. UPI options might not work. The preferred option is to use <span className="text-forest-600 bg-forest-100 px-1 rounded">Net Banking</span>. Please do not be afraid, this payment is unreal/fake and your actual money will not be deducted.
+              <div className="space-y-4 mb-6 sm:mb-8 relative">
+                {/* Simulated QR Code for native feel */}
+                <div className="flex flex-col items-center justify-center p-6 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-white/5 mb-6">
+                  <div className="w-32 h-32 bg-white p-2 rounded-xl shadow-inner mb-3 relative overflow-hidden group">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ETAXPAY_TAX_PAYMENT_MONTH_${pendingMonth}_${selectedYear}`}
+                      alt="Payment QR" 
+                      className="w-full h-full object-contain grayscale opacity-50 dark:opacity-30 group-hover:opacity-100 transition-opacity"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/80 dark:bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-[8px] font-black uppercase text-maroon-600 dark:text-maroon-400 border border-maroon-100 dark:border-maroon-900">Scan Disabled</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-center">
+                    Quick Pay via QR (Disabled in Test Mode)
+                  </span>
+                </div>
+
+                <div className="bg-orange-50 dark:bg-[#2A2010] border-l-4 border-orange-500 p-4 rounded-r-2xl">
+                  <p className="text-xs font-bold text-gray-800 dark:text-gray-200 leading-relaxed">
+                    This payment is in <span className="text-red-600 dark:text-red-400 font-black underline decoration-red-500/30">Test Mode</span>. UPI options might not work. Please use <span className="text-forest-600 dark:text-forest-400 bg-forest-100 dark:bg-forest-900/30 px-1.5 py-0.5 rounded-lg whitespace-nowrap">Net Banking</span>. No actual money will be deducted.
                   </p>
-                  <p className="text-xs sm:text-sm font-bold text-gray-800 border-t border-orange-200 pt-3">
-                    यह भुगतान <span className="text-red-600">टेस्ट मोड (Test Mode)</span> में है। यूपीआई (UPI) काम नहीं कर सकता है। कृपया <span className="text-forest-600 bg-forest-100 px-1 rounded">नेट बैंकिंग (Net Banking)</span> का उपयोग करें। कृपया घबराएं नहीं, यह भुगतान वास्तविक नहीं है और आपका कोई पैसा नहीं कटेगा।
+                  <p className="text-[11px] font-medium text-gray-600 dark:text-gray-400 mt-4 border-t border-orange-200 dark:border-orange-500/20 pt-4 leading-relaxed">
+                    यह भुगतान <span className="text-red-600 dark:text-red-400 font-bold">टेस्ट मोड</span> में है। कृपया <span className="text-forest-600 dark:text-forest-400">नेट बैंकिंग</span> का उपयोग करें। यह भुगतान वास्तविक नहीं है।
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 relative">
                 <button 
                   onClick={() => setShowInstructionModal(false)}
-                  className="flex-1 py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors uppercase tracking-wider text-xs"
+                  className="flex-1 py-4 px-4 bg-gray-100 dark:bg-[#2A2A2A] text-gray-700 dark:text-gray-300 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-[#333333] transition-colors uppercase tracking-widest text-[10px]"
                 >
-                  Cancel / रद्द करें
+                  रद्द करें / Cancel
                 </button>
                 <button 
                   onClick={() => {
@@ -344,9 +365,9 @@ export default function MonthlyTaxPayment() {
                       handlePay(pendingMonth);
                     }
                   }}
-                  className="flex-1 py-3 px-4 bg-maroon-600 text-white font-bold rounded-xl hover:bg-maroon-700 shadow-lg shadow-maroon-500/30 transition-all active:scale-95 uppercase tracking-wider text-xs"
+                  className="flex-1 py-4 px-4 bg-gradient-to-r from-maroon-500 to-maroon-600 text-white font-black rounded-2xl shadow-lg shadow-maroon-500/30 active:scale-95 transition-all uppercase tracking-widest text-[10px]"
                 >
-                  Proceed to Pay
+                  भुगतान करें / Pay
                 </button>
               </div>
             </motion.div>

@@ -30,6 +30,15 @@ self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
+  // Skip Vite HMR / Development requests
+  if (
+    request.url.includes('hot-update') || 
+    request.url.includes('vite') || 
+    request.url.includes('?token') ||
+    request.url.includes('socket.io') ||
+    (self.location.hostname === 'localhost' && (request.url.endsWith('.jsx') || request.url.endsWith('.js')))
+  ) return;
+
   // Navigation requests (HTML pages) — Network first, fallback to cache
   // This prevents the "refresh" feeling — always serves fresh content instantly
   if (request.mode === 'navigate') {

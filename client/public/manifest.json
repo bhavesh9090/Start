@@ -10,6 +10,22 @@
   "scope": "/",
   "prefer_related_applications": false,
   "categories": ["finance", "government"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View tax overview",
+      "url": "/user/dashboard",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pay Monthly Tax",
+      "short_name": "Pay Tax",
+      "description": "Quick tax payment",
+      "url": "/user/monthly-tax",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ],
   "permissions": [
     "notifications",
     "camera",

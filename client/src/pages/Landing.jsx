@@ -16,6 +16,7 @@ import {
 import { complaintAPI, authAPI, helpAPI } from '../services/api';
 import UttarakhandMap from '../components/UttarakhandMap';
 import ChatBot from '../components/ChatBot';
+import BannerSlider from '../components/BannerSlider';
 // Supabase Storage Configuration
 const BUCKET_NAME = "assets";
 const STORAGE_BASE = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}`;
@@ -137,6 +138,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-white text-gray-800 overflow-hidden">
+      <BannerSlider />
       <HeroSection t={t} isMobile={isMobile} />
       <DevbhoomiBanner />
       <HowItWorksSection t={t} />
@@ -181,7 +183,7 @@ function HowItWorksSection({ t }) {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="hiw-section" id="howitworks" ref={ref}>
+    <section className="hiw-section" id="how-it-works" ref={ref}>
       <div className="hiw-bg-pattern"></div>
       <div className="hiw-blob-red"></div>
       <div className="hiw-blob-green"></div>
@@ -336,11 +338,14 @@ function DevbhoomiBanner() {
   const marqueeItems = [...items, ...items, ...items, ...items];
 
   return (
-    <div className="relative py-3 overflow-hidden my-0">
-      <div className="relative bg-black py-5 overflow-hidden border-y border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.4)] -rotate-1 scale-x-[1.12]">
+    <div className="relative py-4 overflow-hidden my-0">
+      <div className="relative bg-gradient-to-r from-maroon-600 to-maroon-700 py-6 overflow-hidden border-y border-maroon-400/30 shadow-[0_10px_40px_rgba(153,27,27,0.2)] -rotate-1 scale-x-[1.15]">
+        {/* Shine Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer pointer-events-none" />
+        
         {/* Fade edges */}
-        <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-maroon-700 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-maroon-700 to-transparent z-10 pointer-events-none" />
 
         <div className="flex whitespace-nowrap animate-marquee-scroll">
           {marqueeItems.map((item, i) => (
@@ -434,17 +439,17 @@ function HeroSection({ t, isMobile }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
-                className="hero-gov-heading"
+                className="hero-gov-heading !text-black"
               >
                 {heroTitles[titleIdx]}
               </motion.h1>
             </AnimatePresence>
             
-            <motion.p variants={fadeInUp} className="hero-gov-subheading">
+            <motion.p variants={fadeInUp} className="hero-gov-subheading !text-black/80">
               {t('hero.subtitle')}
             </motion.p>
             
-            <motion.p variants={fadeInUp} className="hero-gov-desc mb-10">
+            <motion.p variants={fadeInUp} className="hero-gov-desc mb-10 !text-black/70">
               {t('hero.description')}
             </motion.p>
             
@@ -1239,45 +1244,85 @@ function ProjectDisclaimer({ t }) {
 }
 
 function Footer({ t }) {
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      setIsStandalone(true);
+    }
+  }, []);
+
+  if (isStandalone) return null;
+
   return (
-    <footer className="bg-gradient-to-br from-red-950 via-black to-green-950 text-gray-300 py-16 border-t-2 border-red-900/50 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(153,27,27,0.3),transparent_50%)]" />
-        <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_80%,rgba(6,78,59,0.3),transparent_50%)]" />
+    <footer className="relative py-16 overflow-hidden border-t border-white/5" style={{
+      background: 'linear-gradient(to right, #2a0000 0%, #000000 35%, #000000 65%, #001a00 100%)'
+    }}>
+      {/* Background Blobs for extra richness */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-0 w-[30%] h-full bg-red-900/20 blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[30%] h-full bg-green-900/20 blur-[100px]" />
       </div>
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <div className="grid md:grid-cols-3 gap-10 mb-10">
-          <div data-aos="fade-up">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center overflow-hidden p-1.5 shadow-lg border border-white/10">
-                <img src={ASSET_IMAGES.logo} alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
+
+      <div className="max-w-7xl mx-auto px-10 relative z-10 pt-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          {/* Logo & Branding */}
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-14 h-14 bg-[#1f1a1a] rounded-[1.2rem] flex items-center justify-center p-2 border border-white/5 shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
+                <img src={ASSET_IMAGES.logo} alt="Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="text-2xl font-bold text-white tracking-tight">{t('nav.logoName')}</span>
+              <span className="text-3xl font-bold text-white tracking-tight">E-TaxPay</span>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">{t('footer.tagline')}</p>
+            <p className="text-gray-400 text-sm leading-relaxed max-w-[280px] font-medium opacity-80">
+              Empowering transparent governance through digital innovation.
+            </p>
           </div>
-          <div data-aos="fade-up" data-aos-delay="100">
-            <h3 className="text-lg font-bold mb-4 text-green-500">{t('footer.quickLinks')}</h3>
-            <div className="space-y-2">
-              {['home', 'about', 'help', 'complaint', 'aboutUs'].map((key) => (
-                <a key={key} href={key === 'home' ? '/' : `#${key === 'aboutUs' ? 'about-us' : key}`}
-                  className="block text-gray-400 hover:text-red-400 hover:translate-x-1 transition-all text-sm">
-                  {t(`nav.${key}`)}
+
+          {/* Quick Links */}
+          <div className="md:col-span-3">
+            <h3 className="text-[#00df00] font-black text-sm mb-6 tracking-wide drop-shadow-[0_0_15px_rgba(0,223,0,0.2)]">Quick Links</h3>
+            <div className="space-y-4">
+              {['Home', 'About', 'Help', 'Complaint', 'About Us'].map((label) => (
+                <a 
+                  key={label} 
+                  href={`#${label.toLowerCase().replace(' ', '-')}`}
+                  className="block text-gray-400 hover:text-white font-medium transition-all text-sm opacity-80 hover:opacity-100"
+                >
+                  {label}
                 </a>
               ))}
             </div>
           </div>
-          <div data-aos="fade-up" data-aos-delay="200">
-            <h3 className="text-lg font-bold mb-4 text-red-500">{t('footer.contact')}</h3>
-            <div className="space-y-2 text-sm text-gray-400">
-              <p>{t('help.address')}</p>
-              <p>{t('help.phone')}</p>
-              <p>{t('help.emailId')}</p>
+
+          {/* Contact Us */}
+          <div className="md:col-span-4">
+            <h3 className="text-[#ff3d3d] font-black text-sm mb-6 tracking-wide ml-[-2px]">Contact Us</h3>
+            <div className="space-y-4 text-sm font-medium text-gray-400 opacity-90">
+              <p className="flex items-start gap-3">
+                <FiMapPin className="w-4 h-4 mt-1 flex-shrink-0 text-[#00df00]" />
+                <span className="tracking-wide">Zila Panchayat, Almora, Uttarakhand - 263601</span>
+              </p>
+              <p className="flex items-center gap-3">
+                <FiPhone className="w-4 h-4 flex-shrink-0 text-[#ff3d3d]" />
+                <span className="text-white font-bold opacity-100">+91 7983630254, +91 7906718235</span>
+              </p>
+              <p className="flex items-center gap-3">
+                <FiMail className="w-4 h-4 flex-shrink-0 text-[#ff3d3d]" />
+                <span className="hover:text-white transition-colors cursor-pointer border-b border-white/5 opacity-100">huuuuii947@gmail.com</span>
+              </p>
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-800 pt-6 text-center text-sm text-gray-500">
-          {t('footer.copyright')}
+
+        {/* Separator Line */}
+        <div className="mt-20 mb-8 w-full h-[1px] bg-white/5 shadow-[0_1px_0_rgba(255,255,255,0.02)]" />
+
+        {/* Bottom Bar */}
+        <div className="pt-10 border-t border-white/5 text-center mt-10">
+          <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.2em] opacity-60">
+            © 2024 E-TaxPay — Zila Panchayat Uttarakhand. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
