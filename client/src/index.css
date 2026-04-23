@@ -78,7 +78,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
-  overscroll-behavior-y: contain; /* Disable pull-to-refresh */
+  /* Pull-to-refresh is enabled by default here for browser users */
 }
 
 body {
