@@ -192,24 +192,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 
 
-.mountain-bg {
-  position: relative;
-}
-
-.mountain-bg::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 200px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200'%3E%3Cpath fill='%2310B98120' d='M0,200 L0,120 L120,60 L240,100 L360,40 L480,80 L600,20 L720,90 L840,30 L960,70 L1080,10 L1200,60 L1320,40 L1440,80 L1440,200Z'/%3E%3Cpath fill='%2310B98110' d='M0,200 L0,140 L180,80 L320,130 L480,60 L640,110 L800,50 L960,100 L1120,40 L1280,90 L1440,60 L1440,200Z'/%3E%3C/svg%3E");
-  background-size: cover;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
-}
+/* Mountain silhouette removed as per request */
 
 
 /* ============================================================
@@ -233,6 +216,23 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   background: radial-gradient(circle at 50% 50%, transparent 0%, #f1f5f9 90%);
   pointer-events: none;
   z-index: 1; /* Place above the grid lines but below the card content */
+}
+
+/* Subtle Hero Grid Background */
+.hero-grid-bg {
+  position: relative;
+  background-color: #fafaf8;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.hero-grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 20%, #fafaf8 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Subtle accent blobs behind the grid */

@@ -46,7 +46,8 @@ import UpdatePrompt from './components/UpdatePrompt';
 import TopHeader from './components/TopHeader';
 
 const BUCKET_NAME = "assets";
-const logoUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/logo.png`;
+const STORAGE_BASE = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}`;
+const logoUrl = `${STORAGE_BASE}/logo.png`;
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading, isAdmin } = useAuth();
@@ -219,6 +220,11 @@ export default function App() {
   const { i18n } = useTranslation();
   const [isInitializing, setIsInitializing] = useState(true);
 
+  const isStandalone = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(display-mode: standalone)').matches || (window.navigator && 'standalone' in window.navigator && window.navigator.standalone);
+  }, []);
+
   useEffect(() => {
     document.documentElement.lang = i18n.language;
     AOS.init({
@@ -227,14 +233,18 @@ export default function App() {
       once: true,
       offset: 60,
     });
-  }, [i18n.language]);
+
+    if (!isStandalone) {
+      setIsInitializing(false);
+    }
+  }, [i18n.language, isStandalone]);
 
   return (
     <ErrorBoundary>
       <AuthProvider>
         <ToastProvider>
           <AnimatePresence mode="wait">
-            {isInitializing ? (
+            {isInitializing && isStandalone ? (
               <SplashScreen finishLoading={() => setIsInitializing(false)} key="splash" />
             ) : (
               <motion.div
